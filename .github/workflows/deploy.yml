@@ -1,0 +1,58 @@
+name: Deploy to Cloudflare Workers
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+concurrency:
+  group: deploy-production
+  cancel-in-progress: false
+
+jobs:
+  deploy:
+    name: Build & deploy
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Sync static UI (index.html -> public/index.html)
+        run: npm run sync:ui
+
+      - name: Typecheck
+        run: npm run typecheck
+
+      - name: Deploy
+        uses: cloudflare/wrangler-action@v3
+        with:
+          apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+          accountId: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+          command: deploy
+          gitHubToken: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Smoke test /api/health
+        run: |
+          set -euo pipefail
+          for i in 1 2 3 4 5; do
+            body=$(curl -fsS --max-time 10 https://vibe-show.com/api/health || true)
+            if echo "$body" | grep -q '"ok":true'; then
+              echo "health OK: $body"
+              exit 0
+            fi
+            echo "attempt $i failed, retrying in 10s..."
+            sleep 10
+          done
+          echo "health check FAILED after 5 attempts"
+          exit 1

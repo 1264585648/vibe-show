@@ -1,0 +1,39 @@
+name = "vibe-show"
+main = "src/index.ts"
+compatibility_date = "2025-02-01"
+
+# 1. workers.dev 兜底地址：vibe-show.zx-ai.workers.dev（域名路由就绪前用它验证链路）
+#    ⚠️ 顶层键必须写在 [assets] 等表头之前，否则会被解析进该表。
+workers_dev = true
+
+# 2. 生产环境域名路由。启用前必须存在对应的 proxied DNS 记录，
+#    否则 {prefix}.vibe-show.com 无法解析到边缘节点。
+routes = [
+  { pattern = "vibe-show.com/*", zone_name = "vibe-show.com" },
+  { pattern = "www.vibe-show.com/*", zone_name = "vibe-show.com" },
+  { pattern = "*.vibe-show.com/*", zone_name = "vibe-show.com" }
+]
+
+# 3. 静态资源托管（public/index.html 与 public/admin.html 走 Cloudflare 免费静态资产层）
+[assets]
+directory = "./public"
+binding = "ASSETS"
+
+# 4. Cloudflare D1 数据库绑定
+[[d1_databases]]
+binding = "DB"
+database_name = "vibe-show-db"
+database_id = "c55a7cb7-5f04-4ccd-b974-3182365deb0c"
+migrations_dir = "migrations"
+
+# 5. Cloudflare Workers KV 绑定（存储毫秒级边缘反向代理路由表）
+[[kv_namespaces]]
+binding = "PROXY_ROUTES"
+id = "f290accd20514327a20b5030113b972a"
+
+# 6. 定时任务：每 30 分钟清理过期软锁号，每天凌晨巡检源站健康度
+[triggers]
+crons = ["*/30 * * * *", "0 20 * * *"]
+
+[vars]
+DOMAIN = "vibe-show.com"

@@ -1,0 +1,2067 @@
+<!DOCTYPE html>
+<html lang="zh-CN" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+    <title>vibe-show.com — 你的灵感，值得一个体面的域名</title>
+    <meta name="description" content="专为 Vibe Coder 打造的免费子域名计划。投稿你的 AI 编程作品，免费领取专属 xxx.vibe-show.com 子域名，并登上首页作品秀场。">
+    <meta name="theme-color" content="#F5F5F7">
+    <meta property="og:type" content="website">
+    <meta property="og:title" content="vibe-show.com — 你的灵感，值得一个体面的域名">
+    <meta property="og:description" content="投稿你的 AI 编程作品，免费领取专属 xxx.vibe-show.com 子域名。">
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'><rect width='32' height='32' rx='8' fill='%231D1D1F'/><circle cx='16' cy='16' r='6' fill='%230071E3'/></svg>">
+    <script>document.documentElement.classList.add('js')</script>
+
+    <!-- Tailwind CSS Play CDN（原型阶段使用，生产构建建议替换为静态产物） -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Google Fonts: Plus Jakarta Sans & JetBrains Mono（替代泛滥的 Inter，强化 Apple 工业克制感与代码质感） -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600;700&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        apple: {
+                            bg: '#F5F5F7',
+                            surface: '#FAFAFC',
+                            card: '#FFFFFF',
+                            dark: '#1D1D1F',
+                            ink: '#2C2C2E',
+                            gray: '#6E6E73',
+                            muted: '#86868B',
+                            blue: '#0071E3',
+                            blueHover: '#0077ED',
+                            blueLight: '#2997FF',
+                            border: '#D2D2D7'
+                        }
+                    },
+                    fontFamily: {
+                        sans: ['-apple-system', 'BlinkMacSystemFont', '"SF Pro Display"', '"SF Pro Text"', '"Plus Jakarta Sans"', '"PingFang SC"', '"Hiragino Sans GB"', '"Microsoft YaHei"', 'sans-serif'],
+                        mono: ['"SF Mono"', '"JetBrains Mono"', 'ui-monospace', 'SFMono-Regular', 'Menlo', 'Monaco', 'Consolas', 'monospace']
+                    },
+                    borderRadius: {
+                        'apple': '24px',
+                        'apple-lg': '30px'
+                    },
+                    boxShadow: {
+                        'apple': '0 10px 30px -6px rgba(29, 29, 31, 0.04), 0 2px 8px -2px rgba(29, 29, 31, 0.02), inset 0 1px 0 0 rgba(255, 255, 255, 0.9)',
+                        'apple-hover': '0 22px 46px -12px rgba(29, 29, 31, 0.085), 0 6px 16px -4px rgba(29, 29, 31, 0.035), inset 0 1px 0 0 rgba(255, 255, 255, 0.98)',
+                        'apple-browser': '0 38px 84px -20px rgba(15, 23, 42, 0.14), 0 12px 28px -8px rgba(15, 23, 42, 0.06), 0 0 0 1px rgba(29, 29, 31, 0.07), inset 0 1px 0 0 rgba(255, 255, 255, 0.9)',
+                        'apple-sheet': '0 40px 100px -20px rgba(0, 0, 0, 0.30), 0 0 0 1px rgba(0, 0, 0, 0.06), inset 0 1px 0 0 rgba(255, 255, 255, 0.9)'
+                    }
+                }
+            }
+        }
+    </script>
+
+    <style>
+        html { scrollbar-gutter: stable; }
+        body {
+            background-color: #F5F5F7;
+            color: #1D1D1F;
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+            text-rendering: optimizeLegibility;
+            overflow-x: hidden;
+            font-feature-settings: "cv02", "cv03", "cv04", "cv11";
+        }
+        h1, h2, h3, h4 { text-wrap: balance; }
+        p { text-wrap: pretty; }
+        .tabular-nums { font-variant-numeric: tabular-nums; }
+        ::selection { background: #0071E3; color: #fff; }
+        section[id] { scroll-margin-top: 56px; }
+        div[id="status"] { scroll-margin-top: 72px; }
+        :focus-visible { outline: 2px solid #0071E3; outline-offset: 3px; }
+        input:focus-visible, select:focus-visible, textarea:focus-visible { outline: none; }
+
+        /* 一屏一页（Screen-per-Section）完整视口布局：确保单屏不截断、下板块不半露 */
+        .screen-section {
+            position: relative;
+            border-bottom: 1px solid rgba(29, 29, 31, 0.06);
+        }
+        .screen-section-alt {
+            background-color: rgba(255, 255, 255, 0.55);
+        }
+        @media (min-width: 1024px) and (min-height: 700px) {
+            .screen-section {
+                min-height: calc(100dvh - 56px);
+                display: flex;
+                flex-direction: column;
+                justify-content: center;
+            }
+        }
+
+        /* 右侧悬浮分屏页码指示器 */
+        .pager-dot {
+            transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+        .pager-btn.is-active .pager-dot {
+            height: 22px;
+            background-color: #0071E3;
+        }
+        .pager-btn.is-active .pager-label {
+            opacity: 1;
+            transform: translateX(0);
+            color: #1D1D1F;
+            font-weight: 600;
+        }
+
+        /* Apple 毛玻璃质感与导航栏高亮 */
+        .apple-glass {
+            background: rgba(245, 245, 247, 0.78);
+            backdrop-filter: saturate(180%) blur(20px);
+            -webkit-backdrop-filter: saturate(180%) blur(20px);
+        }
+        #site-header { transition: background-color .3s ease, border-color .3s ease, box-shadow .3s ease; }
+        #site-header.is-scrolled {
+            background: rgba(255, 255, 255, 0.84);
+            border-bottom-color: rgba(29, 29, 31, 0.08);
+            box-shadow: 0 8px 24px -16px rgba(29, 29, 31, 0.10), inset 0 -1px 0 0 rgba(255, 255, 255, 0.5);
+        }
+        .nav-link {
+            position: relative;
+            padding: 5px 11px;
+            border-radius: 9999px;
+            transition: color 0.22s ease, background-color 0.22s ease;
+        }
+        .nav-link:hover {
+            color: #1D1D1F;
+            background-color: rgba(29, 29, 31, 0.04);
+        }
+        .nav-link.is-active {
+            color: #1D1D1F;
+            font-weight: 600;
+            background-color: rgba(29, 29, 31, 0.065);
+            box-shadow: inset 0 1px 0 0 rgba(255, 255, 255, 0.7);
+        }
+        .apple-badge-glass {
+            background: rgba(255, 255, 255, 0.88);
+            backdrop-filter: saturate(180%) blur(16px);
+            -webkit-backdrop-filter: saturate(180%) blur(16px);
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05), inset 0 1px 0 0 rgba(255, 255, 255, 0.9);
+        }
+        .apple-dark-glass {
+            background: rgba(29, 29, 31, 0.80);
+            backdrop-filter: saturate(180%) blur(16px);
+            -webkit-backdrop-filter: saturate(180%) blur(16px);
+            box-shadow: 0 4px 14px rgba(0, 0, 0, 0.22), inset 0 1px 0 0 rgba(255, 255, 255, 0.14);
+        }
+
+        /* Apple 钛金属深色主标题与克制苹果蓝高光（去除 AI 紫粉渐变套路） */
+        .hero-gradient-text {
+            background: linear-gradient(180deg, #141416 0%, #3A3A3C 100%);
+            -webkit-background-clip: text;
+            background-clip: text;
+            -webkit-text-fill-color: transparent;
+            padding-bottom: .04em;
+        }
+        .text-gradient-brand {
+            background: linear-gradient(135deg, #005BB5 0%, #0071E3 50%, #2997FF 100%);
+            -webkit-background-clip: text;
+            background-clip: text;
+            -webkit-text-fill-color: transparent;
+            padding-bottom: .04em;
+        }
+
+        /* 首屏克制天光氛围与工程网格（纯正蓝/青/暖白，无紫粉光污染） */
+        .studio-light { position: absolute; inset: 0; overflow: hidden; pointer-events: none; transition: opacity .6s ease; }
+        .studio-light span { position: absolute; border-radius: 9999px; filter: blur(80px); animation: float 22s ease-in-out infinite; }
+        .studio-light .l1 { width: 620px; height: 480px; left: -140px; top: -180px; background: radial-gradient(circle, rgba(0, 113, 227, .12), transparent 68%); }
+        .studio-light .l2 { width: 560px; height: 460px; right: -160px; top: -120px; background: radial-gradient(circle, rgba(41, 151, 255, .10), transparent 68%); animation-delay: -8s; }
+        .studio-light .l3 { width: 480px; height: 380px; left: 36%; top: 240px; background: radial-gradient(circle, rgba(16, 185, 129, .06), transparent 70%); animation-delay: -15s; }
+        @keyframes float {
+            0%, 100% { transform: translate3d(0, 0, 0) scale(1); }
+            50% { transform: translate3d(24px, -18px, 0) scale(1.04); }
+        }
+        .hero-grid {
+            background-image:
+                linear-gradient(rgba(29, 29, 31, .03) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(29, 29, 31, .03) 1px, transparent 1px);
+            background-size: 64px 64px;
+            -webkit-mask-image: radial-gradient(ellipse 58% 42% at 50% 20%, #000 20%, transparent 72%);
+            mask-image: radial-gradient(ellipse 58% 42% at 50% 20%, #000 20%, transparent 72%);
+            transition: opacity .6s ease;
+        }
+
+        /* ==================== 首屏「极昼光学雕塑」3D 磨砂玻璃背景舞台 ==================== */
+        #hero-bg-stage {
+            position: absolute;
+            inset: 0;
+            overflow: hidden;
+            pointer-events: none;
+            z-index: 0;
+        }
+        #hero-bg-photo {
+            position: absolute;
+            inset: -2%;
+            background-image: url('https://images.unsplash.com/photo-1618005198919-d3d4b5a92ead?auto=format&fit=crop&w=2200&q=85');
+            background-size: cover;
+            background-position: center 42%;
+            background-repeat: no-repeat;
+            filter: saturate(1.08) contrast(1.03) brightness(1.02);
+            transform: scale(1.02);
+            animation: heroSculptureFloat 24s ease-in-out infinite alternate;
+        }
+        @keyframes heroSculptureFloat {
+            0% { transform: scale(1.02) translate3d(0, 0, 0); }
+            100% { transform: scale(1.055) translate3d(-10px, -8px, 0); }
+        }
+        #hero-bg-scrim {
+            position: absolute;
+            inset: 0;
+            background:
+                radial-gradient(ellipse 54% 40% at 50% 32%, rgba(255, 255, 255, 0.72) 0%, rgba(255, 255, 255, 0.24) 62%, rgba(245, 245, 247, 0.05) 100%),
+                linear-gradient(180deg, rgba(255, 255, 255, 0.22) 0%, transparent 52%, rgba(245, 245, 247, 0.88) 100%);
+        }
+        #hero-screen #hero-workbench {
+            background: rgba(255, 255, 255, 0.90);
+            backdrop-filter: saturate(180%) blur(24px);
+            -webkit-backdrop-filter: saturate(180%) blur(24px);
+            box-shadow: 0 38px 84px -18px rgba(15, 23, 42, 0.15), 0 12px 28px -8px rgba(15, 23, 42, 0.07), 0 0 0 1px rgba(255, 255, 255, 0.85), inset 0 1px 0 0 rgba(255, 255, 255, 0.98);
+        }
+
+        /* 顶部微光胶囊标签 */
+        .shimmer-pill {
+            position: relative;
+            overflow: hidden;
+            background: rgba(255, 255, 255, 0.92);
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.03), inset 0 0 0 1px rgba(29, 29, 31, 0.08);
+        }
+        .shimmer-pill::after {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background: linear-gradient(110deg, transparent 32%, rgba(255, 255, 255, .95) 50%, transparent 68%);
+            transform: translateX(-100%);
+            animation: shimmer 6s ease-in-out infinite;
+            pointer-events: none;
+        }
+        @keyframes shimmer { 0%, 60% { transform: translateX(-100%); } 100% { transform: translateX(100%); } }
+
+        /* 打字机光标 */
+        .type-caret {
+            display: inline-block;
+            width: 2px;
+            height: 1.05em;
+            margin: 0 1px;
+            background: #0071E3;
+            border-radius: 1px;
+            vertical-align: -0.15em;
+            animation: blink 1.05s steps(1) infinite;
+        }
+        @keyframes blink { 50% { opacity: 0; } }
+
+        /* 卡片平滑过渡与精细内高光（Apple 阳极氧化边缘感） */
+        .bento-card {
+            border: 1px solid rgba(29, 29, 31, 0.065);
+            box-shadow: 0 10px 30px -6px rgba(29, 29, 31, 0.04), 0 2px 8px -2px rgba(29, 29, 31, 0.02), inset 0 1px 0 0 rgba(255, 255, 255, 0.92);
+            transition: transform 0.42s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.42s cubic-bezier(0.16, 1, 0.3, 1), border-color 0.3s ease;
+        }
+        .bento-card:hover {
+            transform: translateY(-3px);
+            border-color: rgba(29, 29, 31, 0.11);
+            box-shadow: 0 22px 46px -12px rgba(29, 29, 31, 0.085), 0 6px 16px -4px rgba(29, 29, 31, 0.035), inset 0 1px 0 0 rgba(255, 255, 255, 0.98);
+        }
+        .dark-specular {
+            box-shadow: 0 28px 64px -18px rgba(0, 0, 0, 0.36), inset 0 1px 0 0 rgba(255, 255, 255, 0.12), 0 0 0 1px rgba(0, 0, 0, 0.35);
+        }
+
+        /* 滚动入场动画 */
+        .js .reveal {
+            opacity: 0;
+            transform: translateY(24px);
+            transition: opacity .85s cubic-bezier(0.16, 1, 0.3, 1), transform .85s cubic-bezier(0.16, 1, 0.3, 1);
+            transition-delay: var(--d, 0ms);
+        }
+        .js .reveal.is-visible { opacity: 1; transform: none; }
+
+        /* 首屏浏览器内容切换 */
+        .swap-target { transition: opacity .26s ease, transform .4s cubic-bezier(0.16, 1, 0.3, 1), filter .26s ease; }
+        .swap-target.is-swapping { opacity: 0; transform: translateY(8px) scale(.99); filter: blur(3px); }
+        .demo-progress { transform-origin: left; transform: scaleX(0); }
+        .demo-progress.is-running { animation: progress var(--dur, 6s) linear forwards; }
+        .demo-progress.is-paused { animation-play-state: paused; }
+        @keyframes progress { to { transform: scaleX(1); } }
+
+        /* 作品筛选入场 */
+        .showcase-card.is-filtered-in { animation: card-in .5s cubic-bezier(0.16, 1, 0.3, 1) both; }
+        @keyframes card-in { from { opacity: 0; transform: translateY(12px) scale(.985); } to { opacity: 1; transform: none; } }
+
+        /* 热敏小票双端锯齿边与投影装饰 */
+        .receipt-card {
+            position: relative;
+            filter: drop-shadow(0 10px 18px rgba(16, 185, 129, 0.14)) drop-shadow(0 2px 4px rgba(0, 0, 0, 0.04));
+        }
+        .receipt-edge-top,
+        .receipt-edge-bottom {
+            height: 6px;
+            width: 100%;
+            background-size: 10px 6px;
+            background-repeat: repeat-x;
+        }
+        .receipt-edge-top {
+            background-image: radial-gradient(circle at 5px 0, transparent 3.6px, #ffffff 4px);
+        }
+        .receipt-edge-bottom {
+            background-image: radial-gradient(circle at 5px 6px, transparent 3.6px, #ffffff 4px);
+        }
+
+        /* 滚动跑马灯 */
+        .marquee {
+            -webkit-mask-image: linear-gradient(90deg, transparent, #000 12%, #000 88%, transparent);
+            mask-image: linear-gradient(90deg, transparent, #000 12%, #000 88%, transparent);
+        }
+        .marquee-track { display: flex; width: max-content; animation: marquee 48s linear infinite; }
+        .marquee:hover .marquee-track { animation-play-state: paused; }
+        @keyframes marquee { from { transform: translateX(0); } to { transform: translateX(-50%); } }
+
+        /* FAQ 丝滑手风琴折叠 */
+        .faq summary { list-style: none; cursor: pointer; user-select: none; }
+        .faq summary::-webkit-details-marker { display: none; }
+        .faq .faq-icon { transition: transform .36s cubic-bezier(0.16, 1, 0.3, 1), background-color .22s ease, color .22s ease; }
+        .faq.is-open .faq-icon,
+        .faq[open]:not(.is-closing) .faq-icon { transform: rotate(45deg); background: #1D1D1F; color: #fff; }
+        .faq-body { overflow: hidden; }
+
+        /* Apple Sheet 弹窗 */
+        .sheet { visibility: hidden; transition: visibility 0s linear .38s; }
+        .sheet.is-open { visibility: visible; transition-delay: 0s; }
+        .sheet-backdrop { opacity: 0; transition: opacity .32s ease; }
+        .sheet.is-open .sheet-backdrop { opacity: 1; }
+        .sheet-panel { opacity: 0; transform: translateY(28px) scale(.985); transition: opacity .28s ease, transform .45s cubic-bezier(0.16, 1, 0.3, 1); }
+        .sheet.is-open .sheet-panel { opacity: 1; transform: none; }
+
+        /* 成功对勾描边动画 */
+        .check-draw { stroke-dasharray: 32; stroke-dashoffset: 32; }
+        .is-drawn .check-draw { animation: draw .55s .12s cubic-bezier(.65, 0, .45, 1) forwards; }
+        @keyframes draw { to { stroke-dashoffset: 0; } }
+
+        /* 加载圈与抖动 */
+        .spinner {
+            display: inline-block;
+            width: 12px;
+            height: 12px;
+            border-radius: 9999px;
+            border: 1.5px solid rgba(0, 0, 0, .15);
+            border-top-color: #0071E3;
+            animation: spin .7s linear infinite;
+        }
+        .spinner-light { border-color: rgba(255, 255, 255, .35); border-top-color: #fff; width: 14px; height: 14px; }
+        @keyframes spin { to { transform: rotate(360deg); } }
+        .shake { animation: shake .4s cubic-bezier(.36, .07, .19, .97); }
+        @keyframes shake {
+            10%, 90% { transform: translateX(-1px); }
+            20%, 80% { transform: translateX(2px); }
+            30%, 50%, 70% { transform: translateX(-4px); }
+            40%, 60% { transform: translateX(4px); }
+        }
+
+        /* Toast 提示 */
+        #toast { transform: translate(-50%, 24px); opacity: 0; transition: opacity .28s ease, transform .4s cubic-bezier(0.16, 1, 0.3, 1); }
+        #toast.is-show { transform: translate(-50%, 0); opacity: 1; }
+
+        /* 移动端菜单按钮 */
+        .menu-bar { transition: transform .32s cubic-bezier(0.16, 1, 0.3, 1); }
+        [aria-expanded="true"] .menu-bar:first-child { transform: translate(-50%, 0) rotate(45deg); }
+        [aria-expanded="true"] .menu-bar:last-child { transform: translate(-50%, 0) rotate(-45deg); }
+
+        .no-scrollbar::-webkit-scrollbar { display: none; }
+        .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+
+        @media (prefers-reduced-motion: reduce) {
+            *, *::before, *::after {
+                animation-duration: .01ms !important;
+                animation-iteration-count: 1 !important;
+                transition-duration: .01ms !important;
+                scroll-behavior: auto !important;
+            }
+            .js .reveal { opacity: 1; transform: none; }
+        }
+    </style>
+</head>
+<body class="font-sans">
+
+    <!-- ==================== 1. 顶部粘性导航栏（常驻申请与进度查询入口） ==================== -->
+    <header id="site-header" class="sticky top-0 z-40 w-full apple-glass border-b border-black/[0.06]">
+        <div class="max-w-[1120px] mx-auto h-[56px] px-5 sm:px-8 flex items-center justify-between">
+            <a href="#top" class="flex items-center gap-2.5 group">
+                <span class="w-6 h-6 rounded-[7px] bg-apple-dark flex items-center justify-center shadow-sm group-hover:bg-apple-blue transition-colors">
+                    <span class="w-2 h-2 rounded-full bg-white"></span>
+                </span>
+                <span class="text-[16px] font-bold tracking-[-0.02em] text-apple-dark">vibe-show<span class="text-apple-muted font-medium">.com</span></span>
+                <span class="hidden lg:inline-flex items-center gap-1.5 text-[11px] font-mono font-medium text-apple-gray bg-black/[0.04] px-2 py-0.5 rounded-md ml-1">
+                    <span class="w-1.5 h-1.5 rounded-full bg-emerald-500"></span>DNS 正常
+                </span>
+            </a>
+
+            <nav id="desktop-nav" class="hidden md:flex items-center gap-2 text-[13px] font-medium text-apple-dark/75">
+                <a href="#top" data-nav="top" class="nav-link is-active">免费申请</a>
+                <a href="#showcase" data-nav="showcase" class="nav-link">作品秀场</a>
+                <a href="#guide" data-nav="guide" class="nav-link">接入指南 & FAQ</a>
+            </nav>
+
+            <div class="flex items-center gap-2 sm:gap-2.5">
+                <button type="button" data-open-workbench="status" class="nav-link hidden sm:inline-flex items-center gap-1 text-[12.5px] font-medium text-apple-gray hover:text-apple-dark">
+                    <svg class="w-3.5 h-3.5 text-apple-blue" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M21 21l-4.35-4.35M17 11a6 6 0 11-12 0 6 6 0 0112 0z"/></svg>
+                    <span>查询进度</span>
+                </button>
+                <button data-open-submit class="bg-apple-blue hover:bg-apple-blueHover text-white text-[12.5px] font-semibold px-4 py-1.5 rounded-full transition-all duration-200 active:scale-95 shadow-sm shadow-apple-blue/20 flex items-center gap-1">
+                    <span>去小红书认领</span>
+                    <span class="text-xs leading-none">↗</span>
+                </button>
+                <button id="menu-toggle" class="md:hidden relative w-9 h-9 -mr-2 rounded-full hover:bg-black/5 transition-colors" aria-label="打开菜单" aria-expanded="false" aria-controls="mobile-menu">
+                    <span class="menu-bar absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-[3px] w-4 h-[1.5px] bg-apple-dark rounded-full"></span>
+                    <span class="menu-bar absolute left-1/2 top-1/2 -translate-x-1/2 translate-y-[3px] w-4 h-[1.5px] bg-apple-dark rounded-full"></span>
+                </button>
+            </div>
+        </div>
+        <div id="mobile-menu" class="md:hidden hidden border-t border-black/[0.06] bg-white/95 backdrop-blur-xl">
+            <nav class="max-w-[1120px] mx-auto px-5 py-2 flex flex-col text-[15px] font-medium text-apple-dark">
+                <a href="#top" data-mobile-nav="top" class="py-3.5 border-b border-black/[0.05] flex items-center justify-between"><span>01 · 免费申请工作台</span></a>
+                <a href="#showcase" data-mobile-nav="showcase" class="py-3.5 border-b border-black/[0.05] flex items-center justify-between"><span>02 · 灵感作品秀场</span></a>
+                <a href="#guide" data-mobile-nav="guide" class="py-3.5 border-b border-black/[0.05] flex items-center justify-between"><span>03 · 接入指南与常见问题</span></a>
+                <button type="button" data-open-workbench="status" class="py-3.5 text-left text-apple-blue flex items-center justify-between"><span>查询申请进度 →</span></button>
+            </nav>
+        </div>
+    </header>
+
+    <!-- ==================== 右侧极简 3 屏页码指示器 ==================== -->
+    <aside id="section-pager" aria-label="页面分屏导航" class="hidden xl:flex fixed right-5 top-1/2 -translate-y-1/2 z-30 flex-col items-end gap-2">
+        <button type="button" id="pager-prev-screen" title="上一屏" aria-label="上一屏" class="w-7 h-7 rounded-full bg-white/85 hover:bg-white border border-black/[0.08] shadow-sm flex items-center justify-center text-apple-gray hover:text-apple-dark transition-all mb-0.5">
+            <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M5 15l7-7 7 7"/></svg>
+        </button>
+        <button type="button" data-page-target="top" class="pager-btn is-active group flex items-center gap-2 px-2.5 py-1 rounded-full bg-white/80 hover:bg-white backdrop-blur-md border border-black/[0.06] shadow-sm transition-all">
+            <span class="text-[11px] font-mono font-semibold text-apple-blue group-hover:text-apple-dark transition-colors">01 申请</span>
+            <span class="pager-dot"></span>
+        </button>
+        <button type="button" data-page-target="showcase" class="pager-btn group flex items-center gap-2 px-2.5 py-1 rounded-full bg-white/80 hover:bg-white backdrop-blur-md border border-black/[0.06] shadow-sm transition-all">
+            <span class="text-[11px] font-mono font-medium text-apple-gray group-hover:text-apple-dark transition-colors">02 秀场</span>
+            <span class="pager-dot"></span>
+        </button>
+        <button type="button" data-page-target="guide" class="pager-btn group flex items-center gap-2 px-2.5 py-1 rounded-full bg-white/80 hover:bg-white backdrop-blur-md border border-black/[0.06] shadow-sm transition-all">
+            <span class="text-[11px] font-mono font-medium text-apple-gray group-hover:text-apple-dark transition-colors">03 指南</span>
+            <span class="pager-dot"></span>
+        </button>
+        <button type="button" id="pager-next-screen" title="下一屏" aria-label="下一屏" class="w-7 h-7 rounded-full bg-white/85 hover:bg-white border border-black/[0.08] shadow-sm flex items-center justify-center text-apple-gray hover:text-apple-dark transition-all mt-0.5">
+            <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M19 9l-7 7-7-7"/></svg>
+        </button>
+    </aside>
+
+    <main id="top">
+        <!-- ==================== 第 01 屏：极简大留白首屏（搭载「极昼光学雕塑」3D 磨砂球体与晨曦柔光曲面背景） ==================== -->
+        <section id="hero-screen" data-screen="top" class="screen-section relative overflow-hidden">
+            <!-- 3D 磨砂球体与晨曦柔光曲面背景舞台层 -->
+            <div id="hero-bg-stage" aria-hidden="true">
+                <div id="hero-bg-photo"></div>
+                <div id="hero-bg-scrim"></div>
+            </div>
+            <div class="hero-grid absolute inset-0 pointer-events-none opacity-60" aria-hidden="true"></div>
+
+            <div class="relative z-10 py-12 md:py-16 px-5 sm:px-8 max-w-[1040px] w-full mx-auto text-center">
+                <!-- 顶部徽章 -->
+                <div id="hero-top-pill" class="reveal inline-flex items-center gap-2 px-4 py-1.5 rounded-full shimmer-pill mb-6 transition-all duration-300">
+                    <span class="pill-dot w-2 h-2 rounded-full bg-apple-blue"></span>
+                    <span class="pill-main-text text-[13px] font-semibold tracking-tight text-apple-dark">专为 Vibe Coder 打造</span>
+                    <span class="pill-div text-apple-border">|</span>
+                    <span class="pill-sub-text text-[12px] font-mono font-medium text-apple-blue">01 / 03 · 免费子域名计划 2.0</span>
+                </div>
+
+                <!-- Apple 旗舰大字号主标题 -->
+                <h1 class="reveal font-extrabold tracking-[-0.038em] leading-[1.07] mb-4 text-[36px] sm:text-[52px] md:text-[64px] lg:text-[68px]" style="--d:60ms">
+                    <span class="hero-gradient-text">你的灵感，值得一个</span><span class="text-gradient-brand">体面的域名</span>
+                </h1>
+
+                <!-- 副标题 + 打字机胶囊 -->
+                <p id="hero-subtitle" class="reveal text-apple-gray text-base sm:text-lg md:text-[19px] font-normal max-w-2xl mx-auto leading-relaxed tracking-[-0.01em] mb-4 transition-colors duration-300" style="--d:120ms">
+                    投稿你的 AI 编程作品，免费领取专属
+                    <span class="inline-flex items-center align-baseline text-apple-dark font-medium font-mono bg-white px-2.5 py-0.5 rounded-lg shadow-sm border border-black/[0.07] whitespace-nowrap"><span id="type-prefix" class="text-apple-blue font-semibold">tarot</span><span class="type-caret" aria-hidden="true"></span><span>.vibe-show.com</span></span>
+                    子域名
+                </p>
+
+                <!-- Before & After 链接对比胶囊 -->
+                <div id="hero-compare-pill" class="reveal inline-flex flex-wrap items-center justify-center gap-2 sm:gap-3 bg-white/80 backdrop-blur-md border border-black/[0.06] rounded-full px-4 py-1.5 mb-8 shadow-sm text-xs transition-all duration-300" style="--d:160ms">
+                    <span class="compare-old inline-flex items-center gap-1.5 text-apple-muted line-through decoration-red-500/70 font-mono">
+                        <span class="w-4 h-4 rounded-full bg-red-500/15 text-red-500 inline-flex items-center justify-center text-[10px] font-bold no-underline">✕</span>
+                        <span>my-<span id="bento-old-prefix">tarot</span>-git-9f8a7b.vercel.app</span>
+                    </span>
+                    <span class="compare-arrow text-apple-muted font-bold">→</span>
+                    <button id="bento-copy-domain" type="button" data-copy="tarot.vibe-show.com" title="点击复制预览域名" class="inline-flex items-center gap-1.5 font-mono font-bold text-apple-dark hover:text-apple-blue transition-colors">
+                        <span class="w-4 h-4 rounded-full bg-apple-blue text-white inline-flex items-center justify-center text-[10px] font-bold">✓</span>
+                        <span>https://<span id="bento-live-prefix" class="text-apple-blue">tarot</span>.vibe-show.com</span>
+                    </button>
+                </div>
+
+                <!-- ==================== 核心：极简首屏查重与小红书认领卡片（只保留单步查重框） ==================== -->
+                <div id="hero-workbench" class="reveal max-w-[900px] mx-auto bg-white rounded-apple sm:rounded-apple-lg shadow-apple-browser bento-card p-6 sm:p-8 md:p-9 text-left relative overflow-hidden" style="--d:220ms">
+                    <!-- 工作台顶栏：申请 / 查进度 切换器 + 核心信任标签 -->
+                    <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-5 mb-6 border-b border-black/[0.06]">
+                        <div class="inline-flex bg-apple-bg p-1 rounded-full self-start" role="tablist">
+                            <button type="button" data-wb-tab="apply" class="wb-tab text-xs sm:text-[13px] font-semibold px-4 py-2 rounded-full transition-all bg-white text-apple-dark shadow-sm flex items-center gap-1.5">
+                                <span class="w-2 h-2 rounded-full bg-apple-blue"></span>
+                                <span>免费申请子域名</span>
+                            </button>
+                            <button type="button" data-wb-tab="status" class="wb-tab text-xs sm:text-[13px] font-semibold px-4 py-2 rounded-full transition-all text-apple-gray hover:text-apple-dark flex items-center gap-1.5">
+                                <svg class="w-3.5 h-3.5 text-apple-blue" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M21 21l-4.35-4.35M17 11a6 6 0 11-12 0 6 6 0 0112 0z"/></svg>
+                                <span>查询审核与解析进度</span>
+                            </button>
+                        </div>
+
+                        <ul class="flex flex-wrap items-center gap-x-4 gap-y-1 text-[12px] text-apple-gray">
+                            <li class="flex items-center gap-1"><svg class="w-3.5 h-3.5 text-emerald-600" fill="none" stroke="currentColor" stroke-width="2.3" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7"/></svg>永久免费持有</li>
+                            <li class="flex items-center gap-1"><svg class="w-3.5 h-3.5 text-emerald-600" fill="none" stroke="currentColor" stroke-width="2.3" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7"/></svg>自动签发 HTTPS</li>
+                            <li class="flex items-center gap-1"><svg class="w-3.5 h-3.5 text-emerald-600" fill="none" stroke="currentColor" stroke-width="2.3" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7"/></svg>24h 人工审核</li>
+                        </ul>
+                    </div>
+
+                    <!-- 视图 A：免费申请子域名（仅保留清爽查重框，点击按钮弹出小红书口令认领窗） -->
+                    <div id="wb-view-apply">
+                        <div class="flex items-center justify-between mb-2.5">
+                            <label for="quick-prefix-input" class="text-xs font-bold uppercase tracking-wider text-apple-dark flex items-center gap-2">
+                                <span class="w-5 h-5 rounded-full bg-apple-blue text-white inline-flex items-center justify-center text-[11px] font-bold">1</span>
+                                <span>输入你想认领的子域名前缀（实时查重）</span>
+                            </label>
+                            <div class="hidden sm:flex items-center gap-1.5 text-[11.5px] text-apple-muted">
+                                <span>试试点击：</span>
+                                <button type="button" data-suggest="notes" data-scope="quick" class="font-mono text-apple-dark hover:text-apple-blue bg-apple-bg px-2 py-0.5 rounded-md transition-colors">notes</button>
+                                <button type="button" data-suggest="canvas" data-scope="quick" class="font-mono text-apple-dark hover:text-apple-blue bg-apple-bg px-2 py-0.5 rounded-md transition-colors">canvas</button>
+                                <button type="button" data-suggest="tarot" data-scope="quick" class="font-mono text-apple-dark hover:text-apple-blue bg-apple-bg px-2 py-0.5 rounded-md transition-colors">tarot(已占)</button>
+                            </div>
+                        </div>
+
+                        <div class="flex flex-col sm:flex-row items-stretch sm:items-center gap-2.5 bg-[#F5F5F7] rounded-2xl p-2 sm:pl-4 sm:pr-2 sm:py-2 border-2 border-transparent focus-within:border-apple-blue focus-within:bg-white transition-all shadow-inner">
+                            <div class="flex items-center flex-1 min-w-0 px-2 sm:px-0 py-1.5 sm:py-0">
+                                <span class="text-apple-muted font-mono text-sm sm:text-base select-none mr-1">https://</span>
+                                <input id="quick-prefix-input" type="text" autocomplete="off" autocapitalize="off" spellcheck="false" placeholder="输入心仪前缀，如 notes" maxlength="30"
+                                    class="bg-transparent text-base sm:text-lg font-mono font-bold text-apple-blue placeholder:font-normal placeholder-apple-muted focus:outline-none w-full min-w-0">
+                                <span class="text-sm sm:text-base font-mono font-semibold text-apple-dark shrink-0 ml-1">.vibe-show.com</span>
+                            </div>
+                            <button id="quick-claim-btn" type="button" class="bg-apple-blue hover:bg-apple-blueHover text-white text-sm font-semibold px-6 py-3 rounded-xl transition-all shadow-md shadow-apple-blue/20 active:scale-[0.98] shrink-0 flex items-center justify-center gap-1.5">
+                                <span>去小红书认领</span>
+                                <span class="text-base leading-none">↗</span>
+                            </button>
+                        </div>
+
+                        <div class="mt-2.5 flex items-center justify-between px-1">
+                            <div id="quick-prefix-status" class="min-h-[22px] text-[12.5px]" aria-live="polite"></div>
+                        </div>
+                    </div>
+
+                    <!-- 视图 B：查询审核与解析进度（原位切换，0 滚动直查） -->
+                    <div id="wb-view-status" class="hidden">
+                        <form id="status-form" class="flex flex-col sm:flex-row gap-3">
+                            <label class="flex items-center bg-[#F5F5F7] rounded-2xl px-4 py-3 flex-1 min-w-0 border-2 border-transparent focus-within:border-apple-blue focus-within:bg-white transition-all">
+                                <span class="text-apple-muted font-mono text-sm mr-1">https://</span>
+                                <input id="status-input" type="text" autocomplete="off" autocapitalize="off" spellcheck="false" placeholder="输入在小红书申请的前缀，如 tarot / pixel / haiku" maxlength="30"
+                                    class="bg-transparent text-base font-mono font-semibold text-apple-dark placeholder:font-normal placeholder-apple-muted focus:outline-none w-full min-w-0">
+                                <span class="text-sm font-mono font-medium text-apple-gray shrink-0">.vibe-show.com</span>
+                            </label>
+                            <button type="submit" class="bg-apple-dark hover:bg-black text-white text-sm font-semibold px-7 py-3 rounded-2xl transition-colors shrink-0">
+                                查询实时进度
+                            </button>
+                        </form>
+
+                        <div class="mt-3 flex flex-wrap items-center justify-between gap-2 text-[12px] text-apple-muted">
+                            <div class="flex flex-wrap items-center gap-2">
+                                <span>示例进度：</span>
+                                <button type="button" data-status-demo="tarot" class="font-mono text-apple-dark hover:text-apple-blue bg-apple-bg px-3 py-1 rounded-full transition-colors">tarot（已上线）</button>
+                                <button type="button" data-status-demo="pixel" class="font-mono text-apple-dark hover:text-apple-blue bg-apple-bg px-3 py-1 rounded-full transition-colors">pixel（待平台绑定）</button>
+                                <button type="button" data-status-demo="haiku" class="font-mono text-apple-dark hover:text-apple-blue bg-apple-bg px-3 py-1 rounded-full transition-colors">haiku（人工审核中）</button>
+                            </div>
+                            <button type="button" data-wb-tab="apply" class="text-apple-blue font-semibold hover:underline">← 返回查重与认领</button>
+                        </div>
+
+                        <div id="status-result" class="empty:hidden mt-5" aria-live="polite"></div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- ==================== 第 02 屏：灵感作品秀场（单行 3 席画廊分页，彻底告别信息拥挤与纵向截断） ==================== -->
+        <section id="showcase" data-screen="showcase" class="screen-section screen-section-alt py-12 md:py-16 px-5 sm:px-8">
+            <div class="max-w-[1120px] w-full mx-auto">
+                <div class="reveal flex flex-col md:flex-row md:items-end justify-between mb-8 gap-5">
+                    <div>
+                        <p class="text-apple-blue text-xs font-mono font-bold tracking-[0.15em] uppercase mb-2">02 / 03 · Vibe Showcase</p>
+                        <h2 class="text-3xl sm:text-5xl font-bold tracking-[-0.03em] text-apple-dark">正在发光的灵感秀场</h2>
+                    </div>
+                    <div class="flex items-center gap-2 overflow-x-auto no-scrollbar pb-1 -mx-5 px-5 md:mx-0 md:px-0">
+                        <button data-filter="all" class="showcase-tab text-xs sm:text-[13px] font-medium px-4 py-2 rounded-full transition-all shrink-0 bg-apple-dark text-white">全部精选 <span id="tab-count-all" class="opacity-65 ml-0.5 font-mono">11</span></button>
+                        <button data-filter="tool" class="showcase-tab text-xs sm:text-[13px] font-medium px-4 py-2 rounded-full transition-all shrink-0 bg-white text-apple-gray hover:text-apple-dark shadow-sm border border-black/[0.04]">效率工具 <span id="tab-count-tool" class="opacity-65 ml-0.5 font-mono">4</span></button>
+                        <button data-filter="creative" class="showcase-tab text-xs sm:text-[13px] font-medium px-4 py-2 rounded-full transition-all shrink-0 bg-white text-apple-gray hover:text-apple-dark shadow-sm border border-black/[0.04]">创意玩具 <span id="tab-count-creative" class="opacity-65 ml-0.5 font-mono">4</span></button>
+                        <button data-filter="game" class="showcase-tab text-xs sm:text-[13px] font-medium px-4 py-2 rounded-full transition-all shrink-0 bg-white text-apple-gray hover:text-apple-dark shadow-sm border border-black/[0.04]">独立小游戏 <span id="tab-count-game" class="opacity-65 ml-0.5 font-mono">3</span></button>
+                    </div>
+                </div>
+
+                <!-- 单行 3 列舒展画廊（每页仅展示 3 张大卡片，一屏完整呈现） -->
+                <div id="showcase-grid" class="reveal grid grid-cols-1 md:grid-cols-3 gap-6"></div>
+
+                <!-- 秀场分页控制栏 -->
+                <div id="showcase-pagination" class="reveal mt-7 pt-5 border-t border-black/[0.06] flex flex-col sm:flex-row items-center justify-between gap-4">
+                    <div class="flex flex-wrap items-center gap-x-4 gap-y-1 text-[13px] text-apple-gray">
+                        <span id="showcase-page-info" class="font-medium text-apple-dark">第 1 / 4 页 · 显示第 1–3 个席位</span>
+                        <button type="button" data-open-submit class="text-apple-blue font-semibold hover:underline inline-flex items-center gap-1">
+                            <span>+ 去小红书留言入驻秀场</span>
+                        </button>
+                    </div>
+                    <div class="flex items-center gap-2">
+                        <button type="button" id="showcase-prev" class="px-4 py-2 rounded-full text-xs font-semibold bg-white hover:bg-apple-surface text-apple-dark border border-black/[0.08] shadow-sm disabled:opacity-40 disabled:pointer-events-none transition-all flex items-center gap-1">
+                            <span>← 上一页</span>
+                        </button>
+                        <div id="showcase-page-nums" class="flex items-center gap-1.5"></div>
+                        <button type="button" id="showcase-next" class="px-4 py-2 rounded-full text-xs font-semibold bg-white hover:bg-apple-surface text-apple-dark border border-black/[0.08] shadow-sm disabled:opacity-40 disabled:pointer-events-none transition-all flex items-center gap-1">
+                            <span>下一页 →</span>
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- ==================== 第 03 屏：接入指南 & 常见问题（采用分段 Tab 切换视图，单屏只展示一层内容） ==================== -->
+        <section id="guide" data-screen="guide" class="screen-section py-12 md:py-16 px-5 sm:px-8">
+            <div class="max-w-[1120px] w-full mx-auto">
+                <div class="reveal flex flex-col md:flex-row md:items-end justify-between mb-8 gap-5">
+                    <div>
+                        <p class="text-apple-blue text-xs font-mono font-bold tracking-[0.15em] uppercase mb-2">03 / 03 · Setup Guide & FAQ</p>
+                        <h2 class="text-3xl sm:text-5xl font-bold tracking-[-0.03em] text-apple-dark">极速接入与常见问题</h2>
+                    </div>
+
+                    <!-- 第 03 屏视图切换器：避免将 DNS 终端与 FAQ 纵向堆叠导致信息过载 -->
+                    <div class="inline-flex bg-black/[0.05] p-1 rounded-full self-start md:self-auto" role="tablist">
+                        <button type="button" data-guide-tab="setup" class="guide-tab text-xs sm:text-[13px] font-semibold px-5 py-2 rounded-full transition-all bg-white text-apple-dark shadow-sm flex items-center gap-1.5">
+                            <span>⚡ 三步接入与 DNS 预览</span>
+                        </button>
+                        <button type="button" data-guide-tab="faq" class="guide-tab text-xs sm:text-[13px] font-semibold px-5 py-2 rounded-full transition-all text-apple-gray hover:text-apple-dark flex items-center gap-1.5">
+                            <span>❓ 常见问题解答 (5)</span>
+                        </button>
+                    </div>
+                </div>
+
+                <!-- 视图 1：三步上线流程 + 平台 DNS 配置终端（默认展示，仅占一排） -->
+                <div id="guide-view-setup" class="reveal grid grid-cols-1 lg:grid-cols-12 gap-6 items-stretch">
+                    <div class="lg:col-span-5 bg-white rounded-apple p-6 sm:p-8 shadow-apple bento-card flex flex-col justify-between">
+                        <div>
+                            <span class="text-xs font-semibold uppercase tracking-wider text-apple-blue">1-Minute Onboarding</span>
+                            <h3 class="text-xl sm:text-2xl font-bold tracking-tight text-apple-dark mt-1 mb-4">三步完成上线</h3>
+
+                            <ol class="space-y-3.5 mb-6 text-[13.5px]">
+                                <li class="flex items-start gap-3">
+                                    <span class="w-6 h-6 rounded-full bg-apple-bg text-apple-dark font-mono text-xs font-bold flex items-center justify-center shrink-0 mt-0.5">01</span>
+                                    <div><b class="text-apple-dark">部署作品</b>：<span class="text-apple-gray">将创意网页部署至 Vercel / GitHub Pages / Lovable 等任意平台。</span></div>
+                                </li>
+                                <li class="flex items-start gap-3">
+                                    <span class="w-6 h-6 rounded-full bg-[#FFF0F2] text-[#FF2442] font-mono text-xs font-bold flex items-center justify-center shrink-0 mt-0.5">02</span>
+                                    <div><b class="text-apple-dark">小红书留言认领</b>：<span class="text-apple-gray">在首屏查重后，一键复制口令去小红书置顶笔记评论区留言。</span></div>
+                                </li>
+                                <li class="flex items-start gap-3">
+                                    <span class="w-6 h-6 rounded-full bg-emerald-50 text-emerald-700 font-mono text-xs font-bold flex items-center justify-center shrink-0 mt-0.5">03</span>
+                                    <div><b class="text-apple-dark">零配置边缘反代生效</b>：<span class="text-apple-gray">无需在部署平台后台绑域名，审核通过即由 Cloudflare Worker 自动反代并签发 HTTPS。</span></div>
+                                </li>
+                            </ol>
+                        </div>
+
+                        <div>
+                            <p class="text-xs font-semibold text-apple-gray mb-2.5">切换你的部署平台，预览边缘反代路由配置：</p>
+                            <div class="flex flex-wrap gap-2" role="tablist">
+                                <button data-platform="vercel" class="platform-tab flex items-center gap-1.5 px-3.5 py-2 rounded-xl text-[13px] font-medium transition-all bg-apple-dark text-white shadow-sm">
+                                    <svg class="w-3 h-3" viewBox="0 0 24 24" fill="currentColor"><path d="M12 3l10 18H2z"/></svg><span>Vercel</span>
+                                </button>
+                                <button data-platform="netlify" class="platform-tab flex items-center gap-1.5 px-3.5 py-2 rounded-xl text-[13px] font-medium transition-all bg-apple-bg text-apple-dark/80 hover:bg-black/[0.06]">
+                                    <span class="w-2 h-2 rotate-45 rounded-[1px] bg-current"></span><span>Netlify</span>
+                                </button>
+                                <button data-platform="github" class="platform-tab flex items-center gap-1.5 px-3.5 py-2 rounded-xl text-[13px] font-medium transition-all bg-apple-bg text-apple-dark/80 hover:bg-black/[0.06]">
+                                    <span>GitHub Pages</span>
+                                </button>
+                                <button data-platform="cloudflare" class="platform-tab flex items-center gap-1.5 px-3.5 py-2 rounded-xl text-[13px] font-medium transition-all bg-apple-bg text-apple-dark/80 hover:bg-black/[0.06]">
+                                    <span>Cloudflare</span>
+                                </button>
+                                <button data-platform="other" class="platform-tab flex items-center gap-1.5 px-3.5 py-2 rounded-xl text-[13px] font-medium transition-all bg-apple-bg text-apple-dark/80 hover:bg-black/[0.06]">
+                                    <span>✦ Lovable / Bolt</span>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="lg:col-span-7 bg-[#16171A] rounded-apple dark-specular overflow-hidden flex flex-col min-h-[320px]">
+                        <div class="flex items-center justify-between px-5 py-3 border-b border-white/[0.08] bg-[#1D1E22]">
+                            <div class="flex items-center gap-2">
+                                <span class="w-3 h-3 rounded-full bg-[#FF5F56]/80"></span>
+                                <span class="w-3 h-3 rounded-full bg-[#FFBD2E]/80"></span>
+                                <span class="w-3 h-3 rounded-full bg-[#28C840]/80"></span>
+                            </div>
+                            <span class="font-mono text-[11px] text-white/45">vibe-show · dns provisioning</span>
+                            <button id="guide-copy-domain" type="button" data-copy="tarot.vibe-show.com" class="text-[11px] font-mono font-medium text-white/80 hover:text-white bg-white/10 hover:bg-white/15 px-3 py-1 rounded-full transition-colors">复制 tarot.vibe-show.com</button>
+                        </div>
+                        <div id="platform-panel" class="swap-target p-6 sm:p-7 font-mono text-[13px] leading-6 text-white/85 flex-1"></div>
+                    </div>
+                </div>
+
+                <!-- 视图 2：常见问题解答 + 小红书认领召唤卡（点击顶部「常见问题解答」Tab 切换显示） -->
+                <div id="guide-view-faq" class="hidden grid grid-cols-1 lg:grid-cols-12 gap-6 items-stretch">
+                    <div class="lg:col-span-5 bg-[#16171A] rounded-apple p-7 sm:p-8 text-left relative overflow-hidden dark-specular flex flex-col justify-between">
+                        <div class="absolute -top-24 -right-10 w-56 h-56 bg-apple-blue/25 rounded-full blur-3xl pointer-events-none"></div>
+                        <div>
+                            <span class="inline-flex items-center gap-2 text-[11px] font-semibold uppercase tracking-widest text-white/75 bg-white/[0.08] border border-white/10 px-3 py-1 rounded-full mb-4">
+                                <span class="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span>
+                                <span>已分配 428+ 个灵感前缀</span>
+                            </span>
+                            <h3 class="text-2xl sm:text-3xl font-extrabold tracking-tight text-white leading-tight mb-3">
+                                好前缀手慢无，<br>去小红书留言占坑
+                            </h3>
+                            <p class="text-white/65 text-sm leading-relaxed mb-6">
+                                目前统一通过小红书官方笔记评论区发放子域名。生成口令后粘贴留言，即可免费锁定属于你的 <span class="text-white font-mono">.vibe-show.com</span>。
+                            </p>
+                        </div>
+
+                        <div>
+                            <div class="flex flex-wrap items-center gap-3 mb-6">
+                                <button data-open-submit class="bg-[#FF2442] hover:bg-[#E61E3A] text-white text-sm font-bold py-3 px-6 rounded-full transition-all shadow-md active:scale-[0.98]">
+                                    生成小红书认领口令 ↗
+                                </button>
+                                <a href="#top" class="text-xs font-medium text-white/75 hover:text-white px-3 py-2 transition-colors">
+                                    回到首屏查重 ↑
+                                </a>
+                            </div>
+                            <div class="pt-4 border-t border-white/10">
+                                <p class="text-[10px] uppercase tracking-[0.18em] text-white/35 font-mono font-semibold mb-2.5">Recently Claimed Subdomains</p>
+                                <div class="marquee overflow-hidden">
+                                    <div id="cta-marquee-track" class="marquee-track gap-2.5"></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div id="faq" class="lg:col-span-7 bg-white rounded-apple shadow-apple bento-card divide-y divide-black/[0.06] px-6 sm:px-8 flex flex-col justify-center">
+                        <details class="faq group py-4" open>
+                            <summary class="flex items-center justify-between gap-4 text-[15px] font-semibold tracking-tight text-apple-dark">
+                                为什么必须通过小红书申请？网页能直接提交吗？
+                                <span class="faq-icon w-6 h-6 rounded-full bg-apple-bg text-apple-dark flex items-center justify-center shrink-0 text-base leading-none">+</span>
+                            </summary>
+                            <p class="faq-body text-[13.5px] text-apple-gray leading-relaxed mt-2.5 pr-8">为防止机器脚本批量恶意抢注简短前缀，目前网页仅提供实时查重与口令生成，暂不支持直接在线提交。请复制口令前往小红书置顶笔记评论区留言，人工审核后 24 小时内直接回复并开通。</p>
+                        </details>
+                        <details class="faq group py-4">
+                            <summary class="flex items-center justify-between gap-4 text-[15px] font-semibold tracking-tight text-apple-dark">
+                                真的完全免费吗？以后会收费吗？
+                                <span class="faq-icon w-6 h-6 rounded-full bg-apple-bg text-apple-dark flex items-center justify-center shrink-0 text-base leading-none">+</span>
+                            </summary>
+                            <p class="faq-body text-[13.5px] text-apple-gray leading-relaxed mt-2.5 pr-8">子域名的申请与使用完全免费，已分配的子域名不会收费。只要作品保持可访问、内容合规，就可以长期持有。</p>
+                        </details>
+                        <details class="faq group py-4">
+                            <summary class="flex items-center justify-between gap-4 text-[15px] font-semibold tracking-tight text-apple-dark">
+                                支持哪些部署平台？需要在平台后台绑定自定义域名吗？
+                                <span class="faq-icon w-6 h-6 rounded-full bg-apple-bg text-apple-dark flex items-center justify-center shrink-0 text-base leading-none">+</span>
+                            </summary>
+                            <p class="faq-body text-[13.5px] text-apple-gray leading-relaxed mt-2.5 pr-8">支持所有主流平台（Vercel、Netlify、GitHub Pages、Cloudflare Pages、Lovable、Bolt、Replit 等）。全站统一采用 Cloudflare Worker 边缘反向代理，<b>你完全不需要在部署平台后台绑定自定义域名或配置 DNS</b>，提供作品原链接即可零配置生效 HTTPS。</p>
+                        </details>
+                        <details class="faq group py-4">
+                            <summary class="flex items-center justify-between gap-4 text-[15px] font-semibold tracking-tight text-apple-dark">
+                                需要备案或实名认证吗？
+                                <span class="faq-icon w-6 h-6 rounded-full bg-apple-bg text-apple-dark flex items-center justify-center shrink-0 text-base leading-none">+</span>
+                            </summary>
+                            <p class="faq-body text-[13.5px] text-apple-gray leading-relaxed mt-2.5 pr-8">不需要购买域名或做实名认证。作品部署在 Vercel、Netlify 等海外平台时通常无需 ICP 备案；暂不支持指向中国大陆境内未备案服务器。</p>
+                        </details>
+                        <details class="faq group py-4">
+                            <summary class="flex items-center justify-between gap-4 text-[15px] font-semibold tracking-tight text-apple-dark">
+                                在小红书评论区留言后，怎么知道审核结果？
+                                <span class="faq-icon w-6 h-6 rounded-full bg-apple-bg text-apple-dark flex items-center justify-center shrink-0 text-base leading-none">+</span>
+                            </summary>
+                            <p class="faq-body text-[13.5px] text-apple-gray leading-relaxed mt-2.5 pr-8">我们会在小红书评论区直接回复你配置结果，你也可以随时回到本页首屏切换至「查询审核与解析进度」输入前缀查看实时状态。</p>
+                        </details>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <!-- ==================== Apple 风格极简页脚 ==================== -->
+    <footer class="border-t border-black/[0.06] py-10 px-5 sm:px-8 text-xs text-apple-gray">
+        <div class="max-w-[1120px] mx-auto flex flex-col gap-6">
+            <div class="flex flex-col sm:flex-row items-center justify-between gap-4">
+                <div class="flex items-center gap-2">
+                    <span class="w-2 h-2 rounded-full bg-apple-dark"></span>
+                    <span class="font-semibold text-apple-dark">vibe-show.com</span>
+                    <span class="hidden sm:inline">— Crafted in Cupertino Style for Vibe Coders.</span>
+                </div>
+                <div class="flex flex-wrap items-center justify-center gap-x-6 gap-y-2">
+                    <a href="#showcase" class="hover:text-apple-dark transition-colors">作品秀场</a>
+                    <a href="#guide" class="hover:text-apple-dark transition-colors">接入指南</a>
+                    <a href="#faq" class="hover:text-apple-dark transition-colors">常见问题</a>
+                    <button type="button" data-open-workbench="status" class="hover:text-apple-dark transition-colors">查询进度</button>
+                    <button data-open-submit class="text-apple-blue font-medium hover:underline">申请子域名</button>
+                </div>
+            </div>
+            <div class="flex flex-col sm:flex-row items-center justify-between gap-3 pt-6 border-t border-black/[0.05]">
+                <span>© 2026 vibe-show.com · 子域名由社区免费提供，作品内容由创作者自行负责</span>
+                <div class="flex items-center gap-5">
+                    <button type="button" data-open-policy="terms" class="hover:text-apple-dark transition-colors">使用规范</button>
+                    <button type="button" data-open-policy="privacy" class="hover:text-apple-dark transition-colors">隐私说明</button>
+                    <a href="mailto:abuse@vibe-show.com?subject=%E4%B8%BE%E6%8A%A5%E6%BB%A5%E7%94%A8" class="hover:text-apple-dark transition-colors">举报滥用</a>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <!-- ==================== 小红书专属认领弹窗（网页暂不支持直接提交，统一生成口令前往小红书留言认领） ==================== -->
+    <div id="submit-modal" class="sheet fixed inset-0 z-50 flex items-end sm:items-center justify-center sm:p-6" role="dialog" aria-modal="true" aria-labelledby="submit-title" aria-hidden="true">
+        <div data-close-modal class="sheet-backdrop absolute inset-0 bg-black/40 backdrop-blur-sm"></div>
+
+        <div class="sheet-panel relative z-10 bg-white w-full sm:max-w-[540px] rounded-t-[28px] sm:rounded-[28px] shadow-apple-sheet max-h-[92dvh] overflow-y-auto no-scrollbar">
+            <div class="sm:hidden flex justify-center pt-2.5"><span class="w-10 h-1.5 rounded-full bg-black/10"></span></div>
+
+            <div class="p-6 sm:p-8">
+                <div class="flex items-start justify-between mb-4">
+                    <div>
+                        <span class="inline-flex items-center gap-1.5 text-[11px] font-bold uppercase tracking-wider text-white bg-[#FF2442] px-2.5 py-0.5 rounded-full">小红书官方唯一认领通道</span>
+                        <h3 id="submit-title" class="text-2xl font-bold tracking-tight text-apple-dark mt-2">复制口令，去小红书留言认领</h3>
+                    </div>
+                    <button data-close-modal class="w-8 h-8 rounded-full bg-apple-bg hover:bg-gray-200 flex items-center justify-center text-apple-gray hover:text-apple-dark transition-colors" aria-label="关闭">
+                        <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" stroke-width="2.4" viewBox="0 0 24 24"><path stroke-linecap="round" d="M6 6l12 12M18 6L6 18"/></svg>
+                    </button>
+                </div>
+
+                <!-- 渠道说明提示条 -->
+                <div class="bg-[#FFF8F9] border border-rose-500/15 rounded-2xl px-4 py-3 mb-5 text-[12.5px] text-apple-dark/85 leading-relaxed flex items-start gap-2.5">
+                    <span class="text-[#FF2442] font-bold shrink-0 mt-0.5">📌</span>
+                    <span>目前网页暂不支持直接在线提交。请确认下方前缀可用后，<b>一键复制认领口令前往小红书置顶笔记评论区留言</b>，24 小时内人工审核回复并自动配置 DNS。</span>
+                </div>
+
+                <!-- 口令生成视图 -->
+                <div id="submit-form-view">
+                    <form id="vibe-submit-form" class="space-y-4">
+                        <!-- 1. 确认前缀 -->
+                        <div>
+                            <label for="modal-prefix-input" class="block text-xs font-semibold text-apple-dark mb-1.5">1. 确认你想认领的子域名前缀 *</label>
+                            <div id="modal-prefix-box" class="flex items-center bg-apple-bg rounded-2xl px-4 py-3 border border-transparent focus-within:border-apple-blue focus-within:bg-white transition-all">
+                                <span class="text-apple-muted font-mono text-sm mr-1">https://</span>
+                                <input id="modal-prefix-input" name="prefix" type="text" required autocomplete="off" autocapitalize="off" spellcheck="false" maxlength="30" placeholder="例如 notes / canvas"
+                                    class="bg-transparent font-mono text-sm font-semibold text-apple-blue placeholder:font-normal placeholder-apple-muted focus:outline-none w-full min-w-0">
+                                <span class="font-mono text-sm font-medium text-apple-dark shrink-0">.vibe-show.com</span>
+                            </div>
+                            <div id="modal-prefix-status" class="mt-1.5 min-h-[20px] text-[12px] px-1" aria-live="polite"></div>
+                        </div>
+
+                        <!-- 2. 选填作品信息（实时同步到下方口令） -->
+                        <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                            <div>
+                                <label for="f-name" class="block text-xs font-semibold text-apple-dark mb-1.5">2. 作品名称（选填，自动同步口令）</label>
+                                <input id="f-name" name="name" type="text" maxlength="30" placeholder="例如 CyberTarot 赛博塔罗"
+                                    class="w-full bg-apple-bg rounded-xl px-3.5 py-2.5 text-[13px] text-apple-dark placeholder-apple-muted focus:outline-none focus:bg-white border border-transparent focus:border-apple-blue transition-all">
+                            </div>
+                            <div>
+                                <label for="f-url" class="block text-xs font-semibold text-apple-dark mb-1.5">原部署地址（选填，自动同步口令）</label>
+                                <input id="f-url" name="url" type="text" placeholder="https://your-project.vercel.app"
+                                    class="w-full bg-apple-bg rounded-xl px-3.5 py-2.5 font-mono text-[12.5px] text-apple-dark placeholder-apple-muted focus:outline-none focus:bg-white border border-transparent focus:border-apple-blue transition-all">
+                            </div>
+                        </div>
+
+                        <!-- 3. 实时生成的标准小红书留言口令 -->
+                        <div class="bg-[#F5F5F7] rounded-2xl p-4 border border-black/[0.06]">
+                            <div class="flex items-center justify-between mb-2">
+                                <span class="text-xs font-bold text-apple-dark">3. 你的专属小红书评论区口令</span>
+                                <button type="button" data-copy-from="#comment-template" class="text-xs font-semibold text-apple-blue hover:text-apple-blueHover flex items-center gap-1 transition-colors">
+                                    <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><rect x="9" y="9" width="11" height="11" rx="2"/><path d="M5 15V6a2 2 0 012-2h9"/></svg>
+                                    <span>仅复制口令</span>
+                                </button>
+                            </div>
+<pre id="comment-template" class="bg-white rounded-xl p-3.5 border border-black/[0.05] font-mono text-[12.5px] leading-6 text-apple-dark whitespace-pre-wrap select-all">#申请子域名 <span id="xhs-tpl-prefix" class="text-apple-blue font-bold">notes</span>
+作品：<span id="xhs-tpl-name">我的 AI 编程作品</span>
+链接：<span id="xhs-tpl-url">https://my-notes.vercel.app</span></pre>
+                        </div>
+
+                        <!-- 4. 一键复制并跳转小红书 -->
+                        <div class="pt-1">
+                            <button id="submit-btn" type="submit" class="w-full bg-[#FF2442] hover:bg-[#E61E3A] text-white font-semibold py-3.5 rounded-full shadow-md shadow-rose-500/20 transition-all active:scale-[0.99] flex items-center justify-center gap-2 text-[15px]">
+                                <span id="submit-btn-text">复制口令并前往小红书留言 ↗</span>
+                            </button>
+                            <p class="text-[11.5px] text-apple-gray text-center mt-2.5">
+                                点击后将自动复制上方口令并打开小红书笔记，粘贴发送即视为遵守<button type="button" data-open-policy="terms" class="text-apple-blue hover:underline font-medium">《子域名使用规范》</button>
+                            </p>
+                        </div>
+                    </form>
+                </div>
+
+                <!-- 复制成功并已跳转小红书后的引导视图 -->
+                <div id="submit-success-view" class="hidden text-center pt-2">
+                    <div id="success-check" class="w-16 h-16 rounded-full bg-emerald-500/10 text-emerald-600 mx-auto mb-4 flex items-center justify-center">
+                        <svg class="w-8 h-8" fill="none" stroke="currentColor" stroke-width="2.6" viewBox="0 0 24 24"><path class="check-draw" stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7"/></svg>
+                    </div>
+                    <h4 class="text-2xl font-bold tracking-tight text-apple-dark mb-2">认领口令已复制到剪贴板！</h4>
+                    <p class="text-[13.5px] text-apple-gray mb-4">请前往小红书置顶笔记评论区直接粘贴发送，人工审核后会在评论区回复你。</p>
+
+                    <button id="reserved-domain-btn" type="button" class="inline-flex items-center gap-2 font-mono text-[15px] font-semibold text-apple-blue bg-apple-blue/10 hover:bg-apple-blue/15 px-4 py-2 rounded-full transition-colors">
+                        <span id="reserved-domain">notes.vibe-show.com</span>
+                        <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><rect x="9" y="9" width="11" height="11" rx="2"/><path d="M5 15V6a2 2 0 012-2h9"/></svg>
+                    </button>
+
+                    <div class="mt-6 flex flex-col sm:flex-row items-center justify-center gap-3">
+                        <a id="xhs-modal-direct-link" href="https://www.xiaohongshu.com/" target="_blank" rel="noopener" class="w-full sm:w-auto bg-[#FF2442] hover:bg-[#E61E3A] text-white text-sm font-semibold px-6 py-3 rounded-full transition-all shadow-sm">
+                            再次打开小红书笔记 ↗
+                        </a>
+                        <button type="button" data-close-modal class="w-full sm:w-auto bg-apple-bg hover:bg-gray-200 text-apple-dark text-sm font-semibold px-6 py-3 rounded-full transition-colors">
+                            我已留言，关闭窗口
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- ==================== 使用规范与隐私说明弹窗（独立层级 z-[55]，不打断填表） ==================== -->
+    <div id="policy-modal" class="sheet fixed inset-0 z-[55] flex items-end sm:items-center justify-center sm:p-6" role="dialog" aria-modal="true" aria-labelledby="policy-title" aria-hidden="true">
+        <div data-close-policy class="sheet-backdrop absolute inset-0 bg-black/40 backdrop-blur-sm"></div>
+
+        <div class="sheet-panel relative z-10 bg-white w-full sm:max-w-[520px] rounded-t-[28px] sm:rounded-[28px] shadow-apple-sheet max-h-[86dvh] overflow-y-auto no-scrollbar">
+            <div class="sm:hidden flex justify-center pt-2.5"><span class="w-10 h-1.5 rounded-full bg-black/10"></span></div>
+
+            <div class="p-6 sm:p-8">
+                <div class="flex items-start justify-between mb-5">
+                    <div>
+                        <span class="text-xs font-semibold uppercase tracking-wider text-apple-blue">Community Guidelines & Privacy</span>
+                        <h3 id="policy-title" class="text-xl sm:text-2xl font-bold tracking-tight text-apple-dark mt-0.5">使用规范与隐私说明</h3>
+                    </div>
+                    <button type="button" data-close-policy class="w-8 h-8 rounded-full bg-apple-bg hover:bg-gray-200 flex items-center justify-center text-apple-gray hover:text-apple-dark transition-colors" aria-label="关闭">
+                        <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" stroke-width="2.4" viewBox="0 0 24 24"><path stroke-linecap="round" d="M6 6l12 12M18 6L6 18"/></svg>
+                    </button>
+                </div>
+
+                <!-- 切换标签 -->
+                <div class="flex gap-1.5 bg-apple-bg p-1 rounded-full mb-6">
+                    <button type="button" data-policy-tab="terms" class="policy-tab flex-1 text-xs font-semibold py-2 rounded-full transition-all bg-white text-apple-dark shadow-sm">子域名使用规范</button>
+                    <button type="button" data-policy-tab="privacy" class="policy-tab flex-1 text-xs font-semibold py-2 rounded-full transition-all text-apple-gray hover:text-apple-dark">隐私与数据说明</button>
+                </div>
+
+                <!-- 规范内容 -->
+                <div id="policy-view-terms" class="space-y-4 text-[13.5px] text-apple-gray leading-relaxed">
+                    <div class="bg-apple-bg rounded-2xl p-4">
+                        <h4 class="text-xs font-bold text-apple-dark uppercase tracking-wider mb-1.5">1. 适用作品范围</h4>
+                        <p>本计划面向 AI 编程创作者（Vibe Coder）的效率工具、创意网页、独立小游戏与个人作品集，要求站点可正常访问且具备实际交互内容。</p>
+                    </div>
+                    <div class="bg-apple-bg rounded-2xl p-4">
+                        <h4 class="text-xs font-bold text-apple-dark uppercase tracking-wider mb-1.5">2. 严禁内容与合规红线</h4>
+                        <p>严禁用于仿冒钓鱼、博彩、色情低俗、恶意软件分发、纯广告导流或侵犯他人知识产权的内容；暂不支持将子域名指向中国大陆境内未备案服务器。</p>
+                    </div>
+                    <div class="bg-apple-bg rounded-2xl p-4">
+                        <h4 class="text-xs font-bold text-apple-dark uppercase tracking-wider mb-1.5">3. 配额与防劫持回收机制</h4>
+                        <p>每位创作者最多同时持有 3 个子域名。若审核通过后 14 天内未完成平台绑定、或站点连续 30 天无法访问，系统将发信提醒并自动回收及清理 DNS 记录，防止悬挂解析被第三方劫持。</p>
+                    </div>
+                </div>
+
+                <!-- 隐私内容 -->
+                <div id="policy-view-privacy" class="hidden space-y-4 text-[13.5px] text-apple-gray leading-relaxed">
+                    <div class="bg-apple-bg rounded-2xl p-4">
+                        <h4 class="text-xs font-bold text-apple-dark uppercase tracking-wider mb-1.5">1. 最小化信息收集</h4>
+                        <p>我们仅收集完成 DNS 解析与秀场展示所必需的作品链接、作品名称、署名及联系邮箱，不收集任何创作者账号密码或平台密钥。</p>
+                    </div>
+                    <div class="bg-apple-bg rounded-2xl p-4">
+                        <h4 class="text-xs font-bold text-apple-dark uppercase tracking-wider mb-1.5">2. 邮箱使用承诺</h4>
+                        <p>你的联系邮箱仅用于发送审核结果、DNS 绑定指引与域名状态预警通知，绝不会在前端页面公开展示，也不会用于营销推广或向第三方出售。</p>
+                    </div>
+                    <div class="bg-apple-bg rounded-2xl p-4">
+                        <h4 class="text-xs font-bold text-apple-dark uppercase tracking-wider mb-1.5">3. 随时修改与注销</h4>
+                        <p>你可以随时发信至 <span class="font-mono text-apple-dark">hi@vibe-show.com</span> 申请更新源站解析目标、从首页秀场隐藏卡片或彻底注销子域名。</p>
+                    </div>
+                </div>
+
+                <button type="button" data-close-policy class="mt-6 w-full bg-apple-dark hover:bg-black text-white text-sm font-semibold py-3 rounded-full transition-colors">我已了解</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Toast -->
+    <div id="toast" class="fixed left-1/2 bottom-8 z-[60] apple-dark-glass text-white text-[13px] font-medium px-4 py-2.5 rounded-full shadow-lg pointer-events-none flex items-center gap-2" role="status">
+        <svg class="w-4 h-4 text-emerald-400" fill="none" stroke="currentColor" stroke-width="2.4" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7"/></svg>
+        <span id="toast-text">已复制</span>
+    </div>
+
+    <!-- ==================== 交互逻辑脚本 ==================== -->
+    <script>
+        const CONFIG = {
+            domain: 'vibe-show.com',
+            xhsNoteUrl: 'https://www.xiaohongshu.com/',
+            demoInterval: 6000
+        };
+
+        // 原型演示数据：上线后由接口 /api/prefix/check 与 /api/applications/status 提供
+        const MOCK_TAKEN = {
+            tarot: '@星河Coder', focus: '@林深Vibe', pixel: '@Momo_AI', synth: '@Kev_Audio', bill: '@阿泽Design',
+            haiku: '@小野Vibe', todo: '@Jun', chat: '@Leo', music: '@Kev_Audio', resume: '@Ada'
+        };
+        const RESERVED = new Set([
+            'www', 'api', 'admin', 'app', 'mail', 'smtp', 'imap', 'pop', 'mx', 'ns1', 'ns2', 'cdn', 'static', 'assets',
+            'img', 'docs', 'blog', 'status', 'help', 'support', 'dev', 'test', 'staging', 'auth', 'login', 'account',
+            'pay', 'billing', 'official', 'vibe', 'show', 'root', 'dashboard', 'console', 'security', 'abuse'
+        ]);
+        const MOCK_STATUS = {
+            tarot: { done: 4, platform: 'Vercel', author: '@星河Coder', note: '已上线，全球 HTTPS 边缘反代已生效，作品已登上首页秀场。' },
+            pixel: { done: 2, platform: 'Lovable', author: '@Momo_AI', note: '已收录你的小红书留言，正在人工核验源站可用性。' },
+            haiku: { done: 1, platform: 'GitHub Pages', author: '@小野Vibe', note: '已生成认领口令并临时锁定 2 小时，请尽快前往小红书置顶笔记评论区粘贴留言。' }
+        };
+        const STAGES = ['已提交', '人工审核', '解析生效', '已上线'];
+
+        const PLATFORMS = {
+            vercel: { name: 'Vercel', example: 'https://my-tarot.vercel.app', tip: '无需去 Vercel 后台添加 Custom Domain 或验证 TXT！审核通过后边缘 Worker 自动透明反代你的 .vercel.app 源站。' },
+            netlify: { name: 'Netlify', example: 'https://my-tarot.netlify.app', tip: '无需在 Netlify 配置域名！Cloudflare 边缘节点会自动重写 Host 头回源并为你签发免费 HTTPS 证书。' },
+            github: { name: 'GitHub Pages', example: 'https://username.github.io/my-repo', tip: '支持带仓库子路径的 GitHub Pages 链接！反代引擎会自动映射子路径并保持浏览器地址栏为专属子域名。' },
+            cloudflare: { name: 'Cloudflare Pages', example: 'https://my-tarot.pages.dev', tip: '同处于 Cloudflare 全球骨干网内，边缘 Worker 零延迟回源你的 .pages.dev 站点，免去跨账号绑定限制。' },
+            other: { name: 'Lovable / Bolt / Replit', example: 'https://my-tarot.lovable.app', tip: '专为不支持免费绑域名的 AI 编程平台打造；由 Cloudflare Worker 边缘智能反代，零配置即刻拥有体面域名。' }
+        };
+
+        // 客户端匿名会话 Token（用于 2 小时软锁号本人重入识别）
+        function getClientToken() {
+            try {
+                let tk = localStorage.getItem('vibe_client_token');
+                if (!tk) {
+                    tk = 'vc_' + Math.random().toString(36).slice(2, 10) + Date.now().toString(36);
+                    localStorage.setItem('vibe_client_token', tk);
+                }
+                return tk;
+            } catch {
+                return 'vc_anon';
+            }
+        }
+        const CLIENT_TOKEN = getClientToken();
+
+        const $ = (sel, root = document) => root.querySelector(sel);
+        const $$ = (sel, root = document) => Array.from(root.querySelectorAll(sel));
+        const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+        const swapClasses = (el, on, off) => { el.classList.remove(...off); el.classList.add(...on); };
+
+        let activePreviewPrefix = 'tarot';
+        let activePlatformKey = 'vercel';
+
+        // 1. 通用：Toast 与复制
+        let toastTimer;
+        function showToast(msg) {
+            $('#toast-text').textContent = msg;
+            $('#toast').classList.add('is-show');
+            clearTimeout(toastTimer);
+            toastTimer = setTimeout(() => $('#toast').classList.remove('is-show'), 2200);
+        }
+
+        async function copyText(text, msg = '已复制到剪贴板') {
+            try {
+                await navigator.clipboard.writeText(text);
+            } catch {
+                const ta = document.createElement('textarea');
+                ta.value = text;
+                ta.style.cssText = 'position:fixed;opacity:0';
+                document.body.appendChild(ta);
+                ta.select();
+                document.execCommand('copy');
+                ta.remove();
+            }
+            showToast(msg);
+        }
+
+        // 2. 导航栏：滚动态、3 屏 Scrollspy 高亮、右侧分屏页码指示器与移动端菜单
+        const header = $('#site-header');
+        const navLinks = $$('[data-nav]');
+        const mobileNavLinks = $$('[data-mobile-nav]');
+        const pagerBtns = $$('[data-page-target]');
+        const screenOrder = ['top', 'showcase', 'guide'];
+        const spySections = ['showcase', 'guide']
+            .map(id => document.getElementById(id))
+            .filter(Boolean);
+        let currentScreenKey = 'top';
+
+        function scrollToScreen(key) {
+            const targetEl = key === 'top' ? document.getElementById('hero-screen') : document.getElementById(key);
+            if (!targetEl) return;
+            targetEl.scrollIntoView({ behavior: reduceMotion ? 'auto' : 'smooth', block: 'start' });
+        }
+
+        function updateScrollSpy() {
+            header.classList.toggle('is-scrolled', window.scrollY > 8);
+            const triggerY = window.scrollY + window.innerHeight * 0.35;
+            let activeId = 'top';
+            for (const sec of spySections) {
+                const top = sec.getBoundingClientRect().top + window.scrollY;
+                if (triggerY >= top) activeId = sec.id;
+            }
+            navLinks.forEach(a => a.classList.toggle('is-active', a.dataset.nav === activeId));
+            mobileNavLinks.forEach(a => a.classList.toggle('text-apple-blue', a.dataset.mobileNav === activeId));
+
+            currentScreenKey = activeId;
+            pagerBtns.forEach(btn => {
+                const isAct = btn.dataset.pageTarget === currentScreenKey;
+                btn.classList.toggle('is-active', isAct);
+                const label = $('span:first-child', btn);
+                if (label) {
+                    label.classList.toggle('text-apple-blue', isAct);
+                    label.classList.toggle('font-semibold', isAct);
+                    label.classList.toggle('text-apple-gray', !isAct);
+                }
+            });
+            const prevScreenBtn = $('#pager-prev-screen');
+            const nextScreenBtn = $('#pager-next-screen');
+            const idx = screenOrder.indexOf(currentScreenKey);
+            if (prevScreenBtn) prevScreenBtn.disabled = idx <= 0;
+            if (nextScreenBtn) nextScreenBtn.disabled = idx >= screenOrder.length - 1;
+        }
+        let scrollTicking = false;
+        window.addEventListener('scroll', () => {
+            if (!scrollTicking) {
+                requestAnimationFrame(() => { updateScrollSpy(); scrollTicking = false; });
+                scrollTicking = true;
+            }
+        }, { passive: true });
+        pagerBtns.forEach(btn => btn.addEventListener('click', () => scrollToScreen(btn.dataset.pageTarget)));
+        const prevScreenBtn = $('#pager-prev-screen');
+        const nextScreenBtn = $('#pager-next-screen');
+        if (prevScreenBtn) prevScreenBtn.addEventListener('click', () => {
+            const idx = screenOrder.indexOf(currentScreenKey);
+            if (idx > 0) scrollToScreen(screenOrder[idx - 1]);
+        });
+        if (nextScreenBtn) nextScreenBtn.addEventListener('click', () => {
+            const idx = screenOrder.indexOf(currentScreenKey);
+            if (idx < screenOrder.length - 1) scrollToScreen(screenOrder[idx + 1]);
+        });
+        updateScrollSpy();
+
+        const menuToggle = $('#menu-toggle');
+        const mobileMenu = $('#mobile-menu');
+        function setMenu(open) {
+            menuToggle.setAttribute('aria-expanded', String(open));
+            mobileMenu.classList.toggle('hidden', !open);
+        }
+        menuToggle.addEventListener('click', () => setMenu(menuToggle.getAttribute('aria-expanded') !== 'true'));
+        $$('a', mobileMenu).forEach(a => a.addEventListener('click', () => setMenu(false)));
+
+        // 3. 滚动入场与数字滚动
+        function countUp(el) {
+            const target = Number(el.dataset.count);
+            if (reduceMotion) { el.textContent = target; return; }
+            const t0 = performance.now();
+            const step = now => {
+                const p = Math.min(1, (now - t0) / 1400);
+                el.textContent = Math.round(target * (1 - Math.pow(1 - p, 3)));
+                if (p < 1) requestAnimationFrame(step);
+            };
+            requestAnimationFrame(step);
+        }
+
+        const revealObserver = new IntersectionObserver(entries => {
+            entries.forEach(entry => {
+                if (!entry.isIntersecting) return;
+                const el = entry.target;
+                revealObserver.unobserve(el);
+                el.classList.add('is-visible');
+                $$('[data-count]', el).forEach(countUp);
+                const delay = parseInt(el.style.getPropertyValue('--d')) || 0;
+                setTimeout(() => el.classList.remove('reveal', 'is-visible'), 1000 + delay);
+            });
+        }, { threshold: 0.12, rootMargin: '0px 0px -40px 0px' });
+        $$('.reveal').forEach(el => revealObserver.observe(el));
+
+        // 4. 首屏：前缀打字机
+        function startTypewriter() {
+            const el = $('#type-prefix');
+            const words = ['tarot', 'focus', 'synth', 'notes', 'pixel', 'haiku', 'canvas'];
+            let w = 0, i = words[0].length, deleting = true;
+            const tick = () => {
+                const word = words[w];
+                if (deleting) {
+                    el.textContent = word.slice(0, --i);
+                    if (i <= 0) { deleting = false; w = (w + 1) % words.length; return setTimeout(tick, 260); }
+                    return setTimeout(tick, 55);
+                }
+                el.textContent = words[w].slice(0, ++i);
+                if (i >= words[w].length) { deleting = true; return setTimeout(tick, 1900); }
+                setTimeout(tick, 110);
+            };
+            setTimeout(tick, 2400);
+        }
+        if (!reduceMotion) startTypewriter();
+
+        // 5. 首屏全能申请工作台：在「免费申请子域名」与「查询审核进度」之间原位切换
+        const WB_ON = ['bg-white', 'text-apple-dark', 'shadow-sm'];
+        const WB_OFF = ['text-apple-gray', 'hover:text-apple-dark'];
+        function switchWorkbenchTab(tabKey, shouldFocus = false) {
+            $$('.wb-tab').forEach(btn => {
+                if (btn.dataset.wbTab === tabKey) swapClasses(btn, WB_ON, WB_OFF);
+                else swapClasses(btn, WB_OFF, WB_ON);
+            });
+            $('#wb-view-apply').classList.toggle('hidden', tabKey !== 'apply');
+            $('#wb-view-status').classList.toggle('hidden', tabKey !== 'status');
+            if (shouldFocus) {
+                setTimeout(() => {
+                    const targetInput = tabKey === 'status' ? $('#status-input') : $('#quick-prefix-input');
+                    if (targetInput) targetInput.focus({ preventScroll: true });
+                }, 120);
+            }
+        }
+        $$('[data-wb-tab]').forEach(btn => btn.addEventListener('click', () => switchWorkbenchTab(btn.dataset.wbTab, true)));
+        $$('[data-open-workbench]').forEach(btn => btn.addEventListener('click', () => {
+            const tabKey = btn.dataset.openWorkbench || 'status';
+            setMenu(false);
+            switchWorkbenchTab(tabKey, true);
+            const wb = $('#hero-workbench');
+            if (wb) wb.scrollIntoView({ behavior: reduceMotion ? 'auto' : 'smooth', block: 'center' });
+        }));
+
+        // 6. 前缀校验与实时查重 + 全站五处实时联动（Bento / DNS 面板 / 小红书模板 / 进度查询 / 投稿弹窗）
+        const sanitizePrefix = v => v.toLowerCase().replace(/[^a-z0-9-]/g, '');
+        const isAvailable = p => !RESERVED.has(p) && !MOCK_TAKEN[p];
+
+        function checkPrefix(p) {
+            if (!p) return { state: 'empty' };
+            if (p.length < 3) return { state: 'hint', msg: '至少需要 3 个字符' };
+            if (p.startsWith('-') || p.endsWith('-')) return { state: 'invalid', msg: '不能以连字符开头或结尾' };
+            if (p.includes('--')) return { state: 'invalid', msg: '不能包含连续的连字符' };
+            if (RESERVED.has(p)) return { state: 'reserved' };
+            if (MOCK_TAKEN[p]) {
+                const base = p.slice(0, 24);
+                const suggestions = [`${base}-ai`, `my${base}`, `${base}-app`, `${base}lab`]
+                    .filter(s => s.length <= 30 && isAvailable(s)).slice(0, 3);
+                return { state: 'taken', owner: MOCK_TAKEN[p], suggestions };
+            }
+            return { state: 'available' };
+        }
+
+        function renderPrefixStatus(el, r, p, scope) {
+            const dot = c => `<span class="w-1.5 h-1.5 rounded-full ${c} shrink-0"></span>`;
+            const renderSug = (list = []) => list.length
+                ? `<span class="text-apple-gray ml-1">试试</span>` + list.map(s =>
+                    `<button type="button" data-suggest="${s}" data-scope="${scope}" class="font-mono text-apple-blue bg-apple-blue/10 hover:bg-apple-blue/15 px-2 py-0.5 rounded-full transition-colors">${s}</button>`).join('')
+                : '';
+            const views = {
+                empty: () => `<span class="text-apple-gray">3–30 位小写字母、数字或连字符，先到先得</span>`,
+                hint: () => `<span class="text-apple-gray">${r.msg}</span>`,
+                checking: () => `<span class="inline-flex items-center gap-2 text-apple-gray"><span class="spinner"></span>正在查询 <b class="font-mono font-semibold text-apple-dark">${p}</b> …</span>`,
+                available: () => `<span class="inline-flex items-center gap-2 text-emerald-600 font-medium">${dot('bg-emerald-500')}<span class="font-mono">${p}.${CONFIG.domain}</span> 可以申请${r.self_locked ? '（已为你软锁号保护中）' : ''}</span>`,
+                reserved: () => `<span class="inline-flex items-center gap-2 text-amber-600">${dot('bg-amber-500')}这是系统保留前缀，换一个试试</span>`,
+                invalid: () => `<span class="inline-flex items-center gap-2 text-amber-600">${dot('bg-amber-500')}${r.msg}</span>`,
+                locked: () => `<span class="inline-flex flex-wrap items-center gap-x-2 gap-y-1.5 text-amber-600">${dot('bg-amber-500')}刚刚有人生成口令（锁号保护剩余 ${r.lock_remaining_minutes || 120} 分钟）${renderSug(r.suggestions)}</span>`,
+                taken: () => `<span class="inline-flex flex-wrap items-center gap-x-2 gap-y-1.5 text-rose-600">${dot('bg-rose-500')}已被 ${r.owner || '其他创作者'} 认领${renderSug(r.suggestions)}</span>`
+            };
+            el.innerHTML = (views[r.state] || views.empty)();
+        }
+
+        async function checkPrefixRemote(p) {
+            const localRes = checkPrefix(p);
+            if (['empty', 'hint', 'invalid', 'reserved'].includes(localRes.state)) return localRes;
+            if (location.protocol === 'file:') return localRes;
+            try {
+                const res = await fetch(`/api/prefix/check?prefix=${encodeURIComponent(p)}&token=${encodeURIComponent(CLIENT_TOKEN)}`);
+                if (!res.ok) return localRes;
+                return await res.json();
+            } catch {
+                return localRes;
+            }
+        }
+
+        function syncLivePrefixPreview(rawVal) {
+            const typed = sanitizePrefix(rawVal);
+            const clean = typed || 'tarot';
+            activePreviewPrefix = clean;
+            const fullDomain = `${clean}.${CONFIG.domain}`;
+
+            // 1) 首屏新旧域名对比条
+            const liveEl = $('#bento-live-prefix');
+            const oldEl = $('#bento-old-prefix');
+            const bentoCopy = $('#bento-copy-domain');
+            if (liveEl) liveEl.textContent = clean;
+            if (oldEl) oldEl.textContent = clean;
+            if (bentoCopy) bentoCopy.dataset.copy = fullDomain;
+
+            // 2) DNS 终端配置面板
+            const copyBtn = $('#guide-copy-domain');
+            if (copyBtn) {
+                copyBtn.dataset.copy = fullDomain;
+                copyBtn.textContent = `复制 ${fullDomain}`;
+            }
+            const panel = $('#platform-panel');
+            if (panel) panel.innerHTML = platformPanelHtml(activePlatformKey);
+
+            // 3) 小红书评论区留言模板实时联动
+            const xhsPrefix = $('#xhs-tpl-prefix');
+            const xhsUrl = $('#xhs-tpl-url');
+            const xhsBadge = $('#xhs-sync-badge');
+            if (xhsPrefix) xhsPrefix.textContent = clean;
+            if (xhsUrl && (!$('#f-url') || !$('#f-url').value.trim())) {
+                xhsUrl.textContent = `https://my-${clean}.vercel.app`;
+            }
+            if (xhsBadge) {
+                xhsBadge.classList.toggle('hidden', !typed);
+                if (typed) xhsBadge.textContent = `已同步：${typed}`;
+            }
+
+            // 4) 进度查询输入框占位提示联动
+            const statusInput = $('#status-input');
+            if (statusInput) {
+                statusInput.placeholder = typed ? `例如 ${typed} / tarot / pixel` : '例如 tarot / pixel / haiku';
+            }
+        }
+
+        function attachPrefixChecker(input, statusEl, scope, onResult) {
+            let timer;
+            let seq = 0;
+            const run = () => {
+                const v = sanitizePrefix(input.value);
+                if (input.value !== v) input.value = v;
+                if (scope === 'quick' || (scope === 'modal' && v)) syncLivePrefixPreview(v);
+                const r = checkPrefix(v);
+                onResult && onResult(r);
+                clearTimeout(timer);
+                if (['empty', 'hint', 'invalid'].includes(r.state)) return renderPrefixStatus(statusEl, r, v, scope);
+                renderPrefixStatus(statusEl, { state: 'checking' }, v, scope);
+                const curSeq = ++seq;
+                timer = setTimeout(async () => {
+                    const remoteR = await checkPrefixRemote(v);
+                    if (curSeq !== seq) return;
+                    onResult && onResult(remoteR);
+                    renderPrefixStatus(statusEl, remoteR, v, scope);
+                }, 220);
+            };
+            input.addEventListener('input', e => { if (!e.isComposing) run(); });
+            input.addEventListener('compositionend', run);
+            run();
+            return run;
+        }
+
+        const quickInput = $('#quick-prefix-input');
+        const runQuickCheck = attachPrefixChecker(quickInput, $('#quick-prefix-status'), 'quick');
+        quickInput.addEventListener('keydown', e => { if (e.key === 'Enter') $('#quick-claim-btn').click(); });
+        $('#quick-claim-btn').addEventListener('click', () => {
+            const v = quickInput.value.trim();
+            const r = checkPrefix(v);
+            if (v && r.state !== 'available') {
+                const box = quickInput.closest('label') || quickInput.parentElement;
+                box.classList.remove('shake'); void box.offsetWidth; box.classList.add('shake');
+                return;
+            }
+            openSubmitModal(v);
+        });
+
+        // 7. 作品秀场：单行 3 席画廊分页（每页 3 张大卡片，一屏完整呈现，0 纵向截断）
+        const SHOWCASE_PAGE_SIZE = 3;
+        let showcaseCategory = 'all';
+        let showcasePage = 1;
+
+        const SHOWCASE_ITEMS = [
+            {
+                prefix: 'focus',
+                category: 'tool',
+                stack: 'v0 + Next.js',
+                title: 'ZenFocus 极简心流钟',
+                tagline: '带合成器环境音的沉浸式番茄工作台',
+                author: '@林深Vibe',
+                bg: 'from-[#EDF5FF] via-[#E3EFFE] to-[#D5E6FB]',
+                art: `
+                    <div class="w-36 h-36 rounded-full bg-white/95 shadow-lg flex flex-col items-center justify-center border border-sky-200/70 group-hover:scale-105 transition-transform duration-500">
+                        <span class="text-[9.5px] font-mono font-semibold uppercase tracking-widest text-apple-blue">Deep Flow</span>
+                        <span class="text-2xl font-extrabold font-mono tracking-tight text-apple-dark mt-0.5 tabular-nums">24:59</span>
+                        <span class="text-[10.5px] text-apple-gray mt-1">🌧️ 雨声白噪音中</span>
+                    </div>`
+            },
+            {
+                prefix: 'pixel',
+                category: 'creative',
+                stack: 'Lovable + Canvas',
+                title: 'PixelPet 像素灵感工坊',
+                tagline: '一句话生成会呼吸的 8-bit 桌面电子宠物',
+                author: '@Momo_AI',
+                bg: 'from-[#FFF6EB] via-[#FFEBD6] to-[#FDE0C2]',
+                art: `
+                    <div class="bg-white/95 p-3.5 rounded-2xl shadow-lg border border-amber-200/70 group-hover:scale-105 transition-transform duration-500">
+                        <div class="grid grid-cols-5 gap-1.5 w-24 h-24">
+                            <div class="bg-amber-100 rounded-sm"></div><div class="bg-orange-500 rounded-sm"></div><div class="bg-amber-100 rounded-sm"></div><div class="bg-orange-500 rounded-sm"></div><div class="bg-amber-100 rounded-sm"></div>
+                            <div class="bg-orange-500 rounded-sm"></div><div class="bg-emerald-500 rounded-sm"></div><div class="bg-orange-500 rounded-sm"></div><div class="bg-emerald-500 rounded-sm"></div><div class="bg-orange-500 rounded-sm"></div>
+                            <div class="bg-orange-500 rounded-sm"></div><div class="bg-orange-500 rounded-sm"></div><div class="bg-amber-400 rounded-sm"></div><div class="bg-orange-500 rounded-sm"></div><div class="bg-orange-500 rounded-sm"></div>
+                            <div class="bg-amber-100 rounded-sm"></div><div class="bg-orange-500 rounded-sm"></div><div class="bg-orange-500 rounded-sm"></div><div class="bg-orange-500 rounded-sm"></div><div class="bg-amber-100 rounded-sm"></div>
+                            <div class="bg-amber-100 rounded-sm"></div><div class="bg-amber-100 rounded-sm"></div><div class="bg-orange-500 rounded-sm"></div><div class="bg-amber-100 rounded-sm"></div><div class="bg-amber-100 rounded-sm"></div>
+                        </div>
+                    </div>`
+            },
+            {
+                prefix: 'tarot',
+                category: 'creative',
+                stack: 'Claude + Cursor',
+                featured: true,
+                dark: true,
+                title: 'CyberTarot 赛博塔罗',
+                tagline: '融合荣格心理学与大模型的每日星象牌阵',
+                author: '@星河Coder',
+                bg: 'from-[#16181D] via-[#1E222B] to-[#121418]',
+                art: `
+                    <div class="flex items-center gap-3 group-hover:scale-105 transition-transform duration-500">
+                        <div class="w-16 h-24 rounded-xl bg-white/[0.07] border border-white/15 flex flex-col items-center justify-center text-white -rotate-6">
+                            <span class="text-lg">🌙</span>
+                        </div>
+                        <div class="w-20 h-28 rounded-xl bg-gradient-to-b from-amber-300/25 to-amber-500/10 border border-amber-300/50 flex flex-col items-center justify-center text-white shadow-xl">
+                            <span class="text-2xl">✦</span>
+                            <span class="text-[9.5px] font-mono uppercase tracking-widest mt-1.5 text-amber-200">STAR</span>
+                        </div>
+                    </div>`
+            },
+            {
+                prefix: 'synth',
+                category: 'game',
+                stack: 'WebAudio + Gemini',
+                title: 'PocketSynth 口袋合成器',
+                tagline: '基于 WebAudio 纯代码生成的复古电子琴',
+                author: '@Kev_Audio',
+                bg: 'from-[#F2F3F5] via-[#E6E8EC] to-[#DADCE2]',
+                art: `
+                    <div class="bg-[#1D1D1F] p-3.5 rounded-2xl shadow-lg border border-black/20 group-hover:scale-105 transition-transform duration-500">
+                        <div class="flex items-center justify-between mb-2">
+                            <span class="w-2 h-2 rounded-full bg-[#FF5722]"></span>
+                            <span class="text-[8.5px] font-mono text-white/60">TE-SYNTH OP-V</span>
+                        </div>
+                        <div class="flex gap-1.5">
+                            <div class="w-5 h-14 bg-white rounded"></div>
+                            <div class="w-5 h-14 bg-white rounded"></div>
+                            <div class="w-5 h-14 bg-[#FF5722] rounded"></div>
+                            <div class="w-5 h-14 bg-white rounded"></div>
+                            <div class="w-5 h-14 bg-sky-400 rounded"></div>
+                            <div class="w-5 h-14 bg-white rounded"></div>
+                        </div>
+                    </div>`
+            },
+            {
+                prefix: 'bill',
+                category: 'tool',
+                stack: 'Cursor + React',
+                title: 'MoodBill 情绪热敏小票',
+                tagline: '把今日歌单与待办打印成复古超市账单',
+                author: '@阿泽Design',
+                bg: 'from-[#E6F8F1] via-[#D3F3E6] to-[#BCEAD8]',
+                art: `
+                    <div class="receipt-card w-44 font-mono text-[9.5px] text-apple-dark group-hover:scale-105 group-hover:-rotate-1 transition-transform duration-500">
+                        <div class="receipt-edge-top" aria-hidden="true"></div>
+                        <div class="bg-white px-3.5 py-2">
+                            <div class="flex items-center justify-between text-[8px] text-apple-muted mb-0.5">
+                                <span>NO.0428</span><span>21:30</span>
+                            </div>
+                            <div class="text-center font-bold tracking-wider border-b border-dashed border-gray-300 pb-1 mb-1.5">DAILY VIBE RECEIPT</div>
+                            <div class="flex justify-between"><span>☕ 冰美式灵感</span><span class="tabular-nums">+40%</span></div>
+                            <div class="flex justify-between mt-0.5"><span>🤖 Cursor Tab</span><span class="tabular-nums">x192</span></div>
+                            <div class="border-t border-dashed border-gray-300 mt-1.5 pt-1 flex justify-between font-bold text-emerald-700">
+                                <span>MOOD</span><span class="tabular-nums">100%</span>
+                            </div>
+                        </div>
+                        <div class="receipt-edge-bottom" aria-hidden="true"></div>
+                    </div>`
+            },
+            {
+                prefix: 'haiku',
+                category: 'creative',
+                stack: 'Claude 3.7 + Astro',
+                title: 'CodeHaiku 代码俳句诗社',
+                tagline: '把你的 Git Commit 提交记录谱写成日式俳句',
+                author: '@小野Vibe',
+                bg: 'from-[#F7F4EE] via-[#EFE9DD] to-[#E5DEC9]',
+                art: `
+                    <div class="bg-white/95 px-5 py-3.5 rounded-2xl shadow-lg border border-stone-300/70 text-center group-hover:scale-105 transition-transform duration-500">
+                        <span class="text-[9px] font-mono text-stone-400 uppercase tracking-widest">git commit -m</span>
+                        <p class="text-[13.5px] font-serif font-semibold text-apple-dark mt-1.5 leading-relaxed">深夜修空针<br>一行绿灯映窗明</p>
+                    </div>`
+            },
+            {
+                prefix: 'kanban',
+                category: 'tool',
+                stack: 'Bolt + Supabase',
+                title: 'MonoBoard 极简灵感看板',
+                tagline: '支持键盘快捷键流转的个人独立开发排期表',
+                author: '@Jun_Dev',
+                bg: 'from-[#F1F5F9] via-[#E2E8F0] to-[#CBD5E1]',
+                art: `
+                    <div class="grid grid-cols-3 gap-2 w-44 bg-white/95 p-3 rounded-2xl shadow-lg border border-slate-200 group-hover:scale-105 transition-transform duration-500">
+                        <div class="bg-slate-100 rounded-lg p-2 space-y-1.5"><span class="block w-6 h-1.5 bg-slate-400 rounded"></span><span class="block w-full h-4 bg-white rounded shadow-sm"></span></div>
+                        <div class="bg-sky-50 rounded-lg p-2 space-y-1.5"><span class="block w-6 h-1.5 bg-apple-blue rounded"></span><span class="block w-full h-5 bg-white rounded shadow-sm border-l-2 border-apple-blue"></span></div>
+                        <div class="bg-emerald-50 rounded-lg p-2 space-y-1.5"><span class="block w-6 h-1.5 bg-emerald-500 rounded"></span><span class="block w-full h-4 bg-white rounded shadow-sm"></span></div>
+                    </div>`
+            },
+            {
+                prefix: 'maze',
+                category: 'game',
+                stack: 'Cursor + Three.js',
+                title: 'GravityMaze 重力迷宫弹珠',
+                tagline: '跟随触控板倾角滚动的微缩极简物理迷宫',
+                author: '@Leo_3D',
+                bg: 'from-[#ECFEFF] via-[#CFFAFE] to-[#A5F3FC]',
+                art: `
+                    <div class="w-28 h-28 rounded-2xl bg-white/95 border-2 border-cyan-500/30 shadow-lg p-3 flex items-center justify-center relative group-hover:rotate-6 transition-transform duration-500">
+                        <div class="w-16 h-16 rounded-xl border-2 border-dashed border-cyan-600/40 flex items-center justify-center">
+                            <span class="w-5 h-5 rounded-full bg-gradient-to-br from-cyan-500 to-blue-600 shadow"></span>
+                        </div>
+                    </div>`
+            },
+            {
+                prefix: 'lofi',
+                category: 'creative',
+                stack: 'v0 + WebAudio',
+                title: 'LofiDesk 深夜书房混音台',
+                tagline: '自由调节壁炉柴火、雨滴与黑胶底噪比例',
+                author: '@Mia_Sound',
+                bg: 'from-[#1F2421] via-[#272D2A] to-[#181C1A]',
+                dark: true,
+                art: `
+                    <div class="bg-white/10 backdrop-blur-md border border-white/15 rounded-2xl px-5 py-3.5 flex items-end gap-2.5 group-hover:scale-105 transition-transform duration-500">
+                        <div class="w-2.5 h-10 bg-emerald-400 rounded-full"></div>
+                        <div class="w-2.5 h-14 bg-amber-300 rounded-full"></div>
+                        <div class="w-2.5 h-8 bg-sky-300 rounded-full"></div>
+                        <div class="w-2.5 h-12 bg-emerald-400 rounded-full"></div>
+                        <span class="text-[10px] font-mono text-white/75 ml-1">432Hz</span>
+                    </div>`
+            },
+            {
+                prefix: 'recipe',
+                category: 'tool',
+                stack: 'Claude + Tailwind',
+                title: 'FridgeChef 冰箱清库存指南',
+                tagline: '勾选剩余食材，10 秒生成一人食快手菜谱',
+                author: '@吃饱写代码',
+                bg: 'from-[#FEFCE8] via-[#FEF9C3] to-[#FEF08A]',
+                art: `
+                    <div class="bg-white/95 rounded-2xl px-4 py-3 shadow-lg border border-yellow-300/70 text-[11px] font-medium text-apple-dark group-hover:scale-105 transition-transform duration-500">
+                        <div class="flex items-center gap-1.5"><span>🍅 番茄 + 🥚 鸡蛋</span><span class="text-emerald-600 font-mono">→ 8min</span></div>
+                        <div class="mt-1 text-[10px] text-apple-gray font-mono">热量 280 kcal · 零失败</div>
+                    </div>`
+            },
+            {
+                prefix: 'typing',
+                category: 'game',
+                stack: 'Windsurf + Vite',
+                title: 'KeyRhythm 机械轴体音游',
+                tagline: '还原茶轴与段落轴清脆声学反馈的盲打竞速',
+                author: '@KeyMaster',
+                bg: 'from-[#F3F4F6] via-[#E5E7EB] to-[#D1D5DB]',
+                art: `
+                    <div class="flex items-center gap-2 group-hover:scale-105 transition-transform duration-500">
+                        <kbd class="w-12 h-12 rounded-xl bg-white shadow-[0_3px_0_0_#CBD5E1] border border-slate-300 flex items-center justify-center font-mono text-sm font-bold text-apple-dark">⌘</kbd>
+                        <kbd class="w-12 h-12 rounded-xl bg-apple-blue text-white shadow-[0_3px_0_0_#0051A8] flex items-center justify-center font-mono text-sm font-bold">V</kbd>
+                        <kbd class="w-12 h-12 rounded-xl bg-white shadow-[0_3px_0_0_#CBD5E1] border border-slate-300 flex items-center justify-center font-mono text-sm font-bold text-apple-dark">K</kbd>
+                    </div>`
+            }
+        ];
+
+        function escapeHtml(str) {
+            return String(str).replace(/[&<>"']/g, m => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[m]));
+        }
+
+        function renderShowcaseCard(item) {
+            if (item.isCta) {
+                return `
+                    <button type="button" data-open-submit class="showcase-card is-filtered-in group rounded-apple border-2 border-dashed border-apple-border hover:border-apple-blue bg-white/65 hover:bg-white transition-all duration-300 p-7 flex flex-col items-center justify-center text-center min-h-[268px]">
+                        <div class="w-14 h-14 rounded-full bg-apple-bg group-hover:bg-apple-blue group-hover:text-white text-apple-dark flex items-center justify-center text-3xl font-light transition-all duration-300 mb-4 shadow-sm group-hover:scale-110">+</div>
+                        <h3 class="text-lg font-bold tracking-tight text-apple-dark group-hover:text-apple-blue transition-colors">虚位以待，提交你的作品</h3>
+                        <p class="text-[13px] text-apple-gray mt-1.5 max-w-[230px] leading-relaxed">
+                            认领你的专属 <span class="font-mono text-apple-dark">xxx.${CONFIG.domain}</span>，登上灵感秀场
+                        </p>
+                        <span class="mt-4 inline-flex items-center gap-1 text-xs font-semibold text-apple-blue">
+                            <span>立即免费入驻</span>
+                            <span class="group-hover:translate-x-1 transition-transform">→</span>
+                        </span>
+                    </button>`;
+            }
+
+            const topBadges = item.featured
+                ? `<div class="absolute top-3.5 left-3.5 z-10 flex items-center gap-1.5">
+                       <span class="bg-amber-300 text-[#3B2A00] text-[10.5px] font-bold px-2.5 py-1 rounded-full shadow-sm">★ 本周精选</span>
+                       <span class="hidden sm:inline-block bg-white/10 backdrop-blur-md text-white/85 font-mono text-[10px] font-medium px-2 py-1 rounded-full border border-white/10">${escapeHtml(item.stack)}</span>
+                   </div>`
+                : `<span class="absolute top-3.5 left-3.5 z-10 ${item.dark ? 'bg-white/10 text-white/85 border-white/10' : 'bg-white/85 text-apple-gray border-black/5'} backdrop-blur-md font-mono text-[10px] font-medium px-2.5 py-1 rounded-full border">${escapeHtml(item.stack)}</span>`;
+
+            const visitPill = item.dark
+                ? `<span class="absolute bottom-3.5 left-3.5 bg-white/95 text-apple-dark text-[11px] font-semibold px-3 py-1 rounded-full shadow-sm opacity-0 translate-y-1 group-hover:opacity-100 group-hover:translate-y-0 transition-all duration-300">访问站点 ↗</span>`
+                : `<span class="absolute bottom-3.5 left-3.5 apple-dark-glass text-white text-[11px] font-semibold px-3 py-1 rounded-full opacity-0 translate-y-1 group-hover:opacity-100 group-hover:translate-y-0 transition-all duration-300">访问站点 ↗</span>`;
+
+            return `
+                <article data-category="${escapeHtml(item.category)}" class="showcase-card is-filtered-in bg-apple-card rounded-apple overflow-hidden shadow-apple hover:shadow-apple-hover bento-card flex flex-col group">
+                    <a href="https://${escapeHtml(item.prefix)}.${CONFIG.domain}" target="_blank" rel="noopener" aria-label="访问 ${escapeHtml(item.title)}"
+                        class="relative h-[180px] sm:h-[192px] w-full bg-gradient-to-br ${item.bg} border-b border-black/[0.05] overflow-hidden flex items-center justify-center p-5">
+                        ${topBadges}
+                        <span class="absolute top-3.5 right-3.5 z-10 apple-badge-glass text-apple-dark font-mono text-[11.5px] font-semibold px-3 py-1 rounded-full border border-black/5">${escapeHtml(item.prefix)}.${CONFIG.domain}</span>
+                        ${item.art}
+                        ${visitPill}
+                    </a>
+                    <div class="p-5 sm:p-6 flex items-center justify-between gap-4 flex-1">
+                        <div class="min-w-0">
+                            <h3 class="text-[17px] font-bold tracking-tight text-apple-dark truncate">${escapeHtml(item.title)}</h3>
+                            <p class="text-[13px] text-apple-gray truncate mt-0.5">${escapeHtml(item.tagline)}</p>
+                        </div>
+                        <span class="shrink-0 bg-apple-bg text-apple-dark/80 text-[12px] font-medium px-3 py-1 rounded-full">${escapeHtml(item.author)}</span>
+                    </div>
+                </article>`;
+        }
+
+        function updateShowcaseCounts() {
+            const counts = { all: SHOWCASE_ITEMS.length, tool: 0, creative: 0, game: 0 };
+            SHOWCASE_ITEMS.forEach(it => { if (counts[it.category] !== undefined) counts[it.category]++; });
+            ['all', 'tool', 'creative', 'game'].forEach(k => {
+                const el = $(`#tab-count-${k}`);
+                if (el) el.textContent = counts[k];
+            });
+        }
+
+        function renderShowcase() {
+            updateShowcaseCounts();
+            const filtered = showcaseCategory === 'all'
+                ? [...SHOWCASE_ITEMS, { isCta: true }]
+                : [...SHOWCASE_ITEMS.filter(it => it.category === showcaseCategory), { isCta: true }];
+
+            const totalItems = filtered.length;
+            const totalPages = Math.max(1, Math.ceil(totalItems / SHOWCASE_PAGE_SIZE));
+            if (showcasePage > totalPages) showcasePage = totalPages;
+            if (showcasePage < 1) showcasePage = 1;
+
+            const startIdx = (showcasePage - 1) * SHOWCASE_PAGE_SIZE;
+            const pageSlice = filtered.slice(startIdx, startIdx + SHOWCASE_PAGE_SIZE);
+
+            const grid = $('#showcase-grid');
+            if (grid) grid.innerHTML = pageSlice.map(renderShowcaseCard).join('');
+
+            const workCount = filtered.length - 1;
+            const infoEl = $('#showcase-page-info');
+            if (infoEl) {
+                const endIdx = Math.min(startIdx + SHOWCASE_PAGE_SIZE, totalItems);
+                infoEl.textContent = `第 ${showcasePage} / ${totalPages} 页 · 显示第 ${startIdx + 1}–${endIdx} 席（共 ${workCount} 个精选作品 + 1 席虚位）`;
+            }
+
+            const prevBtn = $('#showcase-prev');
+            const nextBtn = $('#showcase-next');
+            if (prevBtn) prevBtn.disabled = showcasePage <= 1;
+            if (nextBtn) nextBtn.disabled = showcasePage >= totalPages;
+
+            const numsEl = $('#showcase-page-nums');
+            if (numsEl) {
+                numsEl.innerHTML = Array.from({ length: totalPages }, (_, i) => {
+                    const p = i + 1;
+                    const active = p === showcasePage;
+                    const cls = active
+                        ? 'bg-apple-dark text-white shadow-sm'
+                        : 'bg-white hover:bg-apple-surface text-apple-gray hover:text-apple-dark border border-black/[0.08]';
+                    return `<button type="button" data-showcase-page="${p}" class="w-7 h-7 rounded-full font-mono text-xs font-semibold transition-all ${cls}">${p}</button>`;
+                }).join('');
+            }
+        }
+
+        const TAB_ON = ['bg-apple-dark', 'text-white'];
+        const TAB_OFF = ['bg-white', 'text-apple-gray', 'hover:text-apple-dark', 'shadow-sm', 'border', 'border-black/[0.04]'];
+        $$('.showcase-tab').forEach(tab => tab.addEventListener('click', () => {
+            showcaseCategory = tab.dataset.filter;
+            showcasePage = 1;
+            $$('.showcase-tab').forEach(t => t === tab ? swapClasses(t, TAB_ON, TAB_OFF) : swapClasses(t, TAB_OFF, TAB_ON));
+            renderShowcase();
+        }));
+        $('#showcase-prev').addEventListener('click', () => { if (showcasePage > 1) { showcasePage--; renderShowcase(); } });
+        $('#showcase-next').addEventListener('click', () => { showcasePage++; renderShowcase(); });
+        $('#showcase-page-nums').addEventListener('click', e => {
+            const btn = e.target.closest('[data-showcase-page]');
+            if (btn) { showcasePage = Number(btn.dataset.showcasePage); renderShowcase(); }
+        });
+        renderShowcase();
+
+        // 8. 平台配置指引（全平台统一 Cloudflare Worker 边缘反向代理，创作者 0 配置）
+        const PTAB_ON = ['bg-apple-dark', 'text-white', 'shadow-sm'];
+        const PTAB_OFF = ['bg-apple-bg', 'text-apple-dark/80', 'hover:bg-black/[0.06]'];
+        function platformPanelHtml(key) {
+            const p = PLATFORMS[key];
+            const pfx = activePreviewPrefix || 'tarot';
+            const cols = 'grid grid-cols-[54px_72px_1fr_auto] sm:grid-cols-[72px_96px_1fr_auto_auto] gap-2 items-center';
+            const proxyBadge = `<span class="hidden sm:inline-flex items-center gap-1 text-[10px] font-sans font-medium text-amber-300 bg-amber-400/10 border border-amber-400/20 px-2 py-0.5 rounded-full">☁️ Edge Proxy 零配置</span>`;
+            const originExample = p.example.replace(/tarot/g, pfx);
+            return `
+                <p class="text-white/40"># 1 · 在 ${p.name} 正常部署作品（无需绑定自定义域名）</p>
+                <p class="mt-0.5 break-words">拿到原始可访问链接即可，例如 <span class="text-emerald-300">${originExample}</span></p>
+                <p class="text-white/40 mt-3.5"># 2 · 审核通过后，系统自动写入 Cloudflare DNS 与边缘反代路由</p>
+                <div class="mt-1.5 rounded-xl bg-white/[0.04] border border-white/10 overflow-hidden text-[12px] sm:text-[12.5px]">
+                    <div class="${cols} px-3.5 py-1.5 text-[10px] uppercase tracking-wider text-white/35 border-b border-white/10"><span>Mode</span><span>Subdomain</span><span>Origin Route (KV)</span><span class="hidden sm:inline">SSL</span><span>Action</span></div>
+                    <div class="${cols} px-3.5 py-2.5">
+                        <span class="text-amber-300 font-semibold">PROXY</span>
+                        <span class="text-white truncate">${pfx}</span>
+                        <span class="text-emerald-300 truncate">${originExample}</span>
+                        ${proxyBadge}
+                        <button type="button" data-copy="https://${pfx}.${CONFIG.domain}" class="text-[11px] text-white/75 hover:text-white bg-white/10 hover:bg-white/15 px-2.5 py-0.5 rounded-md transition-colors">复制域名</button>
+                    </div>
+                </div>
+                <p class="text-white/40 mt-3.5"># 3 · Universal SSL 与边缘反向代理秒级生效（< 5 秒）</p>
+                <p class="mt-0.5"><span class="text-emerald-400">✓</span> https://<span class="text-sky-300 font-semibold">${pfx}</span>.${CONFIG.domain} 已在全球节点生效</p>
+                <p class="mt-3.5 pt-3 border-t border-white/10 font-sans text-[11.5px] text-white/55 leading-relaxed">💡 ${p.tip}</p>
+            `;
+        }
+        function selectPlatformTab(key) {
+            activePlatformKey = key;
+            $$('.platform-tab').forEach(t => t.dataset.platform === key ? swapClasses(t, PTAB_ON, PTAB_OFF) : swapClasses(t, PTAB_OFF, PTAB_ON));
+            const panel = $('#platform-panel');
+            panel.classList.add('is-swapping');
+            setTimeout(() => { panel.innerHTML = platformPanelHtml(key); panel.classList.remove('is-swapping'); }, 160);
+        }
+        $$('.platform-tab').forEach(t => t.addEventListener('click', () => selectPlatformTab(t.dataset.platform)));
+        $('#platform-panel').innerHTML = platformPanelHtml('vercel');
+
+        // 8.5 第 03 屏视图切换器（在「三步接入与 DNS 预览」与「常见问题解答」之间原位切换，避免纵向堆叠）
+        const GUIDE_ON = ['bg-white', 'text-apple-dark', 'shadow-sm'];
+        const GUIDE_OFF = ['text-apple-gray', 'hover:text-apple-dark'];
+        function switchGuideTab(tabKey) {
+            $$('.guide-tab').forEach(btn => {
+                if (btn.dataset.guideTab === tabKey) swapClasses(btn, GUIDE_ON, GUIDE_OFF);
+                else swapClasses(btn, GUIDE_OFF, GUIDE_ON);
+            });
+            $('#guide-view-setup').classList.toggle('hidden', tabKey !== 'setup');
+            $('#guide-view-faq').classList.toggle('hidden', tabKey !== 'faq');
+        }
+        $$('[data-guide-tab]').forEach(btn => btn.addEventListener('click', () => switchGuideTab(btn.dataset.guideTab)));
+        $$('a[href="#faq"]').forEach(a => a.addEventListener('click', e => {
+            e.preventDefault();
+            switchGuideTab('faq');
+            scrollToScreen('guide');
+        }));
+
+        // 9. 小红书评论区链接、进度查询与时间线
+        const xhsModalDirectLink = $('#xhs-modal-direct-link');
+        if (xhsModalDirectLink) xhsModalDirectLink.href = CONFIG.xhsNoteUrl;
+
+        function timelineHtml(done) {
+            return `<ol class="grid grid-cols-4 gap-1">${STAGES.map((label, i) => {
+                const state = i < done ? 'done' : i === done ? 'current' : 'todo';
+                const circle = {
+                    done: `<span class="relative z-10 w-7 h-7 rounded-full bg-apple-blue text-white flex items-center justify-center text-[11px] font-bold shadow-sm">✓</span>`,
+                    current: `<span class="relative z-10 w-7 h-7 rounded-full bg-white border-2 border-apple-blue flex items-center justify-center"><span class="w-2 h-2 rounded-full bg-apple-blue animate-pulse"></span></span>`,
+                    todo: `<span class="relative z-10 w-7 h-7 rounded-full bg-apple-bg border border-black/[0.06] flex items-center justify-center text-[11px] font-semibold text-apple-gray">${i + 1}</span>`
+                }[state];
+                const line = i < STAGES.length - 1
+                    ? `<span class="absolute top-3.5 left-1/2 w-full h-[2px] ${i < done - 1 || (i < done && done === STAGES.length) ? 'bg-apple-blue' : 'bg-black/[0.07]'}"></span>` : '';
+                const labelCls = state === 'todo' ? 'text-apple-gray' : 'text-apple-dark font-semibold';
+                return `<li class="relative flex flex-col items-center text-center">${line}${circle}<span class="mt-2 text-[12px] ${labelCls}">${label}</span>${state === 'current' ? '<span class="text-[11px] text-apple-blue mt-0.5">进行中</span>' : ''}</li>`;
+            }).join('')}</ol>`;
+        }
+
+        async function queryStatusByPrefix(rawPrefix) {
+            const input = $('#status-input');
+            const p = sanitizePrefix(rawPrefix);
+            input.value = p;
+            const box = $('#status-result');
+            if (!p) { input.focus(); return; }
+
+            let rec = MOCK_STATUS[p] || null;
+            if (location.protocol !== 'file:') {
+                box.innerHTML = `<div class="py-4 text-[13px] text-apple-gray flex items-center gap-2"><span class="spinner"></span>正在查询 <b class="font-mono text-apple-dark">${p}.${CONFIG.domain}</b> 的实时状态…</div>`;
+                try {
+                    const res = await fetch(`/api/applications/status?prefix=${encodeURIComponent(p)}`);
+                    if (res.ok) {
+                        const data = await res.json();
+                        if (data && data.found) {
+                            rec = data;
+                        } else if (data && data.found === false) {
+                            rec = MOCK_STATUS[p] || null;
+                        }
+                    }
+                } catch {}
+            }
+
+            if (!rec) {
+                box.innerHTML = `<div class="flex items-start gap-3 bg-apple-bg rounded-2xl p-4 text-[13px] text-apple-gray leading-relaxed">
+                    <span class="w-5 h-5 rounded-full bg-black/[0.06] flex items-center justify-center shrink-0 text-[11px] font-mono">?</span>
+                    <span>没有找到 <b class="font-mono text-apple-dark">${p}.${CONFIG.domain}</b> 的申请记录。小红书评论区留言的申请会在 24 小时内人工录入，你也可以点击<button type="button" data-open-submit data-prefix="${p}" class="text-[#FF2442] font-semibold hover:underline mx-1">生成 ${p} 认领口令去小红书留言 ↗</button>。</span>
+                </div>`;
+                return;
+            }
+            box.innerHTML = `
+                <div class="border-t border-black/[0.06] pt-6">
+                    <div class="flex flex-wrap items-center gap-x-4 gap-y-2 mb-6">
+                        <span class="font-mono text-[15px] font-bold text-apple-dark"><span class="text-apple-blue">${escapeHtml(p)}</span>.${CONFIG.domain}</span>
+                        <span class="text-[12px] text-apple-gray bg-apple-bg px-2.5 py-0.5 rounded-full">${escapeHtml(rec.platform || 'Web')} · ${escapeHtml(rec.author || '创作者')}</span>
+                        ${rec.done >= STAGES.length ? `<a href="https://${escapeHtml(p)}.${CONFIG.domain}" target="_blank" rel="noopener" class="text-[12px] font-semibold text-apple-blue hover:underline">访问站点 ↗</a>` : ''}
+                    </div>
+                    <div class="max-w-xl">${timelineHtml(rec.done)}</div>
+                    <p class="mt-5 text-[13px] text-apple-gray">${escapeHtml(rec.note || '')}</p>
+                </div>`;
+        }
+
+        $('#status-form').addEventListener('submit', e => {
+            e.preventDefault();
+            queryStatusByPrefix($('#status-input').value);
+        });
+
+        $$('[data-status-demo]').forEach(btn => {
+            btn.addEventListener('click', () => queryStatusByPrefix(btn.dataset.statusDemo));
+        });
+
+        // 10. FAQ 丝滑手风琴动画（Web Animations API 双向平滑过渡）
+        $$('details.faq').forEach(details => {
+            const summary = $('summary', details);
+            let anim = null;
+            summary.addEventListener('click', e => {
+                if (reduceMotion) return;
+                e.preventDefault();
+                if (anim) anim.cancel();
+                const startHeight = details.offsetHeight;
+                if (details.open) {
+                    details.classList.add('is-closing');
+                    const style = getComputedStyle(details);
+                    const pad = parseFloat(style.paddingTop) + parseFloat(style.paddingBottom);
+                    const endHeight = summary.offsetHeight + pad;
+                    details.style.overflow = 'hidden';
+                    anim = details.animate(
+                        [{ height: `${startHeight}px` }, { height: `${endHeight}px` }],
+                        { duration: 300, easing: 'cubic-bezier(0.16, 1, 0.3, 1)' }
+                    );
+                    anim.onfinish = () => {
+                        details.open = false;
+                        details.classList.remove('is-closing');
+                        details.style.height = '';
+                        details.style.overflow = '';
+                        anim = null;
+                    };
+                } else {
+                    details.open = true;
+                    const endHeight = details.offsetHeight;
+                    details.style.overflow = 'hidden';
+                    anim = details.animate(
+                        [{ height: `${startHeight}px` }, { height: `${endHeight}px` }],
+                        { duration: 340, easing: 'cubic-bezier(0.16, 1, 0.3, 1)' }
+                    );
+                    anim.onfinish = () => {
+                        details.style.height = '';
+                        details.style.overflow = '';
+                        anim = null;
+                    };
+                }
+            });
+        });
+
+        // 11. 跑马灯与动态秀场数据加载
+        function renderMarquee(list) {
+            const items = list
+                .map(p => `<span class="shrink-0 font-mono text-[13px] text-white/80 bg-white/[0.06] border border-white/10 px-3.5 py-1.5 rounded-full">${escapeHtml(p)}<span class="text-white/35">.${CONFIG.domain}</span></span>`).join('');
+            const track = $('#cta-marquee-track');
+            if (track) track.innerHTML = items + items;
+        }
+        renderMarquee(['tarot', 'focus', 'pixel', 'synth', 'bill', 'haiku', 'resume', 'todo', 'lofi', 'recipe', 'kanban', 'poem', 'maze', 'moodboard', 'weather', 'quote']);
+
+        async function loadShowcaseFromApi() {
+            if (location.protocol === 'file:') return;
+            try {
+                const res = await fetch('/api/showcase');
+                if (!res.ok) return;
+                const data = await res.json();
+                if (Array.isArray(data.items) && data.items.length > 0) {
+                    const existingMap = new Map(SHOWCASE_ITEMS.map(it => [it.prefix, it]));
+                    const defaultArt = prefix => `
+                        <div class="bg-white/95 px-5 py-3.5 rounded-2xl shadow-lg border border-black/10 text-center group-hover:scale-105 transition-transform duration-500">
+                            <span class="text-[10px] font-mono text-apple-blue uppercase tracking-widest">Vibe App</span>
+                            <p class="text-sm font-mono font-bold text-apple-dark mt-1">${escapeHtml(prefix)}.${CONFIG.domain}</p>
+                        </div>`;
+                    const merged = data.items.map(row => {
+                        const preset = existingMap.get(row.prefix);
+                        return {
+                            prefix: row.prefix,
+                            category: row.category || (preset && preset.category) || 'tool',
+                            stack: row.stack || (preset && preset.stack) || 'AI + Web',
+                            featured: Boolean(row.featured ?? (preset && preset.featured)),
+                            dark: Boolean(row.dark ?? (preset && preset.dark)),
+                            title: row.title || (preset && preset.title) || row.prefix,
+                            tagline: row.tagline || (preset && preset.tagline) || 'AI 编程灵感作品',
+                            author: row.author || (preset && preset.author) || '@VibeCoder',
+                            bg: row.bg || (preset && preset.bg) || 'from-[#EDF5FF] via-[#E3EFFE] to-[#D5E6FB]',
+                            art: (preset && preset.art) || defaultArt(row.prefix)
+                        };
+                    });
+                    SHOWCASE_ITEMS.splice(0, SHOWCASE_ITEMS.length, ...merged);
+                    SHOWCASE_ITEMS.forEach(it => { MOCK_TAKEN[it.prefix] = it.author; });
+                    renderShowcase();
+                }
+                if (Array.isArray(data.recent_prefixes) && data.recent_prefixes.length >= 6) {
+                    renderMarquee(data.recent_prefixes);
+                }
+            } catch {}
+        }
+        loadShowcaseFromApi();
+
+        // 若从反代未认领域名跳转而来（?claim=xxx），自动填入查重框
+        (function handleUrlClaimParam() {
+            try {
+                const params = new URLSearchParams(location.search);
+                const claim = sanitizePrefix(params.get('claim') || params.get('unclaimed') || '');
+                if (claim && quickInput) {
+                    quickInput.value = claim;
+                    quickInput.dispatchEvent(new Event('input'));
+                }
+            } catch {}
+        })();
+
+        // 12. 小红书认领口令弹窗（点击复制口令时自动请求后端软锁号 2 小时）
+        const modal = $('#submit-modal');
+        const form = $('#vibe-submit-form');
+        const modalPrefix = $('#modal-prefix-input');
+        const urlInput = $('#f-url');
+        const nameInput = $('#f-name');
+        let lastFocus = null;
+
+        const runModalCheck = attachPrefixChecker(modalPrefix, $('#modal-prefix-status'), 'modal', r => {
+            const msg = {
+                empty: '请填写子域名前缀',
+                hint: r.msg,
+                invalid: r.msg,
+                reserved: '这是系统保留前缀，请换一个',
+                locked: '该前缀刚被他人临时锁定，请换一个',
+                taken: '这个前缀已被认领，请换一个'
+            }[r.state];
+            modalPrefix.setCustomValidity(msg || '');
+        });
+
+        urlInput.addEventListener('input', e => {
+            const xhsUrl = $('#xhs-tpl-url');
+            const pfx = sanitizePrefix(modalPrefix.value) || 'notes';
+            if (xhsUrl) xhsUrl.textContent = e.target.value.trim() || `https://my-${pfx}.vercel.app`;
+        });
+        urlInput.addEventListener('blur', () => {
+            const v = urlInput.value.trim();
+            if (v && !/^https?:\/\//i.test(v) && v.includes('.')) {
+                urlInput.value = 'https://' + v;
+                urlInput.dispatchEvent(new Event('input'));
+            }
+        });
+        nameInput.addEventListener('input', e => {
+            const xhsName = $('#xhs-tpl-name');
+            if (xhsName) xhsName.textContent = e.target.value.trim() || '我的 AI 编程作品';
+        });
+
+        function openSubmitModal(prefix = '') {
+            lastFocus = document.activeElement;
+            $('#submit-form-view').classList.remove('hidden');
+            $('#submit-success-view').classList.add('hidden');
+            $('#success-check').classList.remove('is-drawn');
+            const candidate = sanitizePrefix(prefix || quickInput.value.trim()) || 'notes';
+            modalPrefix.value = candidate;
+            runModalCheck();
+            modal.classList.add('is-open');
+            modal.setAttribute('aria-hidden', 'false');
+            document.documentElement.style.overflow = 'hidden';
+            setMenu(false);
+            setTimeout(() => (checkPrefix(candidate).state === 'available' ? nameInput : modalPrefix).focus({ preventScroll: true }), 150);
+        }
+
+        function closeSubmitModal() {
+            modal.classList.remove('is-open');
+            modal.setAttribute('aria-hidden', 'true');
+            if (!policyModal.classList.contains('is-open')) {
+                document.documentElement.style.overflow = '';
+            }
+            if (lastFocus && lastFocus.focus) lastFocus.focus({ preventScroll: true });
+        }
+
+        // 13. 独立规范与隐私弹窗
+        const policyModal = $('#policy-modal');
+        let policyLastFocus = null;
+        const POLICY_ON = ['bg-white', 'text-apple-dark', 'shadow-sm'];
+        const POLICY_OFF = ['text-apple-gray', 'hover:text-apple-dark'];
+
+        function switchPolicyTab(tabKey) {
+            $$('[data-policy-tab]').forEach(btn => {
+                if (btn.dataset.policyTab === tabKey) swapClasses(btn, POLICY_ON, POLICY_OFF);
+                else swapClasses(btn, POLICY_OFF, POLICY_ON);
+            });
+            $('#policy-view-terms').classList.toggle('hidden', tabKey !== 'terms');
+            $('#policy-view-privacy').classList.toggle('hidden', tabKey !== 'privacy');
+        }
+
+        function openPolicyModal(tabKey = 'terms') {
+            policyLastFocus = document.activeElement;
+            switchPolicyTab(tabKey);
+            policyModal.classList.add('is-open');
+            policyModal.setAttribute('aria-hidden', 'false');
+            document.documentElement.style.overflow = 'hidden';
+        }
+
+        function closePolicyModal() {
+            policyModal.classList.remove('is-open');
+            policyModal.setAttribute('aria-hidden', 'true');
+            if (!modal.classList.contains('is-open')) {
+                document.documentElement.style.overflow = '';
+            }
+            if (policyLastFocus && policyLastFocus.focus) policyLastFocus.focus({ preventScroll: true });
+        }
+
+        $$('[data-policy-tab]').forEach(btn => btn.addEventListener('click', () => switchPolicyTab(btn.dataset.policyTab)));
+
+        form.addEventListener('submit', e => {
+            e.preventDefault();
+            const prefix = sanitizePrefix(modalPrefix.value) || 'notes';
+            const titleVal = (nameInput.value || '').trim() || '我的 AI 编程作品';
+            const originVal = (urlInput.value || '').trim() || `https://my-${prefix}.vercel.app`;
+            const tplText = $('#comment-template').textContent.trim();
+            copyText(tplText, '✓ 口令已复制并为你锁定 2 小时，正在前往小红书…');
+
+            // 本地与远端同步软锁号 2 小时（方便用户立刻在「查询进度」查到阶段 1）
+            MOCK_STATUS[prefix] = {
+                done: 1,
+                platform: '小红书认领中',
+                author: '你本人',
+                note: '已为你临时锁定该前缀（有效期 2 小时），请尽快在小红书置顶笔记评论区粘贴口令留言。'
+            };
+            if (location.protocol !== 'file:') {
+                fetch('/api/prefix/soft-lock', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        prefix,
+                        title: titleVal,
+                        origin_url: originVal,
+                        token: CLIENT_TOKEN
+                    })
+                }).catch(() => {});
+            }
+
+            const domain = `${prefix}.${CONFIG.domain}`;
+            $('#reserved-domain').textContent = domain;
+            window.open(CONFIG.xhsNoteUrl, '_blank', 'noopener');
+
+            $('#submit-form-view').classList.add('hidden');
+            $('#submit-success-view').classList.remove('hidden');
+            requestAnimationFrame(() => $('#success-check').classList.add('is-drawn'));
+            $('.sheet-panel', modal).scrollTop = 0;
+        });
+
+        $('#reserved-domain-btn').addEventListener('click', () => copyText($('#reserved-domain').textContent, '域名已复制'));
+
+        // 14. 全局事件委托与复制按钮原位微反馈
+        document.addEventListener('click', e => {
+            const policyOpener = e.target.closest('[data-open-policy]');
+            if (policyOpener) { e.preventDefault(); return openPolicyModal(policyOpener.dataset.openPolicy || 'terms'); }
+
+            if (e.target.closest('[data-close-policy]')) return closePolicyModal();
+
+            const opener = e.target.closest('[data-open-submit]');
+            if (opener) { e.preventDefault(); return openSubmitModal(opener.dataset.prefix || ''); }
+
+            if (e.target.closest('[data-close-modal]')) return closeSubmitModal();
+
+            const suggest = e.target.closest('[data-suggest]');
+            if (suggest) {
+                const input = suggest.dataset.scope === 'modal' ? modalPrefix : quickInput;
+                input.value = suggest.dataset.suggest;
+                input.dispatchEvent(new Event('input'));
+                return input.focus();
+            }
+
+            const copyBtn = e.target.closest('[data-copy], [data-copy-from]');
+            if (copyBtn) {
+                const text = copyBtn.dataset.copy || $(copyBtn.dataset.copyFrom).textContent.trim();
+                copyText(text, copyBtn.dataset.copyFrom ? '留言口令已复制，去小红书粘贴吧' : `已复制 ${text}`);
+                if (!copyBtn.dataset.copyLock && copyBtn.textContent.trim().length > 0 && !copyBtn.querySelector('svg:only-child')) {
+                    const origHtml = copyBtn.innerHTML;
+                    copyBtn.dataset.copyLock = '1';
+                    copyBtn.innerHTML = '✓ 已复制';
+                    setTimeout(() => {
+                        copyBtn.innerHTML = origHtml;
+                        delete copyBtn.dataset.copyLock;
+                    }, 1300);
+                }
+                return;
+            }
+        });
+
+        document.addEventListener('keydown', e => {
+            if (e.key === 'Escape') {
+                if (policyModal.classList.contains('is-open')) return closePolicyModal();
+                if (modal.classList.contains('is-open')) return closeSubmitModal();
+            }
+        });
+    </script>
+</body>
+</html>

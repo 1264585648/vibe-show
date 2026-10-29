@@ -1,0 +1,482 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>vibe-show.com — 运营审核与 DNS 反代控制台</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600;700&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        apple: {
+                            bg: '#F5F5F7',
+                            card: '#FFFFFF',
+                            dark: '#1D1D1F',
+                            gray: '#6E6E73',
+                            muted: '#86868B',
+                            blue: '#0071E3',
+                            blueHover: '#0077ED',
+                            border: '#D2D2D7'
+                        }
+                    },
+                    fontFamily: {
+                        sans: ['-apple-system', 'BlinkMacSystemFont', '"Plus Jakarta Sans"', '"PingFang SC"', 'sans-serif'],
+                        mono: ['"JetBrains Mono"', 'ui-monospace', 'SFMono-Regular', 'monospace']
+                    }
+                }
+            }
+        }
+    </script>
+</head>
+<body class="bg-apple-bg text-apple-dark font-sans min-h-screen antialiased">
+
+    <!-- 顶部栏 -->
+    <header class="sticky top-0 z-30 bg-white/85 backdrop-blur-xl border-b border-black/[0.07]">
+        <div class="max-w-[1280px] mx-auto px-6 h-16 flex items-center justify-between gap-4">
+            <div class="flex items-center gap-3">
+                <a href="/" class="flex items-center gap-2 group">
+                    <span class="w-6 h-6 rounded-[7px] bg-apple-dark flex items-center justify-center">
+                        <span class="w-2 h-2 rounded-full bg-white"></span>
+                    </span>
+                    <span class="font-bold tracking-tight text-apple-dark">vibe-show<span class="text-apple-muted font-normal">.com</span></span>
+                </a>
+                <span class="text-black/15">/</span>
+                <span class="text-xs font-mono font-semibold bg-apple-blue/10 text-apple-blue px-2.5 py-1 rounded-full">Admin Console · DNS & Edge Proxy</span>
+            </div>
+
+            <div class="flex items-center gap-3">
+                <div class="flex items-center bg-apple-bg rounded-full px-3.5 py-1.5 border border-black/[0.06]">
+                    <span class="text-[11px] font-mono text-apple-gray mr-2">ADMIN_TOKEN:</span>
+                    <input id="admin-token" type="password" value="vibe-admin-2026" placeholder="输入管理口令"
+                        class="bg-transparent font-mono text-xs text-apple-dark focus:outline-none w-36">
+                </div>
+                <button id="refresh-btn" type="button" class="text-xs font-semibold bg-apple-dark hover:bg-black text-white px-4 py-2 rounded-full transition-colors">
+                    刷新列表
+                </button>
+                <a href="/" class="text-xs font-medium text-apple-gray hover:text-apple-dark">返回前台 ↗</a>
+            </div>
+        </div>
+    </header>
+
+    <main class="max-w-[1280px] mx-auto px-6 py-8">
+        <!-- 顶部统计指标卡 -->
+        <div class="grid grid-cols-2 sm:grid-cols-4 gap-4 mb-7">
+            <div class="bg-white rounded-2xl p-4 border border-black/[0.06] shadow-sm">
+                <p class="text-xs text-apple-gray font-medium">ACTIVE · 已上线反代</p>
+                <p id="stat-active" class="text-2xl font-extrabold font-mono text-emerald-600 mt-1">-</p>
+            </div>
+            <div class="bg-white rounded-2xl p-4 border border-black/[0.06] shadow-sm">
+                <p class="text-xs text-apple-gray font-medium">SOFT_LOCKED · 2h 软锁号中</p>
+                <p id="stat-locked" class="text-2xl font-extrabold font-mono text-amber-600 mt-1">-</p>
+            </div>
+            <div class="bg-white rounded-2xl p-4 border border-black/[0.06] shadow-sm">
+                <p class="text-xs text-apple-gray font-medium">全平台接入模式</p>
+                <p class="text-sm font-bold font-mono text-apple-blue mt-2">Worker Edge Proxy (零配置)</p>
+            </div>
+            <div class="bg-white rounded-2xl p-4 border border-black/[0.06] shadow-sm">
+                <p class="text-xs text-apple-gray font-medium">权威 DNS 自动下发</p>
+                <p class="text-sm font-bold font-mono text-apple-dark mt-2">Cloudflare API + KV</p>
+            </div>
+        </div>
+
+        <div class="grid grid-cols-1 lg:grid-cols-12 gap-7 items-start">
+            <!-- 左栏：小红书评论一键解析与审核放行工作台 -->
+            <section class="lg:col-span-5 bg-white rounded-3xl p-6 sm:p-7 border border-black/[0.06] shadow-sm space-y-5">
+                <div class="flex items-center justify-between">
+                    <div>
+                        <span class="text-[11px] font-mono font-bold uppercase tracking-wider text-[#FF2442]">Step 1 · Xiaohongshu Parser</span>
+                        <h2 class="text-xl font-bold tracking-tight mt-0.5">小红书评论一键解析 & 放行</h2>
+                    </div>
+                    <button id="fill-demo-btn" type="button" class="text-xs font-medium text-apple-blue hover:underline">
+                        填入示例评论
+                    </button>
+                </div>
+
+                <!-- 1. 粘贴评论框 -->
+                <div>
+                    <label class="block text-xs font-semibold text-apple-gray mb-1.5">粘贴小红书评论原文（支持带昵称或仅口令）：</label>
+                    <textarea id="xhs-raw-input" rows="4" placeholder="@小鹿Vibe&#10;#申请子域名 notes&#10;作品：MindNotes 极简灵感卡片&#10;链接：https://example.com"
+                        class="w-full bg-apple-bg rounded-2xl p-3.5 font-mono text-xs leading-relaxed text-apple-dark focus:outline-none focus:bg-white border border-transparent focus:border-apple-blue transition-all"></textarea>
+                    <button id="parse-btn" type="button" class="mt-2.5 w-full bg-apple-dark hover:bg-black text-white text-xs font-semibold py-2.5 rounded-xl transition-all flex items-center justify-center gap-1.5">
+                        <span>⚡ 解析评论 + 关联软锁草稿 + 预检源站连通性</span>
+                    </button>
+                </div>
+
+                <!-- 预检状态反馈条 -->
+                <div id="preflight-box" class="hidden rounded-2xl p-3.5 text-xs leading-relaxed border"></div>
+
+                <!-- 2. 结构化审核表单 -->
+                <form id="approve-form" class="space-y-3.5 pt-2 border-t border-black/[0.06]">
+                    <div class="grid grid-cols-2 gap-3">
+                        <div>
+                            <label class="block text-[11px] font-semibold text-apple-gray mb-1">子域名前缀 *</label>
+                            <div class="flex items-center bg-apple-bg rounded-xl px-3 py-2 border border-transparent focus-within:border-apple-blue focus-within:bg-white">
+                                <input id="f-prefix" type="text" required placeholder="notes"
+                                    class="bg-transparent font-mono text-xs font-bold text-apple-blue focus:outline-none w-full">
+                                <span class="font-mono text-[11px] text-apple-muted shrink-0">.vibe-show.com</span>
+                            </div>
+                        </div>
+                        <div>
+                            <label class="block text-[11px] font-semibold text-apple-gray mb-1">创作者署名 / 小红书 ID *</label>
+                            <input id="f-author" type="text" required placeholder="@小鹿Vibe"
+                                class="w-full bg-apple-bg rounded-xl px-3 py-2 text-xs text-apple-dark focus:outline-none focus:bg-white border border-transparent focus:border-apple-blue">
+                        </div>
+                    </div>
+
+                    <div>
+                        <label class="block text-[11px] font-semibold text-apple-gray mb-1">作品源站 URL（边缘 Worker 反代目标地址）*</label>
+                        <input id="f-origin" type="url" required placeholder="https://your-project.vercel.app"
+                            class="w-full bg-apple-bg rounded-xl px-3 py-2 font-mono text-xs text-apple-dark focus:outline-none focus:bg-white border border-transparent focus:border-apple-blue">
+                    </div>
+
+                    <div class="grid grid-cols-2 gap-3">
+                        <div>
+                            <label class="block text-[11px] font-semibold text-apple-gray mb-1">作品名称（<=30字）*</label>
+                            <input id="f-title" type="text" required maxlength="30" placeholder="MindNotes 灵感卡片"
+                                class="w-full bg-apple-bg rounded-xl px-3 py-2 text-xs text-apple-dark focus:outline-none focus:bg-white border border-transparent focus:border-apple-blue">
+                        </div>
+                        <div>
+                            <label class="block text-[11px] font-semibold text-apple-gray mb-1">作品分类</label>
+                            <select id="f-category" class="w-full bg-apple-bg rounded-xl px-3 py-2 text-xs text-apple-dark focus:outline-none focus:bg-white border border-transparent focus:border-apple-blue">
+                                <option value="tool">效率工具 (tool)</option>
+                                <option value="creative">创意玩具 (creative)</option>
+                                <option value="game">独立小游戏 (game)</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <div class="grid grid-cols-2 gap-3">
+                        <div>
+                            <label class="block text-[11px] font-semibold text-apple-gray mb-1">构建工具 / 技术栈标签</label>
+                            <input id="f-stack" type="text" maxlength="24" placeholder="Cursor + Next.js"
+                                class="w-full bg-apple-bg rounded-xl px-3 py-2 font-mono text-xs text-apple-dark focus:outline-none focus:bg-white border border-transparent focus:border-apple-blue">
+                        </div>
+                        <div>
+                            <label class="block text-[11px] font-semibold text-apple-gray mb-1">部署平台识别</label>
+                            <input id="f-platform" type="text" placeholder="Vercel"
+                                class="w-full bg-apple-bg rounded-xl px-3 py-2 text-xs text-apple-dark focus:outline-none focus:bg-white border border-transparent focus:border-apple-blue">
+                        </div>
+                    </div>
+
+                    <div>
+                        <label class="block text-[11px] font-semibold text-apple-gray mb-1">一句话简介（<=40字，展示在秀场卡片）</label>
+                        <input id="f-tagline" type="text" maxlength="40" placeholder="专为创作者打造的极简双向链接笔记"
+                            class="w-full bg-apple-bg rounded-xl px-3 py-2 text-xs text-apple-dark focus:outline-none focus:bg-white border border-transparent focus:border-apple-blue">
+                    </div>
+
+                    <div class="flex flex-wrap items-center gap-5 pt-1 text-xs text-apple-dark">
+                        <label class="inline-flex items-center gap-1.5 cursor-pointer">
+                            <input id="f-gallery" type="checkbox" checked class="rounded text-apple-blue">
+                            <span>展示在首页秀场</span>
+                        </label>
+                        <label class="inline-flex items-center gap-1.5 cursor-pointer">
+                            <input id="f-featured" type="checkbox" class="rounded text-apple-blue">
+                            <span>★ 本周精选角标</span>
+                        </label>
+                        <label class="inline-flex items-center gap-1.5 cursor-pointer">
+                            <input id="f-force" type="checkbox" class="rounded text-apple-blue">
+                            <span class="text-apple-gray">忽略单人 3 个配额限制</span>
+                        </label>
+                    </div>
+
+                    <button id="approve-submit-btn" type="submit" class="w-full bg-apple-blue hover:bg-apple-blueHover text-white font-semibold py-3 rounded-2xl shadow-sm transition-all text-sm">
+                        ✓ 一键审核通过（自动写 DNS + 开启边缘反代）
+                    </button>
+                </form>
+
+                <!-- 审核成功后的小红书回帖话术复制区 -->
+                <div id="reply-box" class="hidden bg-emerald-50/90 border border-emerald-500/25 rounded-2xl p-4 space-y-2.5">
+                    <div class="flex items-center justify-between">
+                        <span class="text-xs font-bold text-emerald-800">🎉 DNS 与边缘反代已生效！小红书回复话术：</span>
+                        <a id="preview-proxy-link" href="#" target="_blank" class="text-xs font-mono font-semibold text-apple-blue hover:underline">测试反代访问 ↗</a>
+                    </div>
+                    <pre id="reply-text" class="bg-white rounded-xl p-3 font-mono text-xs text-apple-dark whitespace-pre-wrap border border-emerald-500/15 select-all"></pre>
+                    <button id="copy-reply-btn" type="button" class="w-full bg-emerald-600 hover:bg-emerald-700 text-white text-xs font-semibold py-2.5 rounded-xl transition-colors">
+                        复制小红书回复话术
+                    </button>
+                </div>
+            </section>
+
+            <!-- 右栏：子域名与软锁号实时列表 -->
+            <section class="lg:col-span-7 bg-white rounded-3xl p-6 sm:p-7 border border-black/[0.06] shadow-sm">
+                <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-5 mb-5 border-b border-black/[0.06]">
+                    <div>
+                        <span class="text-[11px] font-mono font-bold uppercase tracking-wider text-apple-blue">Subdomain Registry</span>
+                        <h2 class="text-xl font-bold tracking-tight mt-0.5">已分配子域名与软锁号队列</h2>
+                    </div>
+                    <div class="inline-flex bg-apple-bg p-1 rounded-full self-start">
+                        <button type="button" data-status-filter="ALL" class="filter-tab text-xs font-semibold px-3.5 py-1.5 rounded-full bg-white text-apple-dark shadow-sm">全部</button>
+                        <button type="button" data-status-filter="SOFT_LOCKED" class="filter-tab text-xs font-semibold px-3.5 py-1.5 rounded-full text-apple-gray hover:text-apple-dark">2h 软锁中</button>
+                        <button type="button" data-status-filter="ACTIVE" class="filter-tab text-xs font-semibold px-3.5 py-1.5 rounded-full text-apple-gray hover:text-apple-dark">已上线</button>
+                    </div>
+                </div>
+
+                <div id="subdomain-list" class="divide-y divide-black/[0.06]"></div>
+            </section>
+        </div>
+    </main>
+
+    <script>
+        const $ = sel => document.querySelector(sel);
+        const $$ = sel => Array.from(document.querySelectorAll(sel));
+        let currentFilter = 'ALL';
+        let currentItems = [];
+
+        const tokenInput = $('#admin-token');
+        const savedToken = localStorage.getItem('vibe_admin_token');
+        if (savedToken) tokenInput.value = savedToken;
+        tokenInput.addEventListener('change', () => localStorage.setItem('vibe_admin_token', tokenInput.value.trim()));
+
+        function getHeaders() {
+            return {
+                'Content-Type': 'application/json',
+                'Authorization': `Bearer ${tokenInput.value.trim()}`
+            };
+        }
+
+        function escapeHtml(str) {
+            return String(str || '').replace(/[&<>"']/g, m => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[m]));
+        }
+
+        async function loadSubdomains() {
+            const box = $('#subdomain-list');
+            box.innerHTML = `<div class="py-8 text-center text-xs text-apple-gray">加载中…</div>`;
+            try {
+                const res = await fetch(`/api/admin/subdomains?status=${encodeURIComponent(currentFilter)}`, {
+                    headers: getHeaders()
+                });
+                const data = await res.json();
+                if (!res.ok || !data.ok) {
+                    box.innerHTML = `<div class="py-8 text-center text-xs text-rose-600">${escapeHtml(data.error || '加载失败，请检查右上角 ADMIN_TOKEN')}</div>`;
+                    return;
+                }
+                $('#stat-active').textContent = data.counts?.ACTIVE ?? 0;
+                $('#stat-locked').textContent = data.counts?.SOFT_LOCKED ?? 0;
+                currentItems = data.items || [];
+
+                if (currentItems.length === 0) {
+                    box.innerHTML = `<div class="py-10 text-center text-xs text-apple-gray">当前筛选下暂无记录</div>`;
+                    return;
+                }
+
+                box.innerHTML = currentItems.map(item => {
+                    const badge = item.status === 'ACTIVE'
+                        ? `<span class="text-[11px] font-mono font-semibold bg-emerald-500/10 text-emerald-700 px-2.5 py-0.5 rounded-full">● ACTIVE</span>`
+                        : item.status === 'SOFT_LOCKED'
+                        ? `<span class="text-[11px] font-mono font-semibold bg-amber-500/15 text-amber-700 px-2.5 py-0.5 rounded-full">⏳ SOFT_LOCKED (2h)</span>`
+                        : `<span class="text-[11px] font-mono font-semibold bg-gray-200 text-gray-700 px-2.5 py-0.5 rounded-full">${escapeHtml(item.status)}</span>`;
+
+                    const featuredBadge = item.is_featured
+                        ? `<span class="text-[10.5px] font-bold bg-amber-300/80 text-amber-950 px-2 py-0.5 rounded-full">★ 精选</span>`
+                        : '';
+
+                    return `
+                        <div class="py-4 flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+                            <div class="min-w-0 space-y-1">
+                                <div class="flex flex-wrap items-center gap-2">
+                                    <span class="font-mono text-sm font-bold text-apple-blue">${escapeHtml(item.prefix)}<span class="text-apple-dark font-normal">.vibe-show.com</span></span>
+                                    ${badge}
+                                    ${featuredBadge}
+                                    <span class="text-xs text-apple-gray">${escapeHtml(item.author_name)}</span>
+                                </div>
+                                <div class="text-xs text-apple-dark font-medium truncate">
+                                    ${escapeHtml(item.title || '未命名作品')}
+                                    <span class="text-apple-muted font-normal mx-1">·</span>
+                                    <a href="${escapeHtml(item.origin_url || '#')}" target="_blank" class="font-mono text-apple-gray hover:text-apple-blue underline">${escapeHtml(item.origin_url || '暂未填写源站链接')}</a>
+                                </div>
+                            </div>
+                            <div class="flex items-center gap-2 shrink-0">
+                                <button type="button" data-edit-prefix="${escapeHtml(item.prefix)}" class="text-xs font-medium bg-apple-bg hover:bg-gray-200 text-apple-dark px-3 py-1.5 rounded-lg transition-colors">
+                                    填入左栏编辑
+                                </button>
+                                ${item.status === 'ACTIVE' ? `<a href="/__proxy/${encodeURIComponent(item.prefix)}/" target="_blank" class="text-xs font-mono font-medium bg-apple-blue/10 hover:bg-apple-blue/20 text-apple-blue px-3 py-1.5 rounded-lg transition-colors">反代测试 ↗</a>` : ''}
+                                <button type="button" data-revoke-prefix="${escapeHtml(item.prefix)}" class="text-xs font-medium bg-rose-50 hover:bg-rose-100 text-rose-600 px-3 py-1.5 rounded-lg transition-colors">
+                                    回收/删除
+                                </button>
+                            </div>
+                        </div>
+                    `;
+                }).join('');
+            } catch (err) {
+                box.innerHTML = `<div class="py-8 text-center text-xs text-rose-600">请求异常: ${escapeHtml(err.message)}</div>`;
+            }
+        }
+
+        // 示例小红书评论一键填入
+        $('#fill-demo-btn').addEventListener('click', () => {
+            $('#xhs-raw-input').value = `@小鹿Vibe\n#申请子域名 notes\n作品：MindNotes 极简灵感卡片\n链接：https://example.com`;
+        });
+
+        // 解析小红书评论 + 源站预检
+        $('#parse-btn').addEventListener('click', async () => {
+            const raw = $('#xhs-raw-input').value.trim();
+            if (!raw) return alert('请先粘贴小红书评论内容');
+            const btn = $('#parse-btn');
+            btn.textContent = '正在解析并探测源站连通性…';
+            btn.disabled = true;
+
+            try {
+                const res = await fetch('/api/admin/parse-xhs', {
+                    method: 'POST',
+                    headers: getHeaders(),
+                    body: JSON.stringify({ comment_text: raw })
+                });
+                const data = await res.json();
+                if (!res.ok || !data.ok) {
+                    alert(data.error || '解析失败');
+                    return;
+                }
+
+                const p = data.parsed;
+                if (p.prefix) $('#f-prefix').value = p.prefix;
+                if (p.author_name) $('#f-author').value = p.author_name;
+                if (p.origin_url) $('#f-origin').value = p.origin_url;
+                if (p.title) $('#f-title').value = p.title;
+                if (p.platform) $('#f-platform').value = p.platform;
+                if (p.tagline) $('#f-tagline').value = p.tagline;
+                if (!$('#f-stack').value) $('#f-stack').value = `${p.platform || 'AI'} + Web`;
+
+                const pf = data.preflight || {};
+                const pfBox = $('#preflight-box');
+                pfBox.classList.remove('hidden', 'bg-emerald-50', 'border-emerald-500/20', 'text-emerald-900', 'bg-amber-50', 'border-amber-500/25', 'text-amber-900');
+
+                const draftHint = data.existing_record
+                    ? `<div>📌 <b>匹配到数据库记录</b>：状态 <code>${escapeHtml(data.existing_record.status)}</code>（已自动合并网页端预填草稿）</div>`
+                    : `<div>🆕 数据库中尚无此前缀记录，审核通过将直接新建并生效</div>`;
+
+                if (pf.reachable && pf.compliance_ok) {
+                    pfBox.classList.add('bg-emerald-50', 'border-emerald-500/20', 'text-emerald-900');
+                    pfBox.innerHTML = `
+                        <div class="font-semibold">✓ 源站预检通过（HTTP ${pf.http_status} · 平台：${escapeHtml(pf.detected_platform)}）</div>
+                        ${pf.detected_title ? `<div class="mt-0.5 text-[11px] opacity-80">抓取网页 Title：${escapeHtml(pf.detected_title)}</div>` : ''}
+                        ${draftHint}
+                    `;
+                } else {
+                    pfBox.classList.add('bg-amber-50', 'border-amber-500/25', 'text-amber-900');
+                    pfBox.innerHTML = `
+                        <div class="font-semibold">⚠️ 源站预检提示：${escapeHtml(pf.compliance_warning || '源站未返回 200 OK')}</div>
+                        ${draftHint}
+                    `;
+                }
+            } catch (err) {
+                alert('解析请求失败: ' + err.message);
+            } finally {
+                btn.textContent = '⚡ 解析评论 + 关联软锁草稿 + 预检源站连通性';
+                btn.disabled = false;
+            }
+        });
+
+        // 提交一键审核通过
+        $('#approve-form').addEventListener('submit', async e => {
+            e.preventDefault();
+            const btn = $('#approve-submit-btn');
+            btn.textContent = '正在下发 Cloudflare DNS 与边缘反代路由…';
+            btn.disabled = true;
+
+            try {
+                const payload = {
+                    prefix: $('#f-prefix').value.trim(),
+                    author_name: $('#f-author').value.trim(),
+                    origin_url: $('#f-origin').value.trim(),
+                    title: $('#f-title').value.trim(),
+                    category: $('#f-category').value,
+                    stack: $('#f-stack').value.trim() || 'AI + Web',
+                    platform: $('#f-platform').value.trim() || 'Vercel',
+                    tagline: $('#f-tagline').value.trim() || 'AI 编程灵感作品',
+                    show_in_gallery: $('#f-gallery').checked,
+                    is_featured: $('#f-featured').checked,
+                    force: $('#f-force').checked,
+                    xhs_comment_raw: $('#xhs-raw-input').value.trim()
+                };
+
+                const res = await fetch('/api/admin/approve', {
+                    method: 'POST',
+                    headers: getHeaders(),
+                    body: JSON.stringify(payload)
+                });
+                const data = await res.json();
+                if (!res.ok || !data.ok) {
+                    alert(data.error || '审核放行失败');
+                    return;
+                }
+
+                $('#reply-box').classList.remove('hidden');
+                $('#reply-text').textContent = data.xhs_reply_text;
+                $('#preview-proxy-link').href = `/__proxy/${encodeURIComponent(data.prefix)}/`;
+                await loadSubdomains();
+            } catch (err) {
+                alert('请求异常: ' + err.message);
+            } finally {
+                btn.textContent = '✓ 一键审核通过（自动写 DNS + 开启边缘反代）';
+                btn.disabled = false;
+            }
+        });
+
+        $('#copy-reply-btn').addEventListener('click', async () => {
+            const text = $('#reply-text').textContent;
+            await navigator.clipboard.writeText(text);
+            const btn = $('#copy-reply-btn');
+            btn.textContent = '✓ 已复制到剪贴板，快去小红书回复吧！';
+            setTimeout(() => { btn.textContent = '复制小红书回复话术'; }, 2000);
+        });
+
+        // 列表筛选与操作事件委托
+        $$('.filter-tab').forEach(btn => btn.addEventListener('click', () => {
+            currentFilter = btn.dataset.statusFilter;
+            $$('.filter-tab').forEach(b => {
+                b.className = b === btn
+                    ? 'filter-tab text-xs font-semibold px-3.5 py-1.5 rounded-full bg-white text-apple-dark shadow-sm'
+                    : 'filter-tab text-xs font-semibold px-3.5 py-1.5 rounded-full text-apple-gray hover:text-apple-dark';
+            });
+            loadSubdomains();
+        }));
+
+        $('#subdomain-list').addEventListener('click', async e => {
+            const editBtn = e.target.closest('[data-edit-prefix]');
+            if (editBtn) {
+                const pfx = editBtn.dataset.editPrefix;
+                const item = currentItems.find(i => i.prefix === pfx);
+                if (item) {
+                    $('#f-prefix').value = item.prefix;
+                    $('#f-author').value = item.author_name || '';
+                    $('#f-origin').value = item.origin_url || '';
+                    $('#f-title').value = item.title || '';
+                    $('#f-category').value = item.category || 'tool';
+                    $('#f-stack').value = item.stack || '';
+                    $('#f-platform').value = item.platform || '';
+                    $('#f-tagline').value = item.tagline || '';
+                    $('#f-gallery').checked = Boolean(item.show_in_gallery);
+                    $('#f-featured').checked = Boolean(item.is_featured);
+                    window.scrollTo({ top: 0, behavior: 'smooth' });
+                }
+                return;
+            }
+
+            const revokeBtn = e.target.closest('[data-revoke-prefix]');
+            if (revokeBtn) {
+                const pfx = revokeBtn.dataset.revokePrefix;
+                if (!confirm(`确定要回收并删除 ${pfx}.vibe-show.com 的 DNS 记录与反代路由吗？`)) return;
+                const res = await fetch('/api/admin/revoke', {
+                    method: 'POST',
+                    headers: getHeaders(),
+                    body: JSON.stringify({ prefix: pfx, reason: '管理员手动回收' })
+                });
+                const data = await res.json();
+                if (data.ok) {
+                    loadSubdomains();
+                } else {
+                    alert(data.error || '回收失败');
+                }
+            }
+        });
+
+        $('#refresh-btn').addEventListener('click', loadSubdomains);
+        loadSubdomains();
+    </script>
+</body>
+</html>
