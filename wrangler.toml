@@ -15,9 +15,13 @@ routes = [
 ]
 
 # 3. 静态资源托管（public/index.html 与 public/admin.html 走 Cloudflare 免费静态资产层）
+#    ⚠️ run_worker_first 必须为 true：静态资产默认先于 Worker 匹配，
+#    否则 {prefix}.vibe-show.com/ 会命中 public/index.html 直接返回主站首页，
+#    子域名反代永远拿不到请求（2026-10-30 事故根因）。
 [assets]
 directory = "./public"
 binding = "ASSETS"
+run_worker_first = true
 
 # 4. Cloudflare D1 数据库绑定
 [[d1_databases]]

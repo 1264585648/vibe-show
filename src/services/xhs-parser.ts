@@ -25,6 +25,7 @@ export function detectPlatformFromUrl(urlStr: string): string {
   if (lower.includes('.netlify.app')) return 'Netlify';
   if (lower.includes('.github.io')) return 'GitHub Pages';
   if (lower.includes('.pages.dev')) return 'Cloudflare Pages';
+  if (lower.includes('.workers.dev')) return 'Cloudflare Workers';
   if (lower.includes('.lovable.app') || lower.includes('lovable.dev')) return 'Lovable';
   if (lower.includes('.bolt.new') || lower.includes('stackblitz')) return 'Bolt';
   if (lower.includes('.replit.app') || lower.includes('.repl.co')) return 'Replit';
