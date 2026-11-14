@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>vibe-show.com — Showcase, subdomains and deployment for vibe coders</title>
+<meta name="description" content="vibe-show is a platform for creators who build with AI coding tools: a public showcase, a free yourname.vibe-show.com subdomain with zero-config HTTPS, and optional paid plans and deployment.">
+<meta property="og:type" content="website">
+<meta property="og:title" content="vibe-show.com — Your AI-built project deserves a real address">
+<meta property="og:description" content="Showcase your project and get a free yourname.vibe-show.com subdomain with zero-config HTTPS.">
+<link rel="alternate" hreflang="zh-CN" href="https://vibe-show.com/">
+<link rel="alternate" hreflang="en" href="https://vibe-show.com/en/">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'><rect width='32' height='32' rx='8' fill='%231D1D1F'/><circle cx='16' cy='16' r='6' fill='%230071E3'/></svg>">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;600;700&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="/assets/site.css">
+<style>
+  .hero { text-align: center; padding: 72px 24px 40px; }
+  .hero h1 { font-size: clamp(38px, 6.5vw, 68px); }
+  .hero .lead { margin: 0 auto 28px; }
+  .url-pill { display: inline-flex; flex-wrap: wrap; gap: 10px; align-items: center; justify-content: center; background: #fff; border: 1px solid var(--line); border-radius: 999px; padding: 8px 18px; font: 600 13px "JetBrains Mono", monospace; }
+  .url-pill s { color: var(--muted); font-weight: 400; }
+  .url-pill b { color: var(--blue); }
+  .cta-row { display: flex; gap: 12px; justify-content: center; flex-wrap: wrap; margin-top: 28px; }
+  .cta-row .btn { margin: 0; padding: 12px 26px; }
+  .feature h3 { margin-top: 6px; }
+  .feature .kicker { font-size: 12px; font-weight: 600; letter-spacing: 0.08em; text-transform: uppercase; color: var(--blue); }
+</style>
+</head>
+<body>
+<header class="site-header"><div class="inner">
+  <a class="brand" href="/en/"><span class="logo"><i></i></span>vibe-show<small>.com</small></a>
+  <nav class="nav">
+    <a href="#features">Features</a><a href="#how">How it works</a><a href="#pricing">Pricing</a><a href="#faq">FAQ</a>
+    <a href="/" hreflang="zh-CN" lang="zh-CN">中文</a>
+  </nav>
+</div></header>
+
+<main>
+  <section class="hero">
+    <p class="eyebrow">Built for vibe coders</p>
+    <h1>Your AI-built project deserves<br>a real address</h1>
+    <p class="lead">vibe-show is a home for projects made with AI coding tools. Showcase your work, get a free <span class="mono">yourname.vibe-show.com</span> subdomain with HTTPS in one step, and let us deploy it for you if you'd rather not.</p>
+    <div class="url-pill"><s>my-tarot-git-9f8a7b.vercel.app</s> → <span>https://<b>tarot</b>.vibe-show.com</span></div>
+    <div class="cta-row">
+      <a class="btn primary" href="mailto:hi@vibe-show.com?subject=Subdomain%20request&body=Prefix%3A%20%0AProject%20name%3A%20%0ASource%20URL%3A%20">Request a free subdomain</a>
+      <a class="btn light" href="/#showcase">Browse the showcase</a>
+    </div>
+  </section>
+
+  <div class="wrap" style="padding-top:8px">
+    <section id="features">
+      <h2>What you get</h2>
+      <div class="grid3">
+        <div class="card feature"><span class="kicker">Showcase</span><h3>Get your work seen</h3><p>Approved projects appear in a curated gallery of productivity tools, creative toys and indie games built by vibe coders.</p></div>
+        <div class="card feature"><span class="kicker">Subdomains</span><h3>Zero-config HTTPS</h3><p>Keep hosting on Vercel, Netlify, GitHub Pages, Cloudflare Pages, Lovable, Bolt or Replit. Our Cloudflare edge proxy serves it at your subdomain — no DNS work on your side.</p></div>
+        <div class="card feature"><span class="kicker">Deployment</span><h3>We ship it for you</h3><p>Hand us a repository and we deploy it to a host you own, connect your subdomain and run a launch check on HTTPS, mobile and basic SEO.</p></div>
+      </div>
+    </section>
+
+    <section id="how">
+      <h2>How it works</h2>
+      <ol class="steps">
+        <li><b>Pick a prefix.</b> Choose 3–30 lowercase letters, digits or hyphens, e.g. <span class="mono">tarot</span>.</li>
+        <li><b>Send us your project.</b> Share the prefix, project name and the URL where it's hosted.</li>
+        <li><b>We review it.</b> Usually within 24 hours (2 hours on Pro). We check that the site loads and follows our rules.</li>
+        <li><b>It goes live.</b> Your subdomain gets a proxied DNS record and HTTPS, and your project joins the showcase.</li>
+      </ol>
+    </section>
+
+    <section id="pricing">
+      <h2>Pricing</h2>
+      <p class="lead" style="margin-bottom:28px">Start free. Upgrade when you need more. Prices in USD.</p>
+      <div class="grid3">
+        <div class="card plan">
+          <span class="kicker">Free</span><h3>Free</h3>
+          <p class="price">$0</p>
+          <ul><li>✓ Up to 3 subdomains</li><li>✓ Edge proxy with automatic HTTPS</li><li>✓ Listed in the showcase</li><li>✓ Review within 24 hours</li></ul>
+          <a class="btn light" href="mailto:hi@vibe-show.com?subject=Subdomain%20request">Request a subdomain</a>
+        </div>
+        <div class="card plan featured">
+          <span class="tag">Coming soon</span>
+          <span class="kicker" style="color:var(--blue)">Pro</span><h3>Creator</h3>
+          <p class="price">$5 <span>/ month · or $48 / year</span></p>
+          <ul><li>✓ Everything in Free</li><li>✓ Up to 10 subdomains</li><li>✓ Priority review within 2 hours</li><li>✓ Request directly on the web</li><li>✓ Featured placement in the showcase</li><li>✓ Cancel anytime, 14-day refund</li></ul>
+          <a class="btn primary" href="mailto:hi@vibe-show.com?subject=Pro%20waitlist">Join the waitlist</a>
+        </div>
+        <div class="card plan">
+          <span class="kicker">Launch</span><h3>Deployment service</h3>
+          <p class="price">$29 <span>/ project, one-time</span></p>
+          <ul><li>✓ Deploy your repo to Vercel or Cloudflare Pages</li><li>✓ Connect your vibe-show subdomain</li><li>✓ Launch check: HTTPS, mobile, basic SEO</li><li>✓ Includes 3 months of Pro</li><li>✓ Full refund before work starts</li></ul>
+          <a class="btn dark" href="mailto:hi@vibe-show.com?subject=Launch%20service">Book a launch</a>
+        </div>
+      </div>
+      <p class="meta" style="margin-top:18px">Need custom development on top of vibe-show? Email <a href="mailto:hi@vibe-show.com?subject=Custom%20development">hi@vibe-show.com</a> for a quote; it's contracted and billed separately. Paying means you agree to our <a href="/terms">Terms</a> and <a href="/refund">Refund Policy</a>.</p>
+    </section>
+
+    <section id="faq">
+      <h2>FAQ</h2>
+      <div class="card">
+        <details open><summary>Is the free plan really free?</summary><p>Yes. Free subdomains stay free for as long as your project is reachable and follows our rules.</p></details>
+        <details><summary>Do I need to configure DNS on my host?</summary><p>No. Our Cloudflare edge proxy serves your existing deployment at your subdomain. You only send us the project URL.</p></details>
+        <details><summary>Which hosts are supported?</summary><p>Vercel, Netlify, GitHub Pages, Cloudflare Pages, Lovable, Bolt, Replit and any public HTTPS site.</p></details>
+        <details><summary>What isn't allowed?</summary><p>Phishing, gambling, adult content, malware, spam and anything that infringes others' rights. See the <a href="/terms">Terms of Service</a>.</p></details>
+        <details><summary>How do I cancel or delete my data?</summary><p>Email <a href="mailto:hi@vibe-show.com">hi@vibe-show.com</a>. See the <a href="/privacy">Privacy Policy</a> and <a href="/refund">Refund Policy</a>.</p></details>
+      </div>
+    </section>
+  </div>
+</main>
+
+<footer class="site-footer"><div class="inner">
+  <span>© 2026 vibe-show.com · Contact <a href="mailto:hi@vibe-show.com">hi@vibe-show.com</a></span>
+  <nav><a href="/terms">Terms</a><a href="/privacy">Privacy</a><a href="/refund">Refunds</a><a href="mailto:abuse@vibe-show.com">Report abuse</a><a href="/" hreflang="zh-CN" lang="zh-CN">中文</a></nav>
+</div></footer>
+</body>
+</html>

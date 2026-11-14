@@ -1,0 +1,617 @@
+<!DOCTYPE html>
+<html lang="zh-CN" class="scroll-smooth">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+  <title>土区 Google AI Ultra 5x 实测与开通手册 — vibe-show.com</title>
+  <meta name="description" content="土耳其区 App Store 内购 Google AI Ultra 5x 的真实到手成本、价格熔断自检与 4 步防翻车实操指南。">
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'><rect width='32' height='32' rx='8' fill='%231D1D1F'/><circle cx='16' cy='16' r='6' fill='%230071E3'/></svg>">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600;700&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg: #F5F5F7;
+      --card: #FFFFFF;
+      --dark: #1D1D1F;
+      --dark-secondary: #3A3A3C;
+      --gray: #6E6E73;
+      --muted: #86868B;
+      --border: rgba(0, 0, 0, 0.08);
+      --blue: #0071E3;
+      --blue-hover: #0077ED;
+      --blue-light: #EBF5FF;
+      --green: #107C41;
+      --green-light: #E8F5E9;
+      --amber: #C05621;
+      --amber-light: #FEF3C7;
+      --rose: #DC2626;
+      --rose-light: #FEE2E2;
+      --font-sans: -apple-system, BlinkMacSystemFont, "SF Pro Display", "SF Pro Text", "Plus Jakarta Sans", "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", sans-serif;
+      --font-mono: "SF Mono", "JetBrains Mono", ui-monospace, Menlo, Consolas, monospace;
+      --shadow-apple: 0 10px 30px -6px rgba(29, 29, 31, 0.04), 0 2px 8px -2px rgba(29, 29, 31, 0.02), inset 0 1px 0 0 rgba(255, 255, 255, 0.9);
+      --shadow-card: 0 4px 18px -2px rgba(0, 0, 0, 0.04), 0 1px 3px rgba(0, 0, 0, 0.02);
+    }
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      background-color: var(--bg);
+      color: var(--dark);
+      font-family: var(--font-sans);
+      font-size: 14px;
+      line-height: 1.55;
+      -webkit-font-smoothing: antialiased;
+      -moz-osx-font-smoothing: grayscale;
+    }
+    a { color: var(--blue); text-decoration: none; transition: color 0.15s ease; }
+    a:hover { color: var(--blue-hover); text-decoration: underline; }
+    code {
+      font-family: var(--font-mono);
+      font-size: 12px;
+      background: rgba(0, 0, 0, 0.04);
+      padding: 2px 6px;
+      border-radius: 6px;
+    }
+
+    /* Apple Glass Header */
+    .apple-glass {
+      position: sticky;
+      top: 0;
+      z-index: 50;
+      background: rgba(245, 245, 247, 0.82);
+      backdrop-filter: saturate(180%) blur(20px);
+      -webkit-backdrop-filter: saturate(180%) blur(20px);
+      border-bottom: 1px solid rgba(0, 0, 0, 0.07);
+    }
+    .header-inner {
+      max-width: 1120px;
+      margin: 0 auto;
+      height: 54px;
+      padding: 0 24px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 16px;
+    }
+    .brand-wrap {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      text-decoration: none !important;
+    }
+    .brand-badge {
+      width: 24px;
+      height: 24px;
+      border-radius: 7px;
+      background: var(--dark);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    .brand-badge span {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background: #FFFFFF;
+    }
+    .brand-text {
+      font-size: 15px;
+      font-weight: 700;
+      color: var(--dark);
+      letter-spacing: -0.02em;
+    }
+    .nav-links {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+    .nav-pill {
+      font-size: 13px;
+      font-weight: 500;
+      color: var(--gray);
+      padding: 6px 13px;
+      border-radius: 9999px;
+      text-decoration: none !important;
+      transition: all 0.18s ease;
+    }
+    .nav-pill:hover {
+      color: var(--dark);
+      background: rgba(0, 0, 0, 0.04);
+    }
+    .nav-pill.active {
+      color: var(--dark);
+      background: rgba(0, 0, 0, 0.07);
+      font-weight: 600;
+    }
+
+    .container {
+      max-width: 1120px;
+      margin: 0 auto;
+      padding: 24px 24px 60px;
+    }
+
+    /* Page Header */
+    .hero-section {
+      padding: 20px 0 24px;
+      display: flex;
+      flex-wrap: wrap;
+      align-items: flex-end;
+      justify-content: space-between;
+      gap: 16px;
+      border-bottom: 1px solid rgba(0, 0, 0, 0.06);
+      margin-bottom: 22px;
+    }
+    .hero-title-group h1 {
+      margin: 0 0 6px;
+      font-size: 30px;
+      font-weight: 800;
+      letter-spacing: -0.03em;
+      color: var(--dark);
+      line-height: 1.18;
+    }
+    .hero-title-group p {
+      margin: 0;
+      font-size: 14.5px;
+      color: var(--gray);
+    }
+    .meta-pill {
+      font-family: var(--font-mono);
+      font-size: 12px;
+      color: var(--gray);
+      background: #FFFFFF;
+      padding: 6px 14px;
+      border-radius: 9999px;
+      border: 1px solid var(--border);
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .meta-pill .dot {
+      width: 7px;
+      height: 7px;
+      border-radius: 50%;
+      background: var(--blue);
+    }
+
+    /* Apple Bento 3-column TL;DR */
+    .tldr-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 14px;
+      margin-bottom: 24px;
+    }
+    .tldr-card {
+      background: #FFFFFF;
+      border-radius: 20px;
+      border: 1px solid var(--border);
+      box-shadow: var(--shadow-apple);
+      padding: 18px 20px;
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+    }
+    .tldr-card-num {
+      font-family: var(--font-mono);
+      font-size: 11px;
+      font-weight: 700;
+      color: var(--blue);
+      text-transform: uppercase;
+      letter-spacing: 0.04em;
+    }
+    .tldr-card h3 {
+      margin: 0;
+      font-size: 15px;
+      font-weight: 700;
+      color: var(--dark);
+    }
+    .tldr-card p {
+      margin: 0;
+      font-size: 13px;
+      color: var(--gray);
+      line-height: 1.45;
+    }
+
+    /* Section Headings */
+    .section-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin: 28px 0 14px;
+    }
+    .section-header h2 {
+      margin: 0;
+      font-size: 20px;
+      font-weight: 800;
+      letter-spacing: -0.02em;
+      color: var(--dark);
+    }
+
+    /* Steps Grid */
+    .steps-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 16px;
+      margin-bottom: 24px;
+    }
+    .step-card {
+      background: #FFFFFF;
+      border-radius: 20px;
+      border: 1px solid var(--border);
+      box-shadow: var(--shadow-card);
+      padding: 20px 22px;
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+    .step-top {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      padding-bottom: 12px;
+      border-bottom: 1px solid rgba(0, 0, 0, 0.05);
+    }
+    .step-badge {
+      width: 28px;
+      height: 28px;
+      border-radius: 50%;
+      background: var(--dark);
+      color: #FFFFFF;
+      font-family: var(--font-mono);
+      font-size: 12px;
+      font-weight: 700;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+    }
+    .step-title {
+      margin: 0;
+      font-size: 15.5px;
+      font-weight: 700;
+      color: var(--dark);
+      letter-spacing: -0.01em;
+    }
+    .step-card ol, .step-card ul {
+      margin: 0;
+      padding-left: 20px;
+      font-size: 13px;
+      color: var(--dark-secondary);
+    }
+    .step-card li {
+      margin-bottom: 8px;
+      line-height: 1.5;
+    }
+    .step-card li:last-child {
+      margin-bottom: 0;
+    }
+    .warn-text {
+      color: var(--rose);
+      font-weight: 600;
+    }
+
+    /* Sub Panels: Calculator & Spec Table */
+    .sub-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 16px;
+    }
+    .apple-panel {
+      background: #FFFFFF;
+      border-radius: 20px;
+      border: 1px solid var(--border);
+      box-shadow: var(--shadow-apple);
+      padding: 20px 22px;
+    }
+    .apple-panel h3 {
+      margin: 0 0 12px;
+      font-size: 16px;
+      font-weight: 700;
+      color: var(--dark);
+      letter-spacing: -0.015em;
+    }
+    table.spec-table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 12.5px;
+    }
+    .spec-table th, .spec-table td {
+      padding: 10px 12px;
+      text-align: left;
+      vertical-align: top;
+      border-bottom: 1px solid rgba(0, 0, 0, 0.05);
+    }
+    .spec-table th {
+      background: #FAFAFC;
+      font-family: var(--font-mono);
+      font-size: 11px;
+      font-weight: 600;
+      color: var(--gray);
+      border-bottom: 1px solid var(--border);
+    }
+    .spec-table tbody tr:last-child td {
+      border-bottom: none;
+    }
+
+    /* Calculator Bar */
+    .calc-box {
+      margin-top: 14px;
+      padding-top: 14px;
+      border-top: 1px solid rgba(0, 0, 0, 0.06);
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      gap: 10px;
+      font-size: 12.5px;
+    }
+    .calc-input-wrap {
+      display: inline-flex;
+      align-items: center;
+      background: #F5F5F7;
+      border: 1px solid var(--border);
+      border-radius: 9px;
+      padding: 4px 10px;
+    }
+    .calc-input-wrap input {
+      width: 90px;
+      border: none;
+      outline: none;
+      background: transparent;
+      font-family: var(--font-mono);
+      font-size: 13px;
+      font-weight: 700;
+      color: var(--dark);
+    }
+    .calc-result-pill {
+      font-family: var(--font-mono);
+      font-weight: 700;
+      font-size: 13px;
+      color: var(--green);
+      background: var(--green-light);
+      padding: 4px 12px;
+      border-radius: 9999px;
+    }
+
+    /* Footer */
+    .apple-footer {
+      max-width: 1120px;
+      margin: 40px auto 0;
+      padding: 24px 24px 0;
+      border-top: 1px solid rgba(0, 0, 0, 0.08);
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: space-between;
+      align-items: center;
+      gap: 12px;
+      font-size: 12px;
+      color: var(--gray);
+    }
+
+    @media (max-width: 860px) {
+      .tldr-grid, .steps-grid, .sub-grid { grid-template-columns: 1fr; }
+      .hero-section { flex-direction: column; align-items: flex-start; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Apple Glass Sticky Header -->
+  <header class="apple-glass">
+    <div class="header-inner">
+      <a href="/" class="brand-wrap">
+        <span class="brand-badge"><span></span></span>
+        <span class="brand-text">vibe-show<span style="color:var(--muted);font-weight:500;">.com</span></span>
+      </a>
+      <nav class="nav-links" aria-label="页面导航">
+        <a href="/deals" class="nav-pill">← 返回优惠总表</a>
+        <a href="/tutorials/turkey-ultra-5x" class="nav-pill active">土区 Ultra 5x 手册</a>
+        <a href="/" class="nav-pill">免费子域名 ↗</a>
+      </nav>
+    </div>
+  </header>
+
+  <main class="container">
+    <!-- Hero / Title -->
+    <section class="hero-section">
+      <div class="hero-title-group">
+        <h1>土区 App Store 内购 Google AI Ultra (5x) 实操流程</h1>
+        <p>适合高频使用 Antigravity 写代码的开发者，先验价、再买卡，规避账号锁区与汇率溢价风险。</p>
+      </div>
+      <div class="meta-pill">
+        <span class="dot"></span>
+        <span>社区实测方案 · 2026-11-08 核验</span>
+      </div>
+    </section>
+
+    <!-- Apple Bento 3-column TL;DR -->
+    <div class="tldr-grid">
+      <div class="tldr-card">
+        <span class="tldr-card-num">01 · 到手成本</span>
+        <h3>₺1,989.99 算上礼品卡溢价 ≈ ¥450</h3>
+        <p>若在手机端弹出 <code>₺1,989.99/月</code>，折合约 $62（美区原价的 6.2 折）；若显示 <code>₺8,999.99</code>（≈¥2,050）说明属于全价目录，请立刻放弃。</p>
+      </div>
+      <div class="tldr-card">
+        <span class="tldr-card-num">02 · 为何走土区</span>
+        <h3>免土耳其信用卡 + 实付权限生效</h3>
+        <p>无需海外银行卡（用 Apple 礼品卡抵扣）；且属于 <strong>实付订阅 (Actively Paid)</strong>，在 Antigravity 正常解锁 Claude Opus 4.6 / Sonnet 4.6。</p>
+      </div>
+      <div class="tldr-card">
+        <span class="tldr-card-num" style="color:var(--rose);">03 · 防翻车铁律</span>
+        <h3 style="color:var(--rose);">未见 ₺ 弹窗前，绝对别买卡</h3>
+        <p>苹果账户余额充进去后若不足或无对应 SKU 无法退款。必须先在手机 Gemini App 亲眼看到 TRY 里拉低价标价再下单购卡。</p>
+      </div>
+    </div>
+
+    <!-- 4-Step Action Grid -->
+    <div class="section-header">
+      <h2>四步开通与防坑操作</h2>
+    </div>
+
+    <div class="steps-grid">
+      <article class="step-card">
+        <div class="step-top">
+          <span class="step-badge">1</span>
+          <h3 class="step-title">仅切换 App Store（不动手机 iCloud）</h3>
+        </div>
+        <ol>
+          <li>准备一个地区为 <strong>土耳其 (Türkiye)</strong>、付款方式为 <code>None（无）</code> 的 Apple ID（建议注册新号，因为老号充入礼品卡若未清零至 <code>₺0.00</code> 将无法切回原国区）。</li>
+          <li>在 iPhone 打开 <strong>「系统设置 → 顶部头像 → 媒体与购买项目 → 退出登录」</strong>，在此处单独登录土区 Apple ID（切勿退出整机的 iCloud 账号）。</li>
+          <li>进入 App Store 搜索下载或更新最新版 <strong>Google Gemini</strong> 与 <strong>Google One</strong>。</li>
+        </ol>
+      </article>
+
+      <article class="step-card">
+        <div class="step-top">
+          <span class="step-badge">2</span>
+          <h3 class="step-title">打开 Gemini App 验价（买卡前熔断）</h3>
+        </div>
+        <ol>
+          <li>连接干净的海外网络环境，打开 iPhone 上的 <strong>Gemini App</strong>，登录你要开通订阅的 Google 账号（确保该号无其他进行中的 Google One 订阅）。</li>
+          <li>点击右上角头像 → <strong>Upgrade / 升级至 Google AI Ultra</strong>，检查底部弹出的付款币种与金额：
+            <ul>
+              <li>显示 <code>₺1,989.99/月</code>（5x 档）或 <code>₺2,949.99/月</code>（促销档）：<strong>符合条件，可以买卡</strong>。</li>
+              <li>显示 <code>USD $</code> 或灰色不可点：该 Google 号绑有其他国家的旧付款资料，需在 <code>pay.google.com</code> 关闭旧资料。</li>
+              <li>显示 <span class="warn-text">₺8,999.99/月</span>：此为 20x 目录全价，比美区直付更昂贵，请立刻停止。</li>
+            </ul>
+          </li>
+        </ol>
+      </article>
+
+      <article class="step-card">
+        <div class="step-top">
+          <span class="step-badge">3</span>
+          <h3 class="step-title">采购单月正规礼品卡并充值</h3>
+        </div>
+        <ol>
+          <li>通过正规土耳其数字卡商（如 <strong>Oyunfor</strong> 或 <strong>Turgame</strong>，支持外币卡或支付宝）购买 <strong>Apple Store Gift Card (TR)</strong>。</li>
+          <li><span class="warn-text">按需购买刚好覆盖当月月费的面额</span>（例如目标 <code>₺1,989.99</code> 买 <code>₺2,000</code> 面额），严禁一次性囤积数月，切勿在闲鱼购买低价黑卡（会导致 Apple ID 永久封禁）。</li>
+          <li>打开 App Store → 右上角头像 → <code>Redeem Gift Card or Code (Kodu Kullan)</code> 输入 16 位卡密，核对账户里拉余额。</li>
+        </ol>
+      </article>
+
+      <article class="step-card">
+        <div class="step-top">
+          <span class="step-badge">4</span>
+          <h3 class="step-title">完成内购订阅 → 立即取消自动续费</h3>
+        </div>
+        <ol>
+          <li>返回 Gemini App 点击订阅，双击电源键使用 Apple ID 内购余额完成支付扣款。</li>
+          <li>若扣款成功后 Google One 仍显示免费版：进入 Gemini 设置页点击 <strong>Restore Purchases（恢复购买）</strong> 即可强制重刷收据。</li>
+          <li><strong>立即关闭自动扣费防反撸：</strong>进入 iPhone「设置 → 顶部 Apple ID → 订阅（Abonelikler）」找到 Google One 点击<strong>取消订阅</strong>，当月已购权益不受影响。</li>
+        </ol>
+      </article>
+    </div>
+
+    <!-- Sub Grid: Calculator & Spec Table -->
+    <div class="sub-grid">
+      <div class="apple-panel">
+        <h3>里拉真实折算对照（含商家礼品卡溢价）</h3>
+        <table class="spec-table">
+          <thead>
+            <tr>
+              <th>弹窗标价</th>
+              <th>折合人民币</th>
+              <th>对比美区原价</th>
+              <th>建议</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><code>₺1,989.99/月</code> (Ultra 5x)</td>
+              <td><strong>≈ ¥454 / 月</strong></td>
+              <td>美区约 6.2 折</td>
+              <td style="color:var(--green);font-weight:700;">✅ 性价比高</td>
+            </tr>
+            <tr>
+              <td><code>₺2,949.99/月</code> (Ultra 促销)</td>
+              <td><strong>≈ ¥672 / 月</strong></td>
+              <td>美区 $249.99 的 3.7 折</td>
+              <td style="color:var(--green);font-weight:700;">✅ 前3月可入</td>
+            </tr>
+            <tr>
+              <td><code>₺719.99/月</code> (AI Pro 2TB)</td>
+              <td><strong>≈ ¥164 / 月</strong></td>
+              <td>美区 $19.99 (≈¥145)</td>
+              <td style="color:var(--amber);font-weight:700;">⚠️ 不如美区直付</td>
+            </tr>
+            <tr>
+              <td><code>₺8,999.99/月</code> (Ultra 20x)</td>
+              <td><strong>≈ ¥2,052 / 月</strong></td>
+              <td>比美区更贵</td>
+              <td style="color:var(--rose);font-weight:700;">⛔ 绝对不要买</td>
+            </tr>
+          </tbody>
+        </table>
+
+        <div class="calc-box">
+          <span>快速折算：</span>
+          <div class="calc-input-wrap">
+            <span>₺</span>
+            <input type="number" id="try-in" value="1989.99" step="0.01">
+          </div>
+          <span>× 卡汇率 (¥/100₺)</span>
+          <div class="calc-input-wrap">
+            <input type="number" id="rate-in" value="22.8" step="0.1">
+          </div>
+          <span class="calc-result-pill" id="cny-out">≈ ¥453.7 / 月</span>
+        </div>
+      </div>
+
+      <div class="apple-panel">
+        <h3>权益得失边界与常见报错速查</h3>
+        <table class="spec-table">
+          <thead>
+            <tr>
+              <th>模块 / 异常</th>
+              <th>实测结论与应对策略</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><strong>Antigravity 权限</strong></td>
+              <td>✅ 正常调用 Claude Opus 4.6 / Sonnet 4.6 与 Gemini Pro。注意配额按 5 小时滚动刷新，网传“无限额度”纯属虚假宣传。</td>
+            </tr>
+            <tr>
+              <td><strong>家庭组与 YouTube</strong></td>
+              <td>⚠️ Google 家庭组强制要求所有成员<strong>属于同一国家</strong>，无法跨区拉国区/美区小号；自带的 YouTube 会员跨区通常无法激活。</td>
+            </tr>
+            <tr>
+              <td><strong>“无法完成你的购买”</strong></td>
+              <td>Apple 新号风控保护。请勿频繁重试，在 Apple ID 补充完整伊斯坦布尔地址，挂土耳其代理静置 24–48 小时后再试。</td>
+            </tr>
+            <tr>
+              <td><strong>网页端直付比价</strong></td>
+              <td>先用电脑打开 <a href="https://one.google.com/about/google-ai-plans/" target="_blank" rel="noreferrer">one.google.com</a>，若账号带有新客首月 $0 或前 3 个月 5 折，直接网页绑卡付更安全省心。</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- Apple Footer -->
+    <footer class="apple-footer">
+      <div>© 2026 vibe-show.com · 实测指南仅供开发参考，请遵守各平台服务协议</div>
+      <div style="display:flex;gap:14px;">
+        <a href="/deals">AI 优惠核验表</a>
+        <a href="/tutorials/turkey-ultra-5x">土区 Ultra 5x 手册</a>
+        <a href="/">返回首页</a>
+      </div>
+    </footer>
+  </main>
+
+  <script>
+    const tryIn = document.getElementById('try-in');
+    const rateIn = document.getElementById('rate-in');
+    const cnyOut = document.getElementById('cny-out');
+    function calc() {
+      const t = parseFloat(tryIn.value) || 0;
+      const r = parseFloat(rateIn.value) || 22.8;
+      const cny = (t / 100) * r;
+      cnyOut.textContent = `≈ ¥${cny.toFixed(1)} / 月 ($${(cny / 7.25).toFixed(1)})`;
+      cnyOut.style.color = t >= 7000 ? 'var(--rose)' : 'var(--green)';
+      cnyOut.style.background = t >= 7000 ? 'var(--rose-light)' : 'var(--green-light)';
+    }
+    tryIn.addEventListener('input', calc);
+    rateIn.addEventListener('input', calc);
+  </script>
+</body>
+</html>

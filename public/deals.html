@@ -1,0 +1,1184 @@
+<!DOCTYPE html>
+<html lang="zh-CN" class="scroll-smooth">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+  <title>AI 优惠与免费额度核验表 — vibe-show.com</title>
+  <meta name="description" content="专为开发者打造的 AI 免费层、学生优惠、API/云 Credits、地区低价与失效避坑核验台账。">
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'><rect width='32' height='32' rx='8' fill='%231D1D1F'/><circle cx='16' cy='16' r='6' fill='%230071E3'/></svg>">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600;700&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg: #F5F5F7;
+      --card: #FFFFFF;
+      --card-hover: #FCFCFD;
+      --dark: #1D1D1F;
+      --dark-secondary: #3A3A3C;
+      --gray: #6E6E73;
+      --muted: #86868B;
+      --border: rgba(0, 0, 0, 0.08);
+      --border-subtle: rgba(0, 0, 0, 0.04);
+      --blue: #0071E3;
+      --blue-hover: #0077ED;
+      --blue-light: #EBF5FF;
+      --green: #107C41;
+      --green-light: #E8F5E9;
+      --green-border: rgba(16, 124, 65, 0.2);
+      --amber: #C05621;
+      --amber-light: #FEF3C7;
+      --amber-border: rgba(192, 86, 33, 0.2);
+      --rose: #DC2626;
+      --rose-light: #FEE2E2;
+      --rose-border: rgba(220, 38, 38, 0.2);
+      --font-sans: -apple-system, BlinkMacSystemFont, "SF Pro Display", "SF Pro Text", "Plus Jakarta Sans", "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", sans-serif;
+      --font-mono: "SF Mono", "JetBrains Mono", ui-monospace, Menlo, Consolas, monospace;
+      --shadow-apple: 0 10px 30px -6px rgba(29, 29, 31, 0.04), 0 2px 8px -2px rgba(29, 29, 31, 0.02), inset 0 1px 0 0 rgba(255, 255, 255, 0.9);
+      --shadow-card: 0 4px 18px -2px rgba(0, 0, 0, 0.04), 0 1px 3px rgba(0, 0, 0, 0.02);
+      --shadow-hover: 0 14px 32px -4px rgba(29, 29, 31, 0.08), 0 4px 12px -2px rgba(29, 29, 31, 0.03);
+    }
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      background-color: var(--bg);
+      color: var(--dark);
+      font-family: var(--font-sans);
+      font-size: 14px;
+      line-height: 1.5;
+      -webkit-font-smoothing: antialiased;
+      -moz-osx-font-smoothing: grayscale;
+      text-rendering: optimizeLegibility;
+    }
+    a { color: var(--blue); text-decoration: none; transition: color 0.15s ease; }
+    a:hover { color: var(--blue-hover); text-decoration: underline; }
+    code {
+      font-family: var(--font-mono);
+      font-size: 12px;
+      background: rgba(0, 0, 0, 0.04);
+      padding: 2px 6px;
+      border-radius: 6px;
+      border: 1px solid rgba(0, 0, 0, 0.04);
+    }
+
+    /* Apple Glass Header */
+    .apple-glass {
+      position: sticky;
+      top: 0;
+      z-index: 50;
+      background: rgba(245, 245, 247, 0.82);
+      backdrop-filter: saturate(180%) blur(20px);
+      -webkit-backdrop-filter: saturate(180%) blur(20px);
+      border-bottom: 1px solid rgba(0, 0, 0, 0.07);
+      transition: all 0.2s ease;
+    }
+    .header-inner {
+      max-width: 1280px;
+      margin: 0 auto;
+      height: 54px;
+      padding: 0 24px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 16px;
+    }
+    .brand-wrap {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      text-decoration: none !important;
+    }
+    .brand-badge {
+      width: 24px;
+      height: 24px;
+      border-radius: 7px;
+      background: var(--dark);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      box-shadow: 0 2px 6px rgba(0,0,0,0.15);
+    }
+    .brand-badge span {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background: #FFFFFF;
+    }
+    .brand-text {
+      font-size: 15px;
+      font-weight: 700;
+      color: var(--dark);
+      letter-spacing: -0.02em;
+    }
+    .brand-tag {
+      font-size: 11.5px;
+      font-family: var(--font-mono);
+      color: var(--gray);
+      background: rgba(0, 0, 0, 0.04);
+      padding: 2px 8px;
+      border-radius: 9999px;
+      font-weight: 500;
+    }
+    .nav-links {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+    .nav-pill {
+      font-size: 13px;
+      font-weight: 500;
+      color: var(--gray);
+      padding: 6px 13px;
+      border-radius: 9999px;
+      text-decoration: none !important;
+      transition: all 0.18s ease;
+    }
+    .nav-pill:hover {
+      color: var(--dark);
+      background: rgba(0, 0, 0, 0.04);
+    }
+    .nav-pill.active {
+      color: var(--dark);
+      background: rgba(0, 0, 0, 0.07);
+      font-weight: 600;
+    }
+
+    .container {
+      max-width: 1280px;
+      margin: 0 auto;
+      padding: 24px 24px 60px;
+    }
+
+    /* Page Hero / Masthead */
+    .hero-section {
+      padding: 20px 0 24px;
+      display: flex;
+      flex-wrap: wrap;
+      align-items: flex-end;
+      justify-content: space-between;
+      gap: 16px;
+      border-bottom: 1px solid rgba(0, 0, 0, 0.06);
+      margin-bottom: 20px;
+    }
+    .hero-title-group h1 {
+      margin: 0 0 6px;
+      font-size: 32px;
+      font-weight: 800;
+      letter-spacing: -0.03em;
+      color: var(--dark);
+      line-height: 1.15;
+    }
+    .hero-title-group p {
+      margin: 0;
+      font-size: 15px;
+      color: var(--gray);
+      font-weight: 400;
+    }
+    .meta-pill {
+      font-family: var(--font-mono);
+      font-size: 12px;
+      color: var(--gray);
+      background: #FFFFFF;
+      padding: 6px 14px;
+      border-radius: 9999px;
+      box-shadow: 0 1px 4px rgba(0, 0, 0, 0.04);
+      border: 1px solid var(--border);
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .meta-pill .dot {
+      width: 7px;
+      height: 7px;
+      border-radius: 50%;
+      background: #10B981;
+    }
+
+    /* Apple Callout / Truth Strip */
+    .alert-callout {
+      background: #FFFFFF;
+      border-radius: 18px;
+      border: 1px solid var(--border);
+      box-shadow: var(--shadow-apple);
+      padding: 14px 18px;
+      margin-bottom: 20px;
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      gap: 10px 20px;
+      font-size: 13px;
+    }
+    .alert-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      font-family: var(--font-mono);
+      font-size: 11.5px;
+      font-weight: 700;
+      color: var(--rose);
+      background: var(--rose-light);
+      padding: 3px 10px;
+      border-radius: 9999px;
+      white-space: nowrap;
+    }
+    .alert-item {
+      color: var(--dark-secondary);
+      line-height: 1.45;
+    }
+    .alert-item strong {
+      color: var(--dark);
+      font-weight: 600;
+    }
+
+    /* Sticky Filter & Search Control */
+    .controls-panel {
+      position: sticky;
+      top: 54px;
+      z-index: 40;
+      background: rgba(245, 245, 247, 0.92);
+      backdrop-filter: blur(16px);
+      -webkit-backdrop-filter: blur(16px);
+      border: 1px solid var(--border);
+      border-radius: 20px;
+      box-shadow: 0 8px 24px -6px rgba(0, 0, 0, 0.06);
+      padding: 14px 18px;
+      margin-bottom: 20px;
+    }
+    .controls-top {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+    }
+    .search-box {
+      flex: 1;
+      min-width: 260px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      background: #FFFFFF;
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 0 14px;
+      box-shadow: inset 0 1px 2px rgba(0, 0, 0, 0.02);
+      transition: all 0.2s ease;
+    }
+    .search-box:focus-within {
+      border-color: var(--blue);
+      box-shadow: 0 0 0 3px rgba(0, 113, 227, 0.15);
+    }
+    .search-box svg {
+      width: 16px;
+      height: 16px;
+      color: var(--muted);
+      flex-shrink: 0;
+    }
+    .search-box input {
+      width: 100%;
+      height: 38px;
+      border: none;
+      outline: none;
+      background: transparent;
+      font-family: var(--font-sans);
+      font-size: 13.5px;
+      color: var(--dark);
+    }
+    .search-box input::placeholder {
+      color: var(--muted);
+    }
+
+    /* Apple Segmented Control View Switcher */
+    .segmented-control {
+      display: inline-flex;
+      background: rgba(0, 0, 0, 0.06);
+      padding: 3px;
+      border-radius: 11px;
+    }
+    .segment-btn {
+      border: none;
+      outline: none;
+      background: transparent;
+      font-family: var(--font-sans);
+      font-size: 12.5px;
+      font-weight: 600;
+      color: var(--gray);
+      padding: 6px 14px;
+      border-radius: 8px;
+      cursor: pointer;
+      transition: all 0.18s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+    .segment-btn.active {
+      background: #FFFFFF;
+      color: var(--dark);
+      box-shadow: 0 2px 6px rgba(0, 0, 0, 0.08);
+    }
+
+    /* Filter Chips */
+    .filter-row {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      gap: 6px;
+      margin-top: 10px;
+    }
+    .filter-label {
+      font-family: var(--font-mono);
+      font-size: 11px;
+      font-weight: 600;
+      color: var(--muted);
+      margin-right: 2px;
+    }
+    .chip {
+      border: 1px solid var(--border);
+      background: #FFFFFF;
+      color: var(--dark-secondary);
+      padding: 4px 12px;
+      border-radius: 9999px;
+      font-size: 12px;
+      font-weight: 500;
+      cursor: pointer;
+      box-shadow: 0 1px 3px rgba(0, 0, 0, 0.02);
+      transition: all 0.16s ease;
+    }
+    .chip:hover {
+      border-color: rgba(0, 0, 0, 0.15);
+      color: var(--dark);
+    }
+    .chip.active {
+      background: var(--dark);
+      color: #FFFFFF;
+      border-color: var(--dark);
+      box-shadow: 0 2px 6px rgba(0, 0, 0, 0.12);
+    }
+    .chip-reset {
+      border-color: var(--rose-border);
+      color: var(--rose);
+      background: var(--rose-light);
+      display: none;
+    }
+    .chip-reset:hover {
+      background: #FECACA;
+      color: var(--rose);
+    }
+
+    /* Badges */
+    .pill-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+      font-family: var(--font-mono);
+      font-size: 11px;
+      font-weight: 600;
+      padding: 2px 9px;
+      border-radius: 9999px;
+      white-space: nowrap;
+    }
+    .badge-official {
+      background: var(--green-light);
+      color: var(--green);
+      border: 1px solid var(--green-border);
+    }
+    .badge-community {
+      background: var(--blue-light);
+      color: var(--blue);
+      border: 1px solid rgba(0, 113, 227, 0.2);
+    }
+    .badge-rumor {
+      background: var(--amber-light);
+      color: var(--amber);
+      border: 1px solid var(--amber-border);
+    }
+    .badge-expired {
+      background: var(--rose-light);
+      color: var(--rose);
+      border: 1px solid var(--rose-border);
+    }
+
+    /* Table View (Apple Tech Specs Style) */
+    .table-card {
+      background: #FFFFFF;
+      border-radius: 20px;
+      border: 1px solid var(--border);
+      box-shadow: var(--shadow-apple);
+      overflow-x: auto;
+    }
+    .table-card.hidden, .cards-grid.hidden {
+      display: none !important;
+    }
+    table.apple-table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 13px;
+      min-width: 1000px;
+    }
+    .apple-table th, .apple-table td {
+      padding: 14px 16px;
+      text-align: left;
+      vertical-align: top;
+      border-bottom: 1px solid rgba(0, 0, 0, 0.05);
+    }
+    .apple-table th {
+      background: #FAFAFC;
+      font-family: var(--font-mono);
+      font-size: 11.5px;
+      font-weight: 600;
+      color: var(--gray);
+      letter-spacing: 0.03em;
+      border-bottom: 1px solid var(--border);
+      white-space: nowrap;
+    }
+    .apple-table tbody tr:last-child td {
+      border-bottom: none;
+    }
+    .apple-table tbody tr {
+      transition: background-color 0.12s ease;
+    }
+    .apple-table tbody tr:hover {
+      background: #F8F8FA;
+    }
+    .td-name { width: 220px; }
+    .td-get { width: 240px; font-family: var(--font-mono); font-size: 12.5px; }
+    .td-cond { width: 200px; }
+    .td-trap { width: 210px; }
+    .td-verdict { min-width: 220px; }
+
+    /* Bento Cards View (Apple Product Feature Grid Style) */
+    .cards-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 16px;
+    }
+    .bento-card {
+      background: #FFFFFF;
+      border-radius: 20px;
+      border: 1px solid var(--border);
+      box-shadow: var(--shadow-card);
+      padding: 18px 20px;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      transition: transform 0.2s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.2s ease;
+    }
+    .bento-card:hover {
+      transform: translateY(-2px);
+      box-shadow: var(--shadow-hover);
+    }
+    .bento-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 8px;
+    }
+    .bento-title-row {
+      display: flex;
+      align-items: baseline;
+      justify-content: space-between;
+      gap: 10px;
+      margin: 0;
+    }
+    .bento-title {
+      font-size: 16px;
+      font-weight: 700;
+      color: var(--dark);
+      letter-spacing: -0.015em;
+      margin: 0;
+    }
+    .bento-price {
+      font-family: var(--font-mono);
+      font-size: 13.5px;
+      font-weight: 700;
+      color: var(--green);
+      white-space: nowrap;
+    }
+    .bento-price.bad {
+      color: var(--rose);
+      text-decoration: line-through;
+    }
+    .bento-meta-list {
+      display: grid;
+      grid-template-columns: 80px 1fr;
+      gap: 6px 12px;
+      font-size: 12.5px;
+      padding: 10px 0;
+      border-top: 1px solid rgba(0, 0, 0, 0.05);
+      border-bottom: 1px solid rgba(0, 0, 0, 0.05);
+    }
+    .bento-label {
+      font-family: var(--font-mono);
+      color: var(--muted);
+      font-size: 11.5px;
+    }
+    .bento-val {
+      color: var(--dark-secondary);
+      line-height: 1.4;
+    }
+    .bento-verdict {
+      font-size: 13px;
+      background: #F5F5F7;
+      padding: 10px 12px;
+      border-radius: 12px;
+      color: var(--dark);
+      line-height: 1.45;
+    }
+    .bento-verdict strong {
+      color: var(--dark);
+      font-weight: 600;
+    }
+
+    /* Footer */
+    .apple-footer {
+      max-width: 1280px;
+      margin: 40px auto 0;
+      padding: 24px 24px 0;
+      border-top: 1px solid rgba(0, 0, 0, 0.08);
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: space-between;
+      align-items: center;
+      gap: 12px;
+      font-size: 12px;
+      color: var(--gray);
+    }
+
+    @media (max-width: 900px) {
+      .cards-grid { grid-template-columns: 1fr; }
+      .controls-panel { position: static; }
+      .hero-section { flex-direction: column; align-items: flex-start; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Apple Glass Sticky Header -->
+  <header class="apple-glass">
+    <div class="header-inner">
+      <a href="/" class="brand-wrap">
+        <span class="brand-badge"><span></span></span>
+        <span class="brand-text">vibe-show<span style="color:var(--muted);font-weight:500;">.com</span></span>
+        <span class="brand-tag">DEALS</span>
+      </a>
+      <nav class="nav-links" aria-label="页面导航">
+        <a href="/deals" class="nav-pill active">AI 优惠核验表</a>
+        <a href="/tutorials/turkey-ultra-5x" class="nav-pill">土区 Ultra 5x 教程</a>
+        <a href="/" class="nav-pill">免费子域名 ↗</a>
+      </nav>
+    </div>
+  </header>
+
+  <main class="container">
+    <!-- Hero / Header Row -->
+    <section class="hero-section">
+      <div class="hero-title-group">
+        <h1>AI 免费额度与优惠核验总表</h1>
+        <p>基于官方文档、API 控制台与社区真实抓包实测，剔除营销泡沫与套壳陷阱。</p>
+      </div>
+      <div class="meta-pill">
+        <span class="dot"></span>
+        <span>最近全量核验：2026-11-08 · 28 条在录</span>
+      </div>
+    </section>
+
+    <!-- Apple Callout Strip -->
+    <div class="alert-callout">
+      <div class="alert-badge">
+        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+        <span>核心辟谣</span>
+      </div>
+      <div class="alert-item">
+        <strong>1. Google 学生 Trial 锁模型：</strong>在 Antigravity 里无法调用 Claude 或 Gemini Pro（必须实付账号，不存在网传“Opus 5.5 无限白嫖”）。
+      </div>
+      <div class="alert-item">
+        <strong>2. GCP $300 赠金不通 AI Studio：</strong>仅抵扣 Vertex AI，绑定到 AI Studio 会直接刷信用卡。
+      </div>
+      <div class="alert-item">
+        <strong>3. 已停用通道：</strong>Cursor 学生一年免费（6.25 关停）、GitHub Models（7.30 退役）、ChatGPT 美区学生 4 个月（10.31 截止）均已失效。
+      </div>
+    </div>
+
+    <!-- Filter & Search Controls Panel -->
+    <section class="controls-panel">
+      <div class="controls-top">
+        <div class="search-box">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><path d="M21 21l-4.35-4.35"/></svg>
+          <input type="search" id="q" placeholder="搜索平台、模型、权益或限制（如：OpenRouter、免绑卡、学生、Antigravity、土区）">
+        </div>
+        <div style="display:flex;align-items:center;gap:12px;">
+          <span id="count-info" style="font-family:var(--font-mono);font-size:12px;color:var(--gray);">28 / 28 条</span>
+          <div class="segmented-control">
+            <button type="button" class="segment-btn active" data-view="table">表格视图</button>
+            <button type="button" class="segment-btn" data-view="cards">卡片视图</button>
+          </div>
+        </div>
+      </div>
+
+      <div class="filter-row" id="cat-row">
+        <span class="filter-label">分类:</span>
+        <button class="chip active" data-cat="all">全部 (28)</button>
+        <button class="chip" data-cat="free-tier">官方免费层 (6)</button>
+        <button class="chip" data-cat="student">学生教育 (4)</button>
+        <button class="chip" data-cat="api-credits">API Credits (4)</button>
+        <button class="chip" data-cat="cloud">云服务 Credits (4)</button>
+        <button class="chip" data-cat="startup">创业计划 (4)</button>
+        <button class="chip" data-cat="regional">地区低价 (3)</button>
+        <button class="chip" data-cat="expired">已失效/避坑 (3)</button>
+      </div>
+
+      <div class="filter-row" id="flag-row">
+        <span class="filter-label">快筛:</span>
+        <button class="chip" data-flag="nocard">免外币信用卡</button>
+        <button class="chip" data-flag="cn">国内直连可用</button>
+        <button class="chip" data-flag="official">仅官方规则</button>
+        <button class="chip" data-flag="community">仅社区实测</button>
+        <button class="chip chip-reset" id="reset-btn">✕ 重置筛选</button>
+      </div>
+    </section>
+
+    <!-- View 1: Apple Tech Specs Table -->
+    <section id="view-table" class="table-card">
+      <table class="apple-table">
+        <thead>
+          <tr>
+            <th class="td-name">项目 / 信源性质</th>
+            <th class="td-get">实际到手权益</th>
+            <th class="td-cond">参与对象 · 认证门槛 · 地区</th>
+            <th class="td-trap">有效期 · 自动续费陷阱</th>
+            <th class="td-verdict">实测判断与建议</th>
+          </tr>
+        </thead>
+        <tbody id="tbody"></tbody>
+      </table>
+    </section>
+
+    <!-- View 2: Apple Bento Feature Cards -->
+    <section id="view-cards" class="cards-grid hidden"></section>
+
+    <footer class="apple-footer">
+      <div>© 2026 vibe-show.com · 实测数据持续更新，建议在结账前核对当季政策</div>
+      <div style="display:flex;gap:14px;">
+        <a href="/deals">AI 优惠核验表</a>
+        <a href="/tutorials/turkey-ultra-5x">土区 Ultra 5x 手册</a>
+        <a href="/">返回首页</a>
+      </div>
+    </footer>
+  </main>
+
+  <script>
+    const DEALS = [
+      // 1. 官方免费层 (6)
+      {
+        id: 'aistudio', cat: 'free-tier', catName: '官方免费层', badge: 'official', badgeText: '官方规则',
+        title: 'Google AI Studio 免费层', price: '$0 长期',
+        source: 'ai.google.dev/pricing', url: 'https://ai.google.dev/gemini-api/docs/pricing',
+        who: '所有 Google 账号',
+        get: 'Gemini 2.5 Pro (5 RPM / 100 RPD)、2.5 Flash (10 RPM / 250 RPD)',
+        auth: '免绑卡、免身份验证',
+        exp: '长期有效（按太平洋时间午夜重置）',
+        renew: '不绑 GCP 项目绝不扣费；注意免费层输入会被 Google 用于改进模型',
+        region: '需海外 IP（美/日/新等），不支持大陆与香港直连',
+        verdict: '必撸。白嫖百万上下文 Gemini 2.5 Pro 最稳的官方渠道，别关联绑了卡的 GCP 项目即可。',
+        flags: ['nocard', 'official']
+      },
+      {
+        id: 'openrouter', cat: 'free-tier', catName: '官方免费层', badge: 'official', badgeText: '官方规则',
+        title: 'OpenRouter :free 免费模型池', price: '$0 (充$10解锁1000次/天)',
+        source: 'openrouter.ai/docs', url: 'https://openrouter.ai/docs/api-reference/limits',
+        who: '所有注册开发者',
+        get: '25+ 款 :free 模型（DeepSeek R1/V3、Llama 3.3 70B 等），限速 20 RPM',
+        auth: '未充钱限 50 RPD；账户累计充满 $10 后永久解锁 1,000 RPD',
+        exp: '长期有效，$10 余额不清零',
+        renew: '关闭 Auto Top-up 即无自动续费',
+        region: '国内可直连 API，无需代理',
+        verdict: '极划算。充 $10 放着不动，每天白拿 1000 次免费请求，适合接入 Cline / Roo Code。',
+        flags: ['cn', 'official']
+      },
+      {
+        id: 'siliconflow', cat: 'free-tier', catName: '官方免费层', badge: 'official', badgeText: '官方规则',
+        title: '硅基流动 SiliconFlow 新客+免费模型', price: '送 2000万 Tokens + 免费小模型',
+        source: 'docs.siliconflow.cn', url: 'https://cloud.siliconflow.cn/',
+        who: '国内手机号注册用户',
+        get: '新客 ¥14 赠金（约 2000 万 Tokens）+ Qwen2.5-7B / GLM-4-9B 等永久 ¥0',
+        auth: '仅需国内手机号验证码，免绑银行卡',
+        exp: '小模型长期免费；赠金有效期以控制台为准',
+        renew: '纯预付费，无自动扣款',
+        region: '国内直连满速',
+        verdict: '国内免翻墙首选。9B 以下免费模型做翻译、分类、Embedding 零成本。',
+        flags: ['nocard', 'cn', 'official']
+      },
+      {
+        id: 'zhipu', cat: 'free-tier', catName: '官方免费层', badge: 'official', badgeText: '官方规则',
+        title: '智谱 BigModel (GLM-4-Flash)', price: '¥0 永久免费',
+        source: 'open.bigmodel.cn', url: 'https://open.bigmodel.cn/pricing',
+        who: '实名认证开发者',
+        get: 'GLM-4-Flash / GLM-4V-Flash API 永久免费（默认并发 5）+ 新客千万 Tokens 资源包',
+        auth: '国内手机号 + 支付宝/身份证实名，免绑卡',
+        exp: 'Flash 系列长期免费，新客包 1–3 个月',
+        renew: '无自动扣费',
+        region: '国内直连',
+        verdict: '国内小程序、个人脚本接免费中文 API 最省心方案。',
+        flags: ['nocard', 'cn', 'official']
+      },
+      {
+        id: 'groq-cerebras', cat: 'free-tier', catName: '官方免费层', badge: 'official', badgeText: '官方规则',
+        title: 'Groq & Cerebras 极速推理免费层', price: '$0 长期 (1000+ tok/s)',
+        source: 'console.groq.com / cerebras.ai', url: 'https://console.groq.com/docs/rate-limits',
+        who: '所有注册开发者',
+        get: 'Groq (Llama 3.3 70B 等 30 RPM / 1K–14.4K RPD)；Cerebras (每日 100 万 Tokens)',
+        auth: '邮箱注册，免绑信用卡',
+        exp: '长期有效，每日重置',
+        renew: '不主动升级 Developer 档不扣费',
+        region: 'Groq 需干净海外 IP（封禁机房 IP 较严）',
+        verdict: '生成速度极快（1000+ tok/s），适合接语音助手或编辑器实时补全。',
+        flags: ['nocard', 'official']
+      },
+      {
+        id: 'bailian', cat: 'free-tier', catName: '官方免费层', badge: 'official', badgeText: '官方规则',
+        title: '阿里云百炼 新客百万 Tokens 包', price: '每模型 100万 Tokens 免费',
+        source: 'help.aliyun.com', url: 'https://bailian.console.aliyun.com/',
+        who: '首次开通百炼的阿里云实名账号',
+        get: 'Qwen-Max / Plus / VL / Coder 等主力模型各送 100 万免费 Tokens',
+        auth: '支付宝实名认证，免绑外币卡',
+        exp: '开通后 90–180 天有效',
+        renew: '注意：勾选“开启免费额度用完即停”，否则超出后从阿里云余额按量扣费',
+        region: '国内直连',
+        verdict: '通义千问全家桶免费额度给得极大方，开完第一时间把“用完即停”勾上。',
+        flags: ['nocard', 'cn', 'official']
+      },
+
+      // 2. 学生与教育优惠 (4)
+      {
+        id: 'gh-student', cat: 'student', catName: '学生优惠', badge: 'official', badgeText: '官方规则',
+        title: 'GitHub 学生包 (含 Copilot Pro)', price: '$0/月 (立省 $10/月)',
+        source: 'education.github.com/pack', url: 'https://education.github.com/pack',
+        who: '全球高校/高中在读生（支持国内 edu.cn）',
+        get: 'Copilot Pro 免费（含 300 次/月高级请求：Claude Sonnet 4.6、Gemini 2.5 Pro、GPT-5）+ JetBrains 全家桶 + $100 Azure + $200 DO',
+        auth: '校园邮箱 + 学信网英文验证报告或学生证（校园定位审核），无需绑信用卡',
+        exp: '每次认证管 1–2 年，在读可续',
+        renew: '无需绑卡，到期不扣费',
+        region: '全球通用，国内直连可用 Copilot',
+        verdict: '含金量第一的学生羊毛。国内学生用学信网英文认证即可过，千万别去淘宝买假证（秒封号）。',
+        flags: ['nocard', 'cn', 'official']
+      },
+      {
+        id: 'google-student', cat: 'student', catName: '学生优惠', badge: 'official', badgeText: '官方规则 · 有暗坑',
+        title: 'Google AI Pro 学生 12 个月免费', price: '$0 享 12个月 (限网页/云盘)',
+        source: 'gemini.google/students + 论坛#186500', url: 'https://discuss.ai.google.dev/t/about-of-new-claude-models-issue/186500/4',
+        who: '仅限美/英/日/印/巴等指定国高校在读生',
+        get: '12 个月 Gemini Advanced 网页版 + 2TB Google One + NotebookLM Plus',
+        auth: 'SheerID 学籍核验 + 必须绑定海外信用卡',
+        exp: '激活后免 12 个月；次年按 $19.99/月自动扣费',
+        renew: '⚠️ 核心真相：该方案被后端标记为 Trial，在 Antigravity 中无法调用 Claude Sonnet/Opus 与 Gemini Pro！',
+        region: '不支持中国大陆高校，需对应国家 IP',
+        verdict: '如果只用 Gemini 网页版和 2TB 网盘很香；如果为了用 Antigravity 写代码，别费劲搞学生认证，会被直接拦截。',
+        flags: ['official']
+      },
+      {
+        id: 'openai-codex-edu', cat: 'student', catName: '学生优惠', badge: 'official', badgeText: '官方规则',
+        title: 'OpenAI Codex 学生 $100 Credits', price: '送 $100 (2,500 Credits)',
+        source: 'developers.openai.com/students', url: 'https://developers.openai.com/community/students',
+        who: '仅限美国与加拿大高校在读生',
+        get: '2,500 ChatGPT Credits（价值 $100），专供 ChatGPT 内的 Codex 智能体消耗',
+        auth: 'SheerID 验证美/加学籍，免绑卡領取',
+        exp: '到账后 12 个月内有效',
+        renew: '一次性赠金，无自动续费（注意：不是 Platform API 通用 Key 余额）',
+        region: '严格锁定美国/加拿大高校',
+        verdict: '北美留学生必领；国内同学别去买代认证，且它不能导出成通用 API Key。',
+        flags: ['nocard', 'official']
+      },
+      {
+        id: 'notion-figma-edu', cat: 'student', catName: '学生优惠', badge: 'official', badgeText: '官方规则',
+        title: 'JetBrains / Notion Plus / Figma 教育版', price: '在读期间 $0',
+        source: 'jetbrains.com/student', url: 'https://www.jetbrains.com/community/education/',
+        who: '持有 .edu / .edu.cn 邮箱的师生',
+        get: 'JetBrains 全套专业版 IDE、Figma Professional、Notion Education Plus 免费（注：Notion AI 仍需另购）',
+        auth: '教育邮箱秒过，免绑卡',
+        exp: '每年邮件点一次续期',
+        renew: '无自动扣款',
+        region: '全球通用，支持国内 .edu.cn',
+        verdict: '无套路纯福利，有 edu.cn 邮箱花 3 分钟全开了就行。',
+        flags: ['nocard', 'cn', 'official']
+      },
+
+      // 3. API Credits (4)
+      {
+        id: 'claude-api', cat: 'api-credits', catName: 'API Credits', badge: 'official', badgeText: '官方规则',
+        title: 'Anthropic Claude API 新号验证赠金', price: '送 $5 (需充$5解锁Tier1)',
+        source: 'docs.anthropic.com', url: 'https://docs.anthropic.com/en/api/rate-limits',
+        who: 'Console 首次绑定海外手机号的新账号',
+        get: '$5 API 赠金（30 天有效）；但未充值前处于 Free Tier（仅 5 RPM，跑 Claude Code 必报错 429）',
+        auth: '海外手机号 SMS + 需绑海外卡预充 $5 才能升 Build Tier 1 (50 RPM)',
+        exp: '$5 赠金 30 天过期；自充余额 1 年有效',
+        renew: '关闭 Auto-reload 即无自动扣款',
+        region: '严禁大陆/香港 IP 与卡段，风控极严',
+        verdict: '单靠白嫖的 $5 限速太死根本跑不动 Agent，老实充 $5 升 Tier 1 或直接走 OpenRouter 更省心。',
+        flags: ['official']
+      },
+      {
+        id: 'volcengine', cat: 'api-credits', catName: 'API Credits', badge: 'official', badgeText: '官方规则',
+        title: '字节火山方舟 (豆包 + DeepSeek) 免费包', price: '每模型 50万 + 每日 200万 Tokens',
+        source: 'volcengine.com/docs', url: 'https://console.volcengine.com/ark',
+        who: '火山引擎实名用户',
+        get: '每个主力模型（含满血 DeepSeek-R1/V3、豆包 1.5 Pro）送 50 万免费 Tokens；加入数据协作计划每日再送 200 万 Tokens',
+        auth: '国内手机号 + 实名认证，免绑外币卡',
+        exp: '长期活动，按日重置协作额度',
+        renew: '建议账户余额留 ¥0 防超额扣费',
+        region: '国内直连低延迟',
+        verdict: '国内白嫖满血联网版 DeepSeek-R1 API 最稳的大厂渠道，速度极快。',
+        flags: ['nocard', 'cn', 'official']
+      },
+      {
+        id: 'deepseek-kimi', cat: 'api-credits', catName: 'API Credits', badge: 'official', badgeText: '官方规则',
+        title: 'DeepSeek 开放平台 ¥10 + Kimi ¥15 新客金', price: '合计 ¥25 API 赠金',
+        source: 'platform.deepseek.com', url: 'https://platform.deepseek.com/',
+        who: '国内手机号首次注册用户',
+        get: 'DeepSeek 送 ¥10（约 500 万输入 Tokens，30 天有效）+ 月之暗面 Kimi 送 ¥15',
+        auth: '国内手机号注册即到账，免绑银行卡',
+        exp: 'DeepSeek 赠金 30 天有效',
+        renew: '纯预付费，扣完即停',
+        region: '国内直连',
+        verdict: '注册仅需 10 秒，加上 DeepSeek 支持硬盘 Context 缓存（0.1元/百万Tokens），¥10 非常耐用。',
+        flags: ['nocard', 'cn', 'official']
+      },
+      {
+        id: 'xai-together', cat: 'api-credits', catName: 'API Credits', badge: 'community', badgeText: '社区实测 · 已缩水',
+        title: 'xAI (Grok) / Together AI 新客 API 赠金', price: '$5–$25 (多数需先充$5)',
+        source: 'docs.x.ai / together.ai', url: 'https://console.x.ai/',
+        who: '海外信用卡用户',
+        get: 'Together AI 现仅送 $1–$5；xAI 已取消早期每月白送 $25，现为预付费充值（最低充 $5 调全模型，赠金仅偶发）',
+        auth: '必须绑定海外实体 Visa/Mastercard',
+        exp: '30–90 天',
+        renew: '务必关闭 Auto top-up 自动充值，防止死循环扣款',
+        region: '需海外网络环境',
+        verdict: '早期每月白嫖 $25 已经结束。当前若要用 Grok API，在充值页选 $5 最低档并关掉自动充值即可。',
+        flags: ['community']
+      },
+
+      // 4. 云服务 Credits (4)
+      {
+        id: 'gcp-300', cat: 'cloud', catName: '云服务 Credits', badge: 'official', badgeText: '官方规则 · 计费分家',
+        title: 'Google Cloud 新客 $300 (可用 Vertex AI)', price: '$300 (90天有效)',
+        source: 'cloud.google.com/free', url: 'https://cloud.google.com/free/docs/free-cloud-features',
+        who: '从未开通过 GCP 的 Google 账号',
+        get: '$300 赠金，可在 Vertex AI 调用 Gemini 2.5 Pro 及已上架的 Claude 模型',
+        auth: '必须绑海外实体信用卡（拒绝虚拟卡，预授权 $0–$1）',
+        exp: '90 天内有效',
+        renew: '⚠️ 铁律：$300 绝对不能抵扣 AI Studio 账单（在 AI Studio 绑 GCP 会直接刷信用卡）！不点 Upgrade 升级付费号就不会超额扣款',
+        region: '需与卡段一致的干净 IP',
+        verdict: '只要走 Vertex AI 端点（别绑进 AI Studio），这 $300 就是实打实的免费大额 API。',
+        flags: ['official']
+      },
+      {
+        id: 'azure-200', cat: 'cloud', catName: '云服务 Credits', badge: 'official', badgeText: '官方规则',
+        title: 'Microsoft Azure 新客 $200 / 学生 $100', price: '$200 (30天) / 学生 $100 (1年)',
+        source: 'azure.microsoft.com/free', url: 'https://azure.microsoft.com/en-us/free/',
+        who: 'Azure 新客（需绑卡）或在读高校学生（免绑卡）',
+        get: '$200（30 天）或学生 $100（12 个月），可在 Azure AI Foundry 部署 GPT-4o / o3-mini 等模型',
+        auth: '普通新客需实体外币卡；学生版走 GitHub 学生包免绑卡',
+        exp: '普通新客 30 天；学生版 12 个月',
+        renew: '默认含免费额度保护，不手动转 Pay-As-You-Go 不会扣信用卡',
+        region: '建议选 East US / Sweden Central 区域（模型最全）',
+        verdict: '合规调 OpenAI 模型的稳妥替身，学生版的 $100 有整整一年有效期，非常实用。',
+        flags: ['official']
+      },
+      {
+        id: 'cf-workers-ai', cat: 'cloud', catName: '云服务 Credits', badge: 'official', badgeText: '官方规则',
+        title: 'Cloudflare Workers AI 每日免费配额', price: '10,000 Neurons / 天 ($0)',
+        source: 'developers.cloudflare.com', url: 'https://developers.cloudflare.com/workers-ai/platform/pricing/',
+        who: '所有 Cloudflare 账号',
+        get: '每天免费 10,000 Neurons（可调 Llama 3.3 70B、Qwen、BGE Embedding、Flux 生图）',
+        auth: '免绑信用卡即可在 Free Plan 使用',
+        exp: '长期有效，每日 UTC 0 点重置',
+        renew: '不升 Workers Paid ($5/月) 绝不产生账单',
+        region: '全球边缘节点，国内可直连',
+        verdict: '做个人小工具（尤其挂在 vibe-show.com 子域名下）直接白嫖边缘推理，零服务器成本。',
+        flags: ['nocard', 'cn', 'official']
+      },
+      {
+        id: 'aws-modal', cat: 'cloud', catName: '云服务 Credits', badge: 'official', badgeText: '官方规则',
+        title: 'AWS 新客 $200 + Modal 每月 $30 Serverless GPU', price: 'AWS $200 + Modal $30/月',
+        source: 'aws.amazon.com/free / modal.com', url: 'https://modal.com/pricing',
+        who: '持有外币信用卡的开发者',
+        get: 'AWS 新账户最高 $200 Credits（6个月，可用 Bedrock）；Modal 绑卡后每月自动送 $30 GPU 算力',
+        auth: '需绑定 Visa / Mastercard 外币卡',
+        exp: 'AWS 6 个月；Modal 按月循环赠送',
+        renew: 'AWS 务必在 Billing 设置 Zero Spend Budget 防超支扣款',
+        region: '全球通用',
+        verdict: '跑自建开源模型或音视频推理，Modal 每月白给的 $30 A100/H100 算力极其实用。',
+        flags: ['official']
+      },
+
+      // 5. 创业与开发者计划 (4)
+      {
+        id: 'ms-founders', cat: 'startup', catName: '创业/开发者计划', badge: 'official', badgeText: '官方规则 · 2026已收紧',
+        title: 'Microsoft for Startups Founders Hub', price: '个人 $200 / 公司主体 $5,000+',
+        source: 'startups.microsoft.com', url: 'https://www.microsoft.com/en-us/startups',
+        who: '独立开发者（LinkedIn 验证）或已注册初创公司',
+        get: '2026 规则大砍：无公司主体仅给 Milestone 1 ($200 Azure 额度，90 天)；提交真实营业执照后升 $5,000（1 年）',
+        auth: '领英账号 + 外币卡（M1）；真实公司注册文件 + 域名官网（M2）',
+        exp: 'M1 为 90 天；M2 为 12 个月',
+        renew: '额度用完或到期自动挂起订阅，不扣卡',
+        region: '不支持中国大陆世纪互联版',
+        verdict: '别再信旧教程“填个表白拿 $1,000–$5,000”，没营业执照现在只有 $200，有公司主体依然值得申。',
+        flags: ['official']
+      },
+      {
+        id: 'aws-activate', cat: 'startup', catName: '创业/开发者计划', badge: 'official', badgeText: '官方规则',
+        title: 'AWS Activate Founders ($1,000 Bedrock)', price: '$1,000 (1年有效)',
+        source: 'aws.amazon.com/activate', url: 'https://aws.amazon.com/activate/founders/',
+        who: '未融资初创项目 / 独立开发者（需有已上线产品网站）',
+        get: '$1,000 AWS Activate Credits，可全额抵扣 Amazon Bedrock 上的 Claude Sonnet 4.6 / Opus 4.6 API 账单',
+        auth: '独立域名官网 + 企业邮箱 + 创始人 LinkedIn + AWS 绑卡账户',
+        exp: '获批后 12 个月有效',
+        renew: '注意：Data Transfer（出网流量）有时不走特定 Credits，需配成本告警',
+        region: '全球通用（通过 Stripe Atlas / YC / 孵化器 Partner 码可申 $5,000+）',
+        verdict: '独立开发者合法白嫖 $1,000 满血 Claude API 的含金量最高通道，前提是先用真域名把产品 Landing Page 搭好。',
+        flags: ['official']
+      },
+      {
+        id: 'elevenlabs-grant', cat: 'startup', catName: '创业/开发者计划', badge: 'official', badgeText: '官方规则',
+        title: 'ElevenLabs Startup Grants (12个月免费语音)', price: '价值 ~$4,000 (3,300万字符)',
+        source: 'elevenlabs.io/startup-grants', url: 'https://elevenlabs.io/startup-grants',
+        who: '年满 22 岁、团队 <25 人、有可演示 AI 产品的创业者',
+        get: '12 个月免费 Scale 档位（总计 3,300 万字符语音合成额度 + 低延迟并发）',
+        auth: '必须使用独立域名企业邮箱申请（拒收 Gmail/QQ）并提供产品 Demo',
+        exp: '获批后 12 个月，到期自动降回免费层',
+        renew: '无强制续费',
+        region: '全球可申',
+        verdict: '做播客生成、AI 视频配音或语音 Agent 的创业团队必申，审得严但给得极其慷慨。',
+        flags: ['nocard', 'official']
+      },
+      {
+        id: 'google-nvidia-startup', cat: 'startup', catName: '创业/开发者计划', badge: 'official', badgeText: '官方规则',
+        title: 'Google Cloud for Startups & NVIDIA Inception', price: 'Start档 $2,000 / Scale档 $100k+',
+        source: 'cloud.google.com/startup', url: 'https://cloud.google.com/startup',
+        who: '近 5 年内成立、有实体注册文件与独立官网的初创公司',
+        get: '未融资通过审核拿 Start 档 $2,000 GCP 额度（2年有效）；拿到机构融资或加入 NVIDIA Inception 可解锁更高额度及云 GPU 折扣',
+        auth: '必须提供真实公司营业执照（大陆公司走国内通道，海外主体走 Global）+ 企业邮箱',
+        exp: '1–2 年',
+        renew: '到期后需手动确认是否继续按量付费',
+        region: '已有公司主体的团队适用',
+        verdict: '纯粹面向真创业公司的重磅扶持，个人无执照无法通过。',
+        flags: ['official']
+      },
+
+      // 6. 地区低价 / 新客活动 (3)
+      {
+        id: 'tr-ultra-5x', cat: 'regional', catName: '地区低价', badge: 'community', badgeText: '社区实测 · 需验结账页',
+        title: '土区 App Store 内购 Google AI Ultra 5x / Pro', price: '₺1,989.99/月 (≈¥450) 或 Pro ₺719.99',
+        source: '站内实测手册', url: '/tutorials/turkey-ultra-5x',
+        who: '持有 iPhone/iPad + 土耳其区 Apple ID 的用户',
+        get: '实付 (Actively Paid) Google AI Ultra 5x 或 Pro，可在 Antigravity 正常解锁 Claude Opus 4.6 / Sonnet 4.6 与 Gemini Pro，含 20TB/2TB 网盘',
+        auth: '无需土耳其银行卡，通过 Oyunfor/Turgame 买正规土区 Apple 礼品卡充值内购',
+        exp: '按月订阅，随时可退订',
+        renew: '⚠️ 必看：买礼品卡前必须先在 iPhone Gemini App 里亲眼确认弹出 ₺1,989.99 或 ₺2,949.99；若显示 ₺8,999.99（≈¥2050）标准高价千万别充卡！',
+        region: '家庭组共享严格锁同国区，YouTube Premium 跨区常受限',
+        verdict: '目前无外币卡或重度使用 Antigravity 的开发者降低实付成本的可行方案，详见站内《土区 Ultra 5x 教程》。',
+        flags: ['nocard', 'community']
+      },
+      {
+        id: 'google-web-50off', cat: 'regional', catName: '地区低价', badge: 'rumor', badgeText: '定向促销 · 千人千面',
+        title: 'Google One 网页端 AI Pro 首月 $0 / Ultra 前3月5折', price: 'Pro 首月$0 / Ultra $124.99×3月',
+        source: 'one.google.com/ai', url: 'https://one.google.com/about/google-ai-plans/',
+        who: '从未订购过 Google One 的干净美/日/台/新账号，或点击退订触发挽留的老订户',
+        get: '新客常见 AI Pro 首月 $0 或 Ultra 前 3 个月 5 折（$124.99/月）；老订户点取消订阅偶发弹出 3 个月半价挽留',
+        auth: '需绑定海外 Visa/Mastercard 或美区 PayPal',
+        exp: '优惠期 1–3 个月，次月恢复原价',
+        renew: '⚠️ 必须设日历提醒！优惠期满前 3 天不退订，会直接按 $19.99 或 $249.99 全价扣款',
+        region: '需海外 IP 与对应付款资料',
+        verdict: '去折腾土区礼品卡之前，一定先用你自己的号打开 one.google.com 看一眼有没有直接半价弹窗，有就直接网页付，零封号风险。',
+        flags: ['community']
+      },
+      {
+        id: 'ide-trials', cat: 'regional', catName: '地区低价', badge: 'official', badgeText: '官方规则',
+        title: 'Cursor (14天) / Windsurf (14天) / Trae 新客免费层', price: '$0 试用 / Trae 免费配额',
+        source: 'cursor.com / windsurf.com / trae.ai', url: 'https://www.cursor.com/pricing',
+        who: '首次注册的开发者（校验设备指纹与卡号）',
+        get: 'Cursor Pro 14 天试用（约 150 次快速请求）；Windsurf 14 天送 100 Prompt Credits；字节 Trae 国际版含免费层配额',
+        auth: 'Cursor / Windsurf 试用多需绑外币卡验权；Trae 免绑卡',
+        exp: '试用期 14 天',
+        renew: '绑卡开启 Trial 后若第 14 天未退订，自动扣 $20/月或 $15/月；切勿用机器脚本无限重置机器码（直接封 IP 和主号）',
+        region: 'Trae 国际版需海外 IP',
+        verdict: '正规试用够评测手感，长期写代码建议搭配 GitHub 学生包 Copilot 或 OpenRouter 自带 Key。',
+        flags: ['official']
+      },
+
+      // 7. 已结束活动与灰产高危避坑 (3)
+      {
+        id: 'cursor-edu-dead', cat: 'expired', catName: '已失效/避坑', badge: 'expired', badgeText: '已关停 · 2026-06-25',
+        title: '【已结束】Cursor 学生 1 年免费 Pro 计划', price: '已对新用户关闭',
+        source: 'cursor.com/students', url: 'https://www.cursor.com/students',
+        who: '仅 2026-06-25 前已认证通过的老学生号存续至期满',
+        get: '新申请通道已彻底关闭（因 SheerID 造假泛滥）',
+        auth: '无（现在买 edu 邮箱或代认证 100% 是骗局）',
+        exp: '已于 2026 年 6 月 25 日停止新申领',
+        renew: '老学生号若手滑在后台切换月付/年付套餐，会立即永久丢失剩余免费期且无法恢复',
+        region: '全球均已关闭新申请',
+        verdict: '千万别去闲鱼/淘宝买“Cursor 学生认证代过”或“.edu 邮箱”，钱货两空。',
+        flags: []
+      },
+      {
+        id: 'gh-models-chatgpt-edu-dead', cat: 'expired', catName: '已失效/避坑', badge: 'expired', badgeText: '已退役 / 已截止',
+        title: '【已结束】GitHub Models 免费 API & ChatGPT 美区学生4个月', price: '7.30 退役 / 10.31 截止',
+        source: 'github.blog / openai.com', url: 'https://github.blog/changelog/',
+        who: '已不可新申领',
+        get: '1) GitHub Models 独立免费推理原型服务已于 2026-07-30 退役；2) ChatGPT Plus 美/加学生 4 个月免费已于 2026-10-31 截止申领',
+        auth: '已下线',
+        exp: '2026-07-30 / 2026-10-31',
+        renew: '之前领了 ChatGPT 学生 4 个月的用户，到期自动按 $20/月扣费',
+        region: '无',
+        verdict: '旧合集里最常残留的两条过期信息，请直接划掉。',
+        flags: []
+      },
+      {
+        id: 'reseller-scam', cat: 'expired', catName: '已失效/避坑', badge: 'expired', badgeText: '高危避坑 · 掺水与封号',
+        title: '【高危避坑】闲鱼/淘宝“1折满血 Opus API / 无限号 / 尼区巴区代充”', price: '极高跑路与封号率',
+        source: 'V2EX / Linux.do 实测抓包', url: 'https://www.v2ex.com/go/programmer',
+        who: '所有开发者（强烈劝退）',
+        get: '号称“1元=1美金满血 Claude Opus / 5.5 无限额度”，实为盗刷黑卡池、学生试用号逆向反代或后台偷换为 DeepSeek/Haiku 蒸馏模型',
+        auth: '预充值年卡/月卡，无退款保障',
+        exp: '随时封池跑路',
+        renew: '此外，尼日利亚(NGN)/巴基斯坦(PKR) Google Play 跨区代充今年触发 OR-CCSEH-21 永久锁死 Google 支付资料的概率极高',
+        region: '灰产重灾区',
+        verdict: '代码和密钥经过不明中转站有严重泄露风险，且假模型写代码越改越乱。要么用官方免费层，要么走正规云 Credits。',
+        flags: []
+      }
+    ];
+
+    const tbody = document.getElementById('tbody');
+    const cardsBox = document.getElementById('view-cards');
+    const countInfo = document.getElementById('count-info');
+    const qInput = document.getElementById('q');
+    const resetBtn = document.getElementById('reset-btn');
+
+    let curCat = 'all';
+    let curFlags = new Set();
+
+    const badgeClass = b => ({
+      official: 'badge-official',
+      community: 'badge-community',
+      rumor: 'badge-rumor',
+      expired: 'badge-expired'
+    }[b] || 'badge-official');
+
+    function render() {
+      const kw = qInput.value.trim().toLowerCase();
+      const list = DEALS.filter(d => {
+        if (curCat !== 'all' && d.cat !== curCat) return false;
+        for (const f of curFlags) {
+          if (f === 'official' && d.badge !== 'official') return false;
+          if (f === 'community' && d.badge !== 'community' && d.badge !== 'rumor') return false;
+          if (f !== 'official' && f !== 'community' && !d.flags.includes(f)) return false;
+        }
+        if (kw) {
+          const hay = `${d.title} ${d.price} ${d.who} ${d.get} ${d.auth} ${d.renew} ${d.region} ${d.verdict}`.toLowerCase();
+          if (!hay.includes(kw)) return false;
+        }
+        return true;
+      });
+
+      countInfo.textContent = `${list.length} / ${DEALS.length} 条`;
+      resetBtn.style.display = (curCat !== 'all' || curFlags.size > 0 || kw) ? 'inline-block' : 'none';
+
+      // Render Table
+      tbody.innerHTML = list.map(d => `
+        <tr>
+          <td class="td-name">
+            <div style="margin-bottom:6px;">
+              <span class="pill-badge ${badgeClass(d.badge)}">${d.badgeText}</span>
+            </div>
+            <div style="font-weight:700;font-size:14px;color:var(--dark);margin-bottom:4px;letter-spacing:-0.01em;">${d.title}</div>
+            <div style="font-family:var(--font-mono);font-size:11.5px;">
+              <a href="${d.url}" target="_blank" rel="noreferrer">${d.source} ↗</a>
+            </div>
+          </td>
+          <td class="td-get">
+            <div style="font-weight:700;color:${d.badge === 'expired' ? 'var(--rose)' : 'var(--green)'};margin-bottom:4px;">${d.price}</div>
+            <div style="font-family:var(--font-sans);font-size:12.5px;color:var(--dark-secondary);">${d.get}</div>
+          </td>
+          <td class="td-cond">
+            <div><span style="color:var(--gray);">对象：</span>${d.who}</div>
+            <div style="margin-top:2px;"><span style="color:var(--gray);">门槛：</span>${d.auth}</div>
+            <div style="margin-top:2px;"><span style="color:var(--gray);">地区：</span>${d.region}</div>
+          </td>
+          <td class="td-trap">
+            <div><span style="color:var(--gray);">时效：</span>${d.exp}</div>
+            <div style="margin-top:4px;color:${d.renew.includes('⚠️') ? 'var(--rose)' : 'var(--dark-secondary)'};">
+              <span style="color:var(--gray);">续费/坑：</span>${d.renew}
+            </div>
+          </td>
+          <td class="td-verdict">
+            <div style="font-size:13px;line-height:1.45;color:var(--dark);">${d.verdict}</div>
+          </td>
+        </tr>
+      `).join('');
+
+      // Render Cards
+      cardsBox.innerHTML = list.map(d => `
+        <article class="bento-card">
+          <div class="bento-header">
+            <span class="pill-badge ${badgeClass(d.badge)}">${d.badgeText} · ${d.catName}</span>
+            <a href="${d.url}" target="_blank" rel="noreferrer" style="font-family:var(--font-mono);font-size:11.5px;">${d.source} ↗</a>
+          </div>
+          <div class="bento-title-row">
+            <h2 class="bento-title">${d.title}</h2>
+            <span class="bento-price ${d.badge === 'expired' ? 'bad' : ''}">${d.price}</span>
+          </div>
+          <div class="bento-meta-list">
+            <span class="bento-label">实际到手</span><span class="bento-val">${d.get}</span>
+            <span class="bento-label">资格门槛</span><span class="bento-val">${d.who} · ${d.auth}</span>
+            <span class="bento-label">地区时效</span><span class="bento-val">${d.region}（${d.exp}）</span>
+            <span class="bento-label">续费陷阱</span><span class="bento-val" style="color:${d.renew.includes('⚠️') ? 'var(--rose)' : 'inherit'}">${d.renew}</span>
+          </div>
+          <div class="bento-verdict"><strong>判断：</strong>${d.verdict}</div>
+        </article>
+      `).join('');
+    }
+
+    // Category click
+    document.querySelectorAll('#cat-row .chip').forEach(btn => {
+      btn.addEventListener('click', () => {
+        document.querySelectorAll('#cat-row .chip').forEach(b => b.classList.remove('active'));
+        btn.classList.add('active');
+        curCat = btn.dataset.cat;
+        render();
+      });
+    });
+
+    // Flags click
+    document.querySelectorAll('#flag-row .chip[data-flag]').forEach(btn => {
+      btn.addEventListener('click', () => {
+        const f = btn.dataset.flag;
+        if (curFlags.has(f)) { curFlags.delete(f); btn.classList.remove('active'); }
+        else { curFlags.add(f); btn.classList.add('active'); }
+        render();
+      });
+    });
+
+    // Reset click
+    resetBtn.addEventListener('click', () => {
+      curCat = 'all';
+      curFlags.clear();
+      qInput.value = '';
+      document.querySelectorAll('#cat-row .chip').forEach(b => b.classList.toggle('active', b.dataset.cat === 'all'));
+      document.querySelectorAll('#flag-row .chip[data-flag]').forEach(b => b.classList.remove('active'));
+      render();
+    });
+
+    // Search input
+    qInput.addEventListener('input', render);
+
+    // Segmented Control View Switcher
+    document.querySelectorAll('.segment-btn').forEach(btn => {
+      btn.addEventListener('click', () => {
+        document.querySelectorAll('.segment-btn').forEach(b => b.classList.remove('active'));
+        btn.classList.add('active');
+        const v = btn.dataset.view;
+        document.getElementById('view-table').classList.toggle('hidden', v !== 'table');
+        document.getElementById('view-cards').classList.toggle('hidden', v !== 'cards');
+      });
+    });
+
+    render();
+  </script>
+</body>
+</html>
