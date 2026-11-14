@@ -119,9 +119,10 @@ export default {
     }
 
     // D. 快捷后台路由：访问 /admin 自动返回 /admin.html
-    if (url.pathname === '/admin' || url.pathname === '/admin/') {
-      const adminUrl = new URL('/admin.html', request.url);
-      return env.ASSETS.fetch(new Request(adminUrl.toString(), request));
+    // 静态资源层会把 /admin.html 307 到 /admin，并自动用 admin.html 响应 /admin，
+    // 所以这里不能再改写成 /admin.html（否则会无限重定向），只规范化结尾斜杠。
+    if (url.pathname === '/admin/') {
+      return Response.redirect(new URL('/admin', request.url).toString(), 301);
     }
 
     // E. 语言选择：?lang=zh|en 记住选择；首次访问 / 时按浏览器语言跳转到 /en/
