@@ -1,6 +1,7 @@
 import { Hono } from 'hono';
 import { Env, SubdomainRow } from '../types';
 import { detectPlatformFromUrl } from '../services/xhs-parser';
+import { sendMail } from '../services/mail';
 
 export const publicRoutes = new Hono<{ Bindings: Env }>();
 
@@ -322,9 +323,151 @@ publicRoutes.get('/showcase', async (c) => {
 
   const recent_prefixes = items.map((i) => i.prefix).slice(0, 16);
 
+  const totalRow = await c.env.DB.prepare(
+    `SELECT COUNT(*) AS cnt FROM subdomains WHERE status = 'ACTIVE' AND show_in_gallery = 1`
+  ).first<{ cnt: number }>();
+
   return c.json({
     items,
-    total_claimed: 417 + items.length,
+    total_claimed: totalRow?.cnt ?? items.length,
     recent_prefixes
   });
+});
+
+/**
+ * 5. 网页表单直接提交申请（替代小红书口令流程）
+ * POST /api/submit
+ * 写入 PENDING_REVIEW 状态，联系邮箱单独存放在 submission_contacts 表（不在任何公开接口中返回）。
+ */
+const EMAIL_RE = /^[^\s@]{1,64}@[^\s@]{1,190}\.[a-z]{2,24}$/i;
+const SUBMIT_CATEGORIES = new Set(['tool', 'creative', 'game']);
+const SUBMIT_HOURLY_LIMIT = 5;
+
+export async function ensureContactsTable(env: Env) {
+  await env.DB.prepare(
+    `CREATE TABLE IF NOT EXISTS submission_contacts (
+       prefix     TEXT PRIMARY KEY,
+       email      TEXT NOT NULL,
+       lang       TEXT NOT NULL DEFAULT 'zh',
+       created_at DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP
+     )`
+  ).run();
+}
+
+publicRoutes.post('/submit', async (c) => {
+  let body: Record<string, unknown>;
+  try {
+    body = await c.req.json();
+  } catch {
+    return c.json({ ok: false, error: 'Invalid request' }, 400);
+  }
+  const en = body.lang === 'en';
+  const msg = (zh: string, enMsg: string) => (en ? enMsg : zh);
+  const str = (k: string, max: number) => String(body[k] ?? '').trim().slice(0, max);
+
+  const p = sanitizePrefix(str('prefix', 40));
+  const fmt = validatePrefixFormat(p);
+  if (!fmt.valid) return c.json({ ok: false, error: msg('子域名前缀格式不正确', 'Invalid subdomain prefix') }, 400);
+  if (await isReservedWord(c.env, p)) {
+    return c.json({ ok: false, error: msg('该前缀为系统保留字', 'This prefix is reserved') }, 400);
+  }
+
+  const title = str('title', 40);
+  const origin_url = str('origin_url', 255);
+  const tagline = str('tagline', 60);
+  const author = str('author', 30);
+  const email = str('email', 120);
+  const category = SUBMIT_CATEGORIES.has(str('category', 16)) ? str('category', 16) : 'tool';
+
+  if (!title || !author) return c.json({ ok: false, error: msg('请填写作品名称和署名', 'Project name and display name are required') }, 400);
+  if (!EMAIL_RE.test(email)) return c.json({ ok: false, error: msg('邮箱格式不正确', 'Invalid email address') }, 400);
+  let originHost = '';
+  try {
+    const u = new URL(origin_url);
+    if (u.protocol !== 'https:') throw new Error('not https');
+    originHost = u.hostname.toLowerCase();
+  } catch {
+    return c.json({ ok: false, error: msg('请填写以 https:// 开头的作品地址', 'Project URL must start with https://') }, 400);
+  }
+  const rootDomain = (c.env.DOMAIN || 'vibe-show.com').toLowerCase();
+  if (originHost === rootDomain || originHost.endsWith(`.${rootDomain}`)) {
+    return c.json({ ok: false, error: msg('作品地址不能指向 vibe-show.com', 'Project URL cannot point to vibe-show.com') }, 400);
+  }
+
+  const ip = c.req.header('CF-Connecting-IP') || '127.0.0.1';
+  const ipHash = await hashIp(ip);
+  const recent = await c.env.DB.prepare(
+    `SELECT COUNT(*) AS cnt FROM subdomains
+     WHERE client_ip_hash = ? AND status = 'PENDING_REVIEW' AND datetime(created_at) > datetime('now', '-1 hour')`
+  )
+    .bind(ipHash)
+    .first<{ cnt: number }>();
+  if ((recent?.cnt || 0) >= SUBMIT_HOURLY_LIMIT) {
+    return c.json({ ok: false, error: msg('提交太频繁，请一小时后再试', 'Too many submissions, please try again in an hour') }, 429);
+  }
+
+  // 清理过期软锁，再判断占用
+  await c.env.DB.prepare(
+    `DELETE FROM subdomains WHERE prefix = ? AND status = 'SOFT_LOCKED'
+       AND lock_expires_at IS NOT NULL AND datetime(lock_expires_at) <= datetime('now')`
+  )
+    .bind(p)
+    .run();
+  const existing = await c.env.DB.prepare('SELECT status FROM subdomains WHERE prefix = ? LIMIT 1')
+    .bind(p)
+    .first<{ status: string }>();
+  if (existing && (existing.status === 'ACTIVE' || existing.status === 'PENDING_REVIEW' || existing.status === 'SOFT_LOCKED')) {
+    return c.json({ ok: false, error: msg('该前缀已被占用，请换一个', 'This prefix is already taken') }, 409);
+  }
+
+  const platform = detectPlatformFromUrl(origin_url);
+  const note = msg('已收到网页提交，人工审核中，预计 24 小时内完成，结果将发送到你的邮箱。', 'Submitted on the web. In review, usually within 24 hours. We will email you the result.');
+
+  await c.env.DB.prepare(
+    `INSERT INTO subdomains (
+        prefix, status, platform, origin_url, title, category, tagline, author_name,
+        client_ip_hash, status_note, created_at, updated_at
+     ) VALUES (?, 'PENDING_REVIEW', ?, ?, ?, ?, ?, ?, ?, ?, datetime('now'), datetime('now'))
+     ON CONFLICT(prefix) DO UPDATE SET
+        status = 'PENDING_REVIEW', platform = excluded.platform, origin_url = excluded.origin_url,
+        title = excluded.title, category = excluded.category, tagline = excluded.tagline,
+        author_name = excluded.author_name, client_ip_hash = excluded.client_ip_hash,
+        client_token = NULL, lock_expires_at = NULL, status_note = excluded.status_note,
+        created_at = datetime('now'), updated_at = datetime('now')`
+  )
+    .bind(p, platform, origin_url, title, category, tagline, author, ipHash, note)
+    .run();
+
+  await ensureContactsTable(c.env);
+  await c.env.DB.prepare(
+    `INSERT INTO submission_contacts (prefix, email, lang) VALUES (?, ?, ?)
+     ON CONFLICT(prefix) DO UPDATE SET email = excluded.email, lang = excluded.lang, created_at = datetime('now')`
+  )
+    .bind(p, email, en ? 'en' : 'zh')
+    .run();
+
+  await c.env.DB.prepare(`INSERT INTO audit_logs (prefix, action, detail) VALUES (?, 'WEB_SUBMIT', ?)`)
+    .bind(p, `${title} | ${origin_url}`)
+    .run();
+
+  c.executionCtx.waitUntil(
+    Promise.all([
+      sendMail(c.env, {
+        to: email,
+        subject: en ? `We received ${p}.vibe-show.com` : `已收到 ${p}.vibe-show.com 的申请`,
+        text: en
+          ? `Hi ${author},\n\nThanks for submitting "${title}". We will review ${p}.vibe-show.com within 24 hours and email you the result.\n\nCheck status: https://${rootDomain}/en/submit/#status\n\n— vibe-show`
+          : `${author} 你好：\n\n感谢提交《${title}》。我们会在 24 小时内审核 ${p}.vibe-show.com，结果会发到这个邮箱。\n\n查询进度：https://${rootDomain}/submit/#status\n\n— vibe-show`
+      }),
+      c.env.ADMIN_EMAIL
+        ? sendMail(c.env, {
+            to: c.env.ADMIN_EMAIL,
+            subject: `[vibe-show] New submission: ${p}`,
+            text: `${title}\n${origin_url}\n${tagline}\nby ${author} <${email}>\n\nReview: https://${rootDomain}/admin`
+          })
+        : Promise.resolve(false)
+    ])
+  );
+
+  return c.json({ ok: true, prefix: p, status: 'PENDING_REVIEW' });
 });

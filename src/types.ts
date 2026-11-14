@@ -8,6 +8,9 @@ export interface Env {
   CF_ZONE_ID?: string;
   CF_API_TOKEN?: string;
   ADMIN_TOKEN?: string;
+  RESEND_API_KEY?: string;
+  MAIL_FROM?: string;
+  ADMIN_EMAIL?: string;
 }
 
 export type SubdomainStatus =

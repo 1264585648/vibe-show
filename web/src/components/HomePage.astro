@@ -1,0 +1,180 @@
+---
+import Base from '../layouts/Base.astro';
+import { t, base, type Lang } from '../i18n/strings';
+import { picks } from '../data/picks';
+
+interface Props { lang: Lang }
+const { lang } = Astro.props;
+const s = t(lang);
+const home = base(lang);
+const submitHref = `${home}submit/`;
+const galleryI18n = {
+  cats: s.gallery.cats, featured: s.gallery.featured, visit: s.gallery.visit, by: s.gallery.by,
+  emptyTitle: s.gallery.emptyTitle, emptyText: s.gallery.emptyText, emptyCta: s.gallery.emptyCta,
+  error: s.gallery.error, liveCount: s.hero.liveCount(0).replace('0', '{n}'), submitHref
+};
+const icons = [
+  'M4 7h16M4 12h10M4 17h7', // subdomain (lines)
+  'M4 5h7v7H4zM13 5h7v7h-7zM4 14h7v5H4zM13 14h7v5h-7z', // wall (grid)
+  'M12 3v12m0 0-4-4m4 4 4-4M5 21h14' // deploy (arrow)
+];
+---
+<Base lang={lang}>
+  <!-- Hero -->
+  <section class="relative overflow-hidden">
+    <div class="pointer-events-none absolute inset-0 -z-10 bg-[radial-gradient(60%_50%_at_50%_0%,#FFEDD5_0%,transparent_70%)]"></div>
+    <div class="container-x pt-16 pb-10 text-center sm:pt-24">
+      <span class="chip"><span class="h-1.5 w-1.5 rounded-full bg-accent"></span>{s.hero.badge}</span>
+      <h1 class="mx-auto mt-6 max-w-4xl text-[40px] font-extrabold leading-[1.05] tracking-[-0.045em] sm:text-6xl lg:text-7xl">
+        <span class="inline-block">{s.hero.title1}</span><br class="hidden sm:block" /> <span class="inline-block text-accent">{s.hero.title2}</span>
+      </h1>
+      <p class="mx-auto mt-6 max-w-2xl text-base leading-relaxed text-ink-3 sm:text-lg">{s.hero.sub}</p>
+      <div class="mt-8 flex flex-wrap items-center justify-center gap-3">
+        <a href={submitHref} class="btn-dark !px-6 !py-3">{s.hero.ctaSubmit}</a>
+        <a href="#projects" class="btn-light !px-6 !py-3">{s.hero.ctaBrowse}</a>
+      </div>
+      <p id="live-count" class="mt-6 h-5 text-sm font-medium text-ink-3"></p>
+    </div>
+  </section>
+
+  <!-- Project wall -->
+  <section id="projects" class="container-x scroll-mt-20 pt-6">
+    <div class="flex flex-col gap-4 sm:flex-row sm:items-end sm:justify-between">
+      <div>
+        <p class="eyebrow">{s.gallery.eyebrow}</p>
+        <h2 class="h2 mt-2">{s.gallery.title}</h2>
+      </div>
+      <div id="cat-filter" class="flex flex-wrap gap-2" role="tablist">
+        <button type="button" data-cat="all" class="cat-btn chip !border-ink !bg-ink !text-white">{s.gallery.all}</button>
+        {Object.entries(s.gallery.cats).map(([k, v]) => (
+          <button type="button" data-cat={k} class="cat-btn chip hover:border-ink">{v}</button>
+        ))}
+      </div>
+    </div>
+    <div id="gallery" class="mt-8 grid gap-5 sm:grid-cols-2 lg:grid-cols-3" aria-live="polite">
+      {[0, 1, 2].map(() => (
+        <div class="card animate-pulse overflow-hidden"><div class="aspect-[16/10] bg-line/60"></div><div class="space-y-2 p-4"><div class="h-4 w-1/2 rounded bg-line/70"></div><div class="h-3 w-3/4 rounded bg-line/50"></div></div></div>
+      ))}
+    </div>
+    <p class="sr-only">{s.gallery.loading}</p>
+  </section>
+
+  <!-- Curated picks (hidden until owner approves entries) -->
+  {picks.length > 0 && (
+    <section class="container-x pt-24">
+      <p class="eyebrow">{s.picks.eyebrow}</p>
+      <h2 class="h2 mt-2">{s.picks.title}</h2>
+      <p class="mt-3 max-w-2xl text-sm text-ink-3">{s.picks.sub}</p>
+      <div class="mt-8 grid gap-5 sm:grid-cols-2 lg:grid-cols-4">
+        {picks.map((p) => (
+          <a href={p.url} target="_blank" rel="noopener" class="card group overflow-hidden transition hover:-translate-y-0.5 hover:shadow-lg">
+            <div class="aspect-[16/10] overflow-hidden bg-line/50">
+              {p.shot && <img src={`/picks/${p.shot}`} alt={p.name} loading="lazy" class="h-full w-full object-cover object-top" />}
+            </div>
+            <div class="p-4">
+              <p class="font-semibold">{p.name}</p>
+              <p class="mt-1 text-sm text-ink-3">{lang === 'en' ? p.en : p.zh}</p>
+              <p class="mt-3 text-xs text-ink-3">{s.gallery.by} {p.creator}</p>
+            </div>
+          </a>
+        ))}
+      </div>
+    </section>
+  )}
+
+  <!-- How it works -->
+  <section id="how" class="container-x scroll-mt-20 pt-28">
+    <p class="eyebrow">{s.how.eyebrow}</p>
+    <h2 class="h2 mt-2">{s.how.title}</h2>
+    <ol class="mt-10 grid gap-5 md:grid-cols-3">
+      {s.how.steps.map((st, i) => (
+        <li class="card p-6">
+          <span class="font-mono text-sm font-semibold text-accent">0{i + 1}</span>
+          <h3 class="mt-3 text-lg font-semibold">{st.t}</h3>
+          <p class="mt-2 text-sm leading-relaxed text-ink-3">{st.d}</p>
+        </li>
+      ))}
+    </ol>
+    <div class="card mt-5 flex flex-col items-start gap-4 p-6 font-mono text-sm sm:flex-row sm:items-center sm:justify-between">
+      <span class="text-ink-3 line-through decoration-ink-3/50">my-tarot-git-9f8a7b-yourname.vercel.app</span>
+      <svg class="hidden h-4 w-8 text-ink-3 sm:block" viewBox="0 0 32 16" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M0 8h30m-6-6 6 6-6 6"/></svg>
+      <span class="font-semibold">https://<span class="text-accent">tarot</span>.vibe-show.com</span>
+    </div>
+  </section>
+
+  <!-- Features -->
+  <section class="container-x pt-28">
+    <p class="eyebrow">{s.features.eyebrow}</p>
+    <h2 class="h2 mt-2">{s.features.title}</h2>
+    <div class="mt-10 grid gap-5 md:grid-cols-3">
+      {s.features.items.map((f, i) => (
+        <div class="card p-6">
+          <span class="inline-flex h-10 w-10 items-center justify-center rounded-xl bg-accent-soft text-accent">
+            <svg class="h-5 w-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d={icons[i]} /></svg>
+          </span>
+          <h3 class="mt-4 text-lg font-semibold">{f.t}</h3>
+          <p class="mt-2 text-sm leading-relaxed text-ink-3">{f.d}</p>
+        </div>
+      ))}
+    </div>
+    <p class="mt-8 text-center text-sm text-ink-3">{s.hero.works}</p>
+  </section>
+
+  <!-- Pricing -->
+  <section id="pricing" class="container-x scroll-mt-20 pt-28">
+    <p class="eyebrow">{s.pricing.eyebrow}</p>
+    <h2 class="h2 mt-2">{s.pricing.title}</h2>
+    <p class="mt-3 text-sm text-ink-3">{s.pricing.sub}</p>
+    <div class="mt-10 grid gap-5 lg:grid-cols-3">
+      {s.pricing.plans.map((p) => (
+        <div class={`card relative flex flex-col p-7 ${p.k === 'pro' ? 'border-ink ring-1 ring-ink' : ''}`}>
+          {p.k === 'pro' && <span class="absolute -top-3 left-7 rounded-full bg-accent px-2.5 py-0.5 text-[11px] font-bold text-white">{s.pricing.soon}</span>}
+          <h3 class="text-base font-semibold">{p.name}</h3>
+          <p class="mt-4"><span class="text-4xl font-extrabold tracking-tight">{p.price}</span> <span class="text-sm text-ink-3">{p.unit}</span></p>
+          <ul class="mt-6 flex-1 space-y-2.5 text-sm text-ink-2">
+            {p.items.map((it) => (
+              <li class="flex gap-2"><svg class="mt-0.5 h-4 w-4 shrink-0 text-ok" viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M16.7 5.3a1 1 0 0 1 0 1.4l-8 8a1 1 0 0 1-1.4 0l-4-4a1 1 0 1 1 1.4-1.4L8 12.6l7.3-7.3a1 1 0 0 1 1.4 0Z" clip-rule="evenodd"/></svg>{it}</li>
+            ))}
+          </ul>
+          <a href={p.href === 'submit' ? submitHref : p.href} class={`mt-7 ${p.k === 'pro' ? 'btn-dark' : 'btn-light'}`}>{p.cta}</a>
+        </div>
+      ))}
+    </div>
+    <p class="mt-6 text-xs leading-relaxed text-ink-3">{s.pricing.note} <a class="underline hover:text-ink" href="/terms">{s.footer.links.terms}</a> · <a class="underline hover:text-ink" href="/refund">{s.footer.links.refund}</a></p>
+  </section>
+
+  <!-- FAQ -->
+  <section id="faq" class="container-x scroll-mt-20 pt-28">
+    <div class="grid gap-10 lg:grid-cols-3">
+      <div>
+        <p class="eyebrow">{s.faq.eyebrow}</p>
+        <h2 class="h2 mt-2">{s.faq.title}</h2>
+      </div>
+      <div class="card divide-y divide-line px-6 lg:col-span-2">
+        {s.faq.items.map((f, i) => (
+          <details class="group py-5" open={i === 0}>
+            <summary class="flex cursor-pointer list-none items-center justify-between gap-4 font-semibold">
+              {f.q}<span class="text-xl leading-none text-ink-3 transition group-open:rotate-45">+</span>
+            </summary>
+            <p class="mt-3 text-sm leading-relaxed text-ink-3">{f.a}</p>
+          </details>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <!-- Final CTA -->
+  <section class="container-x pt-28">
+    <div class="rounded-3xl bg-ink px-8 py-14 text-center text-white">
+      <h2 class="text-3xl font-bold tracking-[-0.03em] sm:text-4xl">{s.cta.title}</h2>
+      <p class="mt-3 text-white/70">{s.cta.sub}</p>
+      <a href={submitHref} class="btn mt-8 bg-white !px-6 !py-3 text-ink hover:bg-paper">{s.cta.btn}</a>
+    </div>
+  </section>
+
+  <script type="application/json" id="gallery-i18n" set:html={JSON.stringify(galleryI18n)}></script>
+  <script>
+    import { initGallery } from '../scripts/gallery';
+    initGallery();
+  </script>
+</Base>

@@ -5,11 +5,12 @@
   "description": "vibe-show.com — Free Subdomain Provisioning, Zero-Config Edge Reverse Proxy & Showcase Platform for Vibe Coders",
   "type": "module",
   "scripts": {
-    "sync:ui": "node --input-type=module -e \"import fs from 'node:fs';fs.mkdirSync('public',{recursive:true});fs.copyFileSync('index.html','public/index.html');console.log('Synced index.html -> public/index.html');\"",
+    "build:web": "npm --prefix web ci && npm --prefix web run build",
     "db:init:local": "wrangler d1 execute vibe-show-db --local --file=./migrations/0001_init.sql",
     "db:init:remote": "wrangler d1 execute vibe-show-db --remote --file=./migrations/0001_init.sql",
-    "dev": "npm run sync:ui && wrangler dev --port 8787",
-    "deploy": "npm run sync:ui && wrangler deploy",
+    "dev": "npm --prefix web run build && wrangler dev --port 8787",
+    "deploy": "npm run build:web && wrangler deploy",
+    "shots": "node scripts/shots.mjs",
     "typecheck": "tsc --noEmit"
   },
   "dependencies": {

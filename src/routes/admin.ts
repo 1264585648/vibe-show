@@ -10,7 +10,8 @@ import {
   ensureSubdomainDnsRecord
 } from '../services/cf-dns';
 import { invalidateProxyCache } from '../proxy';
-import { sanitizePrefix, validatePrefixFormat } from './public';
+import { ensureContactsTable, sanitizePrefix, validatePrefixFormat } from './public';
+import { sendMail } from '../services/mail';
 
 export const adminRoutes = new Hono<{ Bindings: Env }>();
 
@@ -272,6 +273,28 @@ adminRoutes.post('/approve', async (c) => {
 
   const domain = c.env.DOMAIN || 'vibe-show.com';
   const xhs_reply_text = `🎉 恭喜！你的专属子域名已开通生效：https://${prefix}.${domain} （已开启 Cloudflare 全球边缘 HTTPS 反代，无需在 ${platform} 后台做任何配置，作品《${title}》已同步登上 ${domain} 首页灵感秀场！）`;
+
+  // 网页提交的申请：审核通过后邮件通知创作者（未配置 RESEND_API_KEY 时自动跳过）
+  try {
+    await ensureContactsTable(c.env);
+    const contact = await c.env.DB.prepare('SELECT email, lang FROM submission_contacts WHERE prefix = ? LIMIT 1')
+      .bind(prefix)
+      .first<{ email: string; lang: string }>();
+    if (contact?.email) {
+      const en = contact.lang === 'en';
+      c.executionCtx.waitUntil(
+        sendMail(c.env, {
+          to: contact.email,
+          subject: en ? `${prefix}.${domain} is live` : `${prefix}.${domain} 已上线`,
+          text: en
+            ? `Good news: "${title}" is approved and live at https://${prefix}.${domain} with HTTPS. It is now on the project wall at https://${domain}/en/.\n\n— vibe-show`
+            : `好消息：《${title}》已审核通过，现在可以通过 https://${prefix}.${domain} 访问（已启用 HTTPS），并已登上作品墙 https://${domain}/。\n\n— vibe-show`
+        })
+      );
+    }
+  } catch (err) {
+    console.warn('[approve] contact lookup failed', err);
+  }
 
   return c.json({
     ok: true,

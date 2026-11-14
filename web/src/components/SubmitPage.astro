@@ -1,0 +1,102 @@
+---
+import Base from '../layouts/Base.astro';
+import { t, type Lang } from '../i18n/strings';
+
+interface Props { lang: Lang }
+const { lang } = Astro.props;
+const s = t(lang);
+const f = s.submit;
+const i18n = {
+  check: f.check, sending: f.sending, btn: f.btn, errGeneric: f.errGeneric,
+  okText: f.okText('{p}'), statusNotFound: f.statusNotFound, statusMap: f.statusMap, lang
+};
+---
+<Base lang={lang} title={s.meta.submitTitle} path="submit/">
+  <section class="container-x grid gap-10 pt-14 lg:grid-cols-5">
+    <div class="lg:col-span-2">
+      <p class="eyebrow">{f.eyebrow}</p>
+      <h1 class="mt-2 text-4xl font-extrabold tracking-[-0.04em] text-balance lg:text-[44px] lg:leading-[1.1]">{f.title}</h1>
+      <p class="mt-4 text-ink-3">{f.sub}</p>
+      <ol class="mt-8 space-y-4 text-sm">
+        {s.how.steps.map((st, i) => (
+          <li class="flex gap-3"><span class="font-mono font-semibold text-accent">0{i + 1}</span><span><b class="text-ink">{st.t}</b><span class="text-ink-3"> · {st.d}</span></span></li>
+        ))}
+      </ol>
+    </div>
+
+    <div class="lg:col-span-3">
+      <form id="submit-form" class="card space-y-5 p-6 sm:p-8" novalidate>
+        <div>
+          <label class="label" for="f-prefix">{f.prefix}</label>
+          <div class="flex items-center rounded-xl border border-line-2 bg-white focus-within:border-ink">
+            <span class="shrink-0 pl-3.5 font-mono text-sm text-ink-3">https://</span>
+            <input id="f-prefix" name="prefix" required maxlength="30" autocomplete="off" autocapitalize="off" spellcheck="false"
+              class="w-full min-w-0 bg-transparent px-1 py-2.5 font-mono text-sm font-semibold text-ink focus:outline-none" placeholder="tarot" />
+            <span class="shrink-0 whitespace-nowrap pr-3.5 font-mono text-sm text-ink-2">.vibe-show.com</span>
+          </div>
+          <p id="prefix-status" class="mt-1.5 min-h-[18px] text-xs text-ink-3" aria-live="polite">{f.prefixHint}</p>
+        </div>
+        <div class="grid gap-5 sm:grid-cols-2">
+          <div>
+            <label class="label" for="f-title">{f.title_}</label>
+            <input id="f-title" name="title" required maxlength="40" class="field" placeholder={f.titlePh} />
+          </div>
+          <div>
+            <label class="label" for="f-category">{f.category}</label>
+            <select id="f-category" name="category" class="field">
+              {Object.entries(s.gallery.cats).map(([k, v]) => <option value={k}>{v}</option>)}
+            </select>
+          </div>
+        </div>
+        <div>
+          <label class="label" for="f-url">{f.url}</label>
+          <input id="f-url" name="origin_url" type="url" required maxlength="255" class="field font-mono" placeholder={f.urlPh} />
+        </div>
+        <div>
+          <label class="label" for="f-tagline">{f.tagline}</label>
+          <input id="f-tagline" name="tagline" maxlength="60" class="field" placeholder={f.taglinePh} />
+        </div>
+        <div class="grid gap-5 sm:grid-cols-2">
+          <div>
+            <label class="label" for="f-author">{f.author}</label>
+            <input id="f-author" name="author" required maxlength="30" class="field" placeholder={f.authorPh} />
+          </div>
+          <div>
+            <label class="label" for="f-email">{f.email}</label>
+            <input id="f-email" name="email" type="email" required maxlength="120" class="field" placeholder="you@example.com" />
+            <p class="mt-1.5 text-xs text-ink-3">{f.emailHint}</p>
+          </div>
+        </div>
+        <label class="flex items-start gap-2.5 text-sm text-ink-2">
+          <input id="f-agree" type="checkbox" required class="mt-0.5 h-4 w-4 accent-[#1C1917]" />
+          <span>{f.agree} <a class="underline" href="/terms" target="_blank">{f.terms}</a> {f.and} <a class="underline" href="/privacy" target="_blank">{f.privacy}</a></span>
+        </label>
+        <p id="form-error" class="hidden rounded-xl bg-red-50 px-4 py-3 text-sm text-red-700" role="alert"></p>
+        <button id="submit-btn" type="submit" class="btn-dark w-full !py-3">{f.btn}</button>
+      </form>
+
+      <div id="submit-ok" class="card hidden p-8 text-center">
+        <span class="mx-auto flex h-12 w-12 items-center justify-center rounded-full bg-green-50 text-ok">
+          <svg class="h-6 w-6" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><path d="M5 13l4 4L19 7"/></svg>
+        </span>
+        <h2 class="mt-4 text-2xl font-bold">{f.okTitle}</h2>
+        <p id="submit-ok-text" class="mt-2 text-ink-3"></p>
+      </div>
+
+      <div id="status" class="card mt-6 scroll-mt-24 p-6">
+        <h2 class="text-base font-semibold">{f.statusTitle}</h2>
+        <form id="status-form" class="mt-4 flex gap-2">
+          <input id="status-prefix" class="field font-mono" placeholder={f.statusPh} autocomplete="off" />
+          <button class="btn-light shrink-0" type="submit">{f.statusBtn}</button>
+        </form>
+        <p id="status-result" class="mt-3 min-h-[20px] text-sm text-ink-2" aria-live="polite"></p>
+      </div>
+    </div>
+  </section>
+
+  <script type="application/json" id="submit-i18n" set:html={JSON.stringify(i18n)}></script>
+  <script>
+    import { initSubmit } from '../scripts/submit';
+    initSubmit();
+  </script>
+</Base>

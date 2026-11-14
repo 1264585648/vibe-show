@@ -50,6 +50,46 @@ function extractSubdomainPrefix(hostname: string, rootDomain: string): string | 
   return null;
 }
 
+const LANG_COOKIE = 'vs_lang';
+
+function readCookie(request: Request, name: string): string | null {
+  const raw = request.headers.get('Cookie') || '';
+  for (const part of raw.split(';')) {
+    const [k, ...v] = part.trim().split('=');
+    if (k === name) return decodeURIComponent(v.join('='));
+  }
+  return null;
+}
+
+/** Prefers English when the first language in Accept-Language is not Chinese. */
+function prefersEnglish(request: Request): boolean {
+  const first = (request.headers.get('Accept-Language') || '').split(',')[0].trim().toLowerCase();
+  return first !== '' && !first.startsWith('zh');
+}
+
+function handleLanguage(request: Request, url: URL): Response | null {
+  if (request.method !== 'GET') return null;
+  const choice = url.searchParams.get('lang');
+  if (choice === 'zh' || choice === 'en') {
+    url.searchParams.delete('lang');
+    return new Response(null, {
+      status: 302,
+      headers: {
+        Location: url.pathname + (url.search || '') + url.hash,
+        'Set-Cookie': `${LANG_COOKIE}=${choice}; Path=/; Max-Age=31536000; SameSite=Lax; Secure`,
+        'Cache-Control': 'no-store'
+      }
+    });
+  }
+  if (url.pathname === '/' && !readCookie(request, LANG_COOKIE) && prefersEnglish(request)) {
+    return new Response(null, {
+      status: 302,
+      headers: { Location: '/en/', 'Cache-Control': 'no-store', Vary: 'Accept-Language, Cookie' }
+    });
+  }
+  return null;
+}
+
 export default {
   async fetch(request: Request, env: Env, ctx: ExecutionContext): Promise<Response> {
     const url = new URL(request.url);
@@ -84,7 +124,11 @@ export default {
       return env.ASSETS.fetch(new Request(adminUrl.toString(), request));
     }
 
-    // E. 静态资源层：返回 public/index.html 等静态文件
+    // E. 语言选择：?lang=zh|en 记住选择；首次访问 / 时按浏览器语言跳转到 /en/
+    const langRedirect = handleLanguage(request, url);
+    if (langRedirect) return langRedirect;
+
+    // F. 静态资源层：返回 Astro 构建产物（web/dist）
     return env.ASSETS.fetch(request);
   },
 

@@ -14,12 +14,13 @@ routes = [
   { pattern = "*.vibe-show.com/*", zone_name = "vibe-show.com" }
 ]
 
-# 3. 静态资源托管（public/index.html 与 public/admin.html 走 Cloudflare 免费静态资产层）
+# 3. 静态资源托管（Astro 构建产物 web/dist，含 admin.html、法律页，走 Cloudflare 免费静态资产层）
+#    部署前必须先 `npm run build:web`。
 #    ⚠️ run_worker_first 必须为 true：静态资产默认先于 Worker 匹配，
-#    否则 {prefix}.vibe-show.com/ 会命中 public/index.html 直接返回主站首页，
+#    否则 {prefix}.vibe-show.com/ 会命中 index.html 直接返回主站首页，
 #    子域名反代永远拿不到请求（2026-10-30 事故根因）。
 [assets]
-directory = "./public"
+directory = "./web/dist"
 binding = "ASSETS"
 run_worker_first = true
 

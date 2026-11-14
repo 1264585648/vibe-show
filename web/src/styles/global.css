@@ -1,0 +1,32 @@
+@import "tailwindcss";
+
+@theme {
+  --color-paper: #FAFAF9;
+  --color-ink: #1C1917;
+  --color-ink-2: #44403C;
+  --color-ink-3: #78716C;
+  --color-line: #E7E5E4;
+  --color-line-2: #D6D3D1;
+  --color-accent: #F97316;
+  --color-accent-soft: #FFF1E6;
+  --color-ok: #16A34A;
+  --font-sans: "Inter", ui-sans-serif, system-ui, -apple-system, "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", sans-serif;
+  --font-mono: "JetBrains Mono", ui-monospace, SFMono-Regular, Menlo, monospace;
+}
+
+@layer base {
+  html { scroll-behavior: smooth; -webkit-font-smoothing: antialiased; }
+  body { @apply bg-paper text-ink font-sans; }
+  ::selection { background: var(--color-accent-soft); }
+}
+
+@utility container-x { @apply mx-auto w-full max-w-[1160px] px-5 sm:px-8; }
+@utility btn { @apply inline-flex items-center justify-center gap-2 rounded-full px-5 py-2.5 text-sm font-semibold transition-colors; }
+@utility btn-dark { @apply btn bg-ink text-white hover:bg-black; }
+@utility btn-light { @apply btn border border-line-2 bg-white text-ink hover:border-ink; }
+@utility chip { @apply inline-flex items-center gap-1.5 rounded-full border border-line-2 bg-white px-3 py-1 text-xs font-medium text-ink-2; }
+@utility card { @apply rounded-2xl border border-line bg-white; }
+@utility eyebrow { @apply font-mono text-xs font-semibold uppercase tracking-[0.14em] text-accent; }
+@utility h2 { @apply text-3xl font-bold tracking-[-0.03em] text-ink sm:text-4xl; }
+@utility field { @apply w-full rounded-xl border border-line-2 bg-white px-3.5 py-2.5 text-sm text-ink placeholder:text-ink-3 focus:border-ink focus:outline-none; }
+@utility label { @apply mb-1.5 block text-xs font-semibold text-ink-2; }
