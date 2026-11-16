@@ -7,7 +7,8 @@ import {
 } from '../services/xhs-parser';
 import {
   deleteSubdomainDnsRecord,
-  ensureSubdomainDnsRecord
+  ensureSubdomainDnsRecord,
+  isExternalSubdomain
 } from '../services/cf-dns';
 import { invalidateProxyCache } from '../proxy';
 import { ensureContactsTable, sanitizePrefix, validatePrefixFormat } from './public';
@@ -192,27 +193,36 @@ adminRoutes.post('/approve', async (c) => {
     }
   }
 
-  // 1. 调用 Cloudflare DNS API 创建 {prefix}.vibe-show.com (Proxied)
-  const dnsResult = await ensureSubdomainDnsRecord(
-    c.env,
-    prefix,
-    origin_url,
-    author_name
-  );
+  const existing = await c.env.DB.prepare('SELECT cf_record_id FROM subdomains WHERE prefix = ? LIMIT 1')
+    .bind(prefix)
+    .first<{ cf_record_id: string | null }>();
+  const externalManaged = isExternalSubdomain(prefix, existing?.cf_record_id);
+
+  // 1. 独立托管子域名仅更新展示元数据，跳过 Cloudflare DNS 与 KV 反代路由改写
+  const dnsResult = externalManaged
+    ? {
+        ok: true,
+        record_id: existing?.cf_record_id || `dryrun_external_${prefix}`,
+        dry_run: true,
+        message: '独立 Worker 托管子域名，跳过 DNS 与反代路由改写'
+      }
+    : await ensureSubdomainDnsRecord(c.env, prefix, origin_url, author_name);
   if (!dnsResult.ok) {
     return c.json({ ok: false, error: dnsResult.message }, 502);
   }
 
   // 2. 写入 Workers KV 边缘反代路由表并刷新 Worker 内存缓存
-  const routeValue: ProxyRouteValue = {
-    origin: origin_url,
-    status: 'ACTIVE',
-    title,
-    author: author_name,
-    updated_at: new Date().toISOString()
-  };
-  await c.env.PROXY_ROUTES.put(prefix, JSON.stringify(routeValue));
-  invalidateProxyCache(prefix);
+  if (!externalManaged) {
+    const routeValue: ProxyRouteValue = {
+      origin: origin_url,
+      status: 'ACTIVE',
+      title,
+      author: author_name,
+      updated_at: new Date().toISOString()
+    };
+    await c.env.PROXY_ROUTES.put(prefix, JSON.stringify(routeValue));
+    invalidateProxyCache(prefix);
+  }
 
   // 3. 写入 D1 数据库
   const statusNote =
@@ -322,6 +332,13 @@ adminRoutes.post('/revoke', async (c) => {
 
   if (!row) {
     return c.json({ ok: false, error: '未找到该子域名记录' }, 404);
+  }
+
+  if (isExternalSubdomain(prefix, row.cf_record_id)) {
+    return c.json(
+      { ok: false, error: '该子域名由独立 Worker 托管，不能从后台回收 DNS；如需撤下展示请编辑取消「首页秀场展示」' },
+      400
+    );
   }
 
   // 1. 删除 Cloudflare DNS 记录

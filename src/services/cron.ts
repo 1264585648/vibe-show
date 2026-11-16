@@ -1,5 +1,5 @@
 import { Env, SubdomainRow } from '../types';
-import { deleteSubdomainDnsRecord } from './cf-dns';
+import { deleteSubdomainDnsRecord, isExternalSubdomain } from './cf-dns';
 import { invalidateProxyCache } from '../proxy';
 
 /**
@@ -21,11 +21,13 @@ export async function runScheduledTasks(env: Env): Promise<{
   ).run();
   const expired_locks_cleaned = cleanRes.meta?.changes || 0;
 
-  // 2. 每次最多抽检 20 个最久未检查的 ACTIVE 站点（避免单次 Worker CPU 超限）
+  // 2. 每次最多抽检 20 个最久未检查的 ACTIVE 站点（避免单次 Worker CPU 超限），跳过独立 Worker 托管的子域名
   const activeRows = await env.DB.prepare(
     `SELECT * FROM subdomains
      WHERE status = 'ACTIVE'
        AND origin_url != ''
+       AND prefix != 'free'
+       AND COALESCE(cf_record_id, '') NOT LIKE 'dryrun_external_%'
      ORDER BY COALESCE(last_checked_at, '1970-01-01') ASC
      LIMIT 20`
   ).all<SubdomainRow>();
@@ -34,6 +36,7 @@ export async function runScheduledTasks(env: Env): Promise<{
   let revoked_dead = 0;
 
   for (const row of activeRows.results || []) {
+    if (isExternalSubdomain(row.prefix, row.cf_record_id)) continue;
     checked_active++;
     let ok = false;
     let status = 0;

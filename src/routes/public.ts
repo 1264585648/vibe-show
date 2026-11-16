@@ -9,7 +9,8 @@ const BUILTIN_RESERVED = new Set([
   'www', 'api', 'admin', 'app', 'mail', 'smtp', 'imap', 'pop', 'mx', 'ns1', 'ns2',
   'cdn', 'static', 'assets', 'img', 'docs', 'blog', 'status', 'help', 'support',
   'dev', 'test', 'staging', 'auth', 'login', 'account', 'pay', 'billing', 'official',
-  'vibe', 'show', 'root', 'dashboard', 'console', 'security', 'abuse', 'edge', 'proxy'
+  'vibe', 'show', 'root', 'dashboard', 'console', 'security', 'abuse', 'edge', 'proxy',
+  'free'
 ]);
 
 export function sanitizePrefix(raw: string): string {

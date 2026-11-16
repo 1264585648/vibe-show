@@ -8,6 +8,13 @@ export interface CfDnsProvisionResult {
 }
 
 /**
+ * 判断子域名是否由独立 Worker（而非 vibe-show 边缘反代）直接托管，避免 Cron 或后台操作误改/误删其 DNS。
+ */
+export function isExternalSubdomain(prefix: string, cfRecordId?: string | null): boolean {
+  return prefix === 'free' || Boolean(cfRecordId && cfRecordId.startsWith('dryrun_external_'));
+}
+
+/**
  * 调用 Cloudflare DNS API 为审核通过的 {prefix}.vibe-show.com 创建开启小黄云 (proxied: true) 的 A 记录。
  * 使用 192.0.2.1 (RFC 5737 占位 IP)，开启 Proxied 后流量直接进入绑定 *.vibe-show.com/* 的 Worker 反代引擎，
  * 并自动享有 Cloudflare Universal SSL 免费泛域名 HTTPS 证书。
