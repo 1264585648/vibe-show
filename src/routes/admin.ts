@@ -13,6 +13,7 @@ import {
 import { invalidateProxyCache } from '../proxy';
 import { ensureContactsTable, sanitizePrefix, validatePrefixFormat } from './public';
 import { sendMail } from '../services/mail';
+import { adminEmailRoutes } from './admin-email';
 
 export const adminRoutes = new Hono<{ Bindings: Env }>();
 
@@ -30,6 +31,8 @@ adminRoutes.use('*', async (c, next) => {
   }
   await next();
 });
+
+adminRoutes.route('/email', adminEmailRoutes);
 
 /**
  * 1. 粘贴小红书评论一键解析 + 关联软锁草稿 + 源站连通性预检

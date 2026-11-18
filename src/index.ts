@@ -118,11 +118,11 @@ export default {
       return app.fetch(request, env, ctx);
     }
 
-    // D. 快捷后台路由：访问 /admin 自动返回 /admin.html
-    // 静态资源层会把 /admin.html 307 到 /admin，并自动用 admin.html 响应 /admin，
-    // 所以这里不能再改写成 /admin.html（否则会无限重定向），只规范化结尾斜杠。
-    if (url.pathname === '/admin/') {
-      return Response.redirect(new URL('/admin', request.url).toString(), 301);
+    // D. 快捷后台路由：访问 /admin 自动返回 /admin.html，/admin-mail 自动返回 /admin-mail.html
+    // 静态资源层会把 /*.html 307 到 /*，并自动用对应 html 响应，
+    // 所以这里不能再改写成 .html（否则会无限重定向），只规范化结尾斜杠。
+    if (url.pathname === '/admin/' || url.pathname === '/admin-mail/') {
+      return Response.redirect(new URL(url.pathname.slice(0, -1), request.url).toString(), 301);
     }
 
     // E. 语言选择：?lang=zh|en 记住选择；首次访问 / 时按浏览器语言跳转到 /en/

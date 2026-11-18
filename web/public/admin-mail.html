@@ -1,0 +1,887 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>vibe-show.com — 子邮箱管理控制台</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600;700&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        apple: {
+                            bg: '#F5F5F7',
+                            card: '#FFFFFF',
+                            dark: '#1D1D1F',
+                            gray: '#6E6E73',
+                            muted: '#86868B',
+                            blue: '#0071E3',
+                            blueHover: '#0077ED',
+                            border: '#D2D2D7'
+                        }
+                    },
+                    fontFamily: {
+                        sans: ['-apple-system', 'BlinkMacSystemFont', '"Plus Jakarta Sans"', '"PingFang SC"', 'sans-serif'],
+                        mono: ['"JetBrains Mono"', 'ui-monospace', 'SFMono-Regular', 'monospace']
+                    }
+                }
+            }
+        }
+    </script>
+</head>
+<body class="bg-apple-bg text-apple-dark font-sans min-h-screen antialiased">
+
+    <!-- 顶部栏 -->
+    <header class="sticky top-0 z-30 bg-white/85 backdrop-blur-xl border-b border-black/[0.07]">
+        <div class="max-w-[1280px] mx-auto px-6 h-16 flex items-center justify-between gap-4">
+            <div class="flex items-center gap-3">
+                <a href="/" class="flex items-center gap-2 group">
+                    <span class="w-6 h-6 rounded-[7px] bg-apple-dark flex items-center justify-center">
+                        <span class="w-2 h-2 rounded-full bg-white"></span>
+                    </span>
+                    <span class="font-bold tracking-tight text-apple-dark">vibe-show<span class="text-apple-muted font-normal">.com</span></span>
+                </a>
+                <span class="text-black/15">/</span>
+                <nav class="inline-flex items-center bg-apple-bg p-1 rounded-full border border-black/[0.05]">
+                    <a href="/admin" class="text-xs font-medium text-apple-gray hover:text-apple-dark px-3 py-1 rounded-full transition-colors">子域名反代</a>
+                    <span class="text-xs font-semibold bg-white text-apple-dark px-3 py-1 rounded-full shadow-sm">子邮箱管理</span>
+                </nav>
+            </div>
+
+            <div class="flex items-center gap-2.5">
+                <div class="flex items-center bg-apple-bg rounded-full px-3.5 py-1.5 border border-black/[0.06]">
+                    <span class="text-[11px] font-mono text-apple-gray mr-2">ADMIN_TOKEN:</span>
+                    <input id="admin-token" type="password" value="vibe-admin-2026" placeholder="输入管理口令"
+                        class="bg-transparent font-mono text-xs text-apple-dark focus:outline-none w-32 sm:w-36">
+                </div>
+                <button id="toggle-cf-auth-btn" type="button" class="text-xs font-medium bg-apple-bg hover:bg-gray-200 text-apple-dark px-3.5 py-2 rounded-full transition-colors border border-black/[0.06]">
+                    CF 授权
+                </button>
+                <button id="refresh-btn" type="button" class="text-xs font-semibold bg-apple-dark hover:bg-black text-white px-4 py-2 rounded-full transition-colors">
+                    刷新
+                </button>
+                <a href="/" class="hidden sm:inline text-xs font-medium text-apple-gray hover:text-apple-dark">返回前台 ↗</a>
+            </div>
+        </div>
+    </header>
+
+    <main class="max-w-[1280px] mx-auto px-6 py-7 space-y-6">
+        <!-- 全局通知条 -->
+        <div id="toast-bar" class="hidden rounded-2xl px-4 py-3 text-xs font-medium border shadow-sm transition-all"></div>
+
+        <!-- 顶部统计卡片 -->
+        <div class="grid grid-cols-2 sm:grid-cols-4 gap-4">
+            <div class="bg-white rounded-2xl p-4 border border-black/[0.06] shadow-sm">
+                <p class="text-xs text-apple-gray font-medium">收信托管 · Email Routing</p>
+                <p id="stat-routing" class="text-lg font-extrabold font-mono text-apple-dark mt-1.5">-</p>
+            </div>
+            <div class="bg-white rounded-2xl p-4 border border-black/[0.06] shadow-sm">
+                <p class="text-xs text-apple-gray font-medium">已配子邮箱规则</p>
+                <p id="stat-rules" class="text-2xl font-extrabold font-mono text-apple-blue mt-1">-</p>
+            </div>
+            <div class="bg-white rounded-2xl p-4 border border-black/[0.06] shadow-sm">
+                <p class="text-xs text-apple-gray font-medium">Catch-all 通配 (*@)</p>
+                <p id="stat-catchall" class="text-sm font-bold font-mono text-apple-dark mt-2">-</p>
+            </div>
+            <div class="bg-white rounded-2xl p-4 border border-black/[0.06] shadow-sm">
+                <p class="text-xs text-apple-gray font-medium">发信服务 · Resend</p>
+                <p id="stat-resend" class="text-sm font-bold font-mono text-apple-dark mt-2">-</p>
+            </div>
+        </div>
+
+        <!-- Cloudflare 权限告警 / 临时凭证设置区 -->
+        <section id="cf-auth-panel" class="hidden bg-amber-50/90 border border-amber-500/30 rounded-3xl p-5 space-y-3">
+            <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-2">
+                <div>
+                    <h2 class="text-sm font-bold text-amber-950">Cloudflare Email Routing 授权检查</h2>
+                    <p class="text-xs text-amber-900/80 mt-0.5">
+                        在线增删子邮箱需要 Token 具备：<code class="font-mono bg-white/80 px-1.5 py-0.5 rounded">Zone → Email Routing Rules → Edit</code>、
+                        <code class="font-mono bg-white/80 px-1.5 py-0.5 rounded">Account → Email Routing Addresses → Edit</code> 与
+                        <code class="font-mono bg-white/80 px-1.5 py-0.5 rounded">Zone → Zone → Read</code>（或配置 <code class="font-mono bg-white/80 px-1.5 py-0.5 rounded">CF_ACCOUNT_ID</code>）。
+                    </p>
+                </div>
+                <button id="copy-wrangler-cmd-btn" type="button" class="shrink-0 text-xs font-semibold bg-amber-900 hover:bg-black text-white px-3.5 py-2 rounded-xl transition-colors">
+                    复制 Secret 配置命令
+                </button>
+            </div>
+            <ul id="warnings-list" class="hidden text-xs text-amber-950 list-disc pl-5 space-y-1"></ul>
+            <div class="grid grid-cols-1 sm:grid-cols-12 gap-3 pt-2 border-t border-amber-500/20">
+                <div class="sm:col-span-5">
+                    <label class="block text-[11px] font-semibold text-amber-950 mb-1">临时覆盖 CF_EMAIL_API_TOKEN（仅存当前标签页 sessionStorage）</label>
+                    <input id="cf-override-token" type="password" placeholder="若默认 CF_API_TOKEN 权限不足可在此临时填入"
+                        class="w-full bg-white rounded-xl px-3 py-2 font-mono text-xs text-apple-dark border border-amber-500/25 focus:outline-none focus:border-apple-blue">
+                </div>
+                <div class="sm:col-span-4">
+                    <label class="block text-[11px] font-semibold text-amber-950 mb-1">临时覆盖 CF_ACCOUNT_ID（可选）</label>
+                    <input id="cf-override-account" type="text" placeholder="32 位 Account ID"
+                        class="w-full bg-white rounded-xl px-3 py-2 font-mono text-xs text-apple-dark border border-amber-500/25 focus:outline-none focus:border-apple-blue">
+                </div>
+                <div class="sm:col-span-3 flex items-end gap-2">
+                    <button id="save-cf-override-btn" type="button" class="flex-1 bg-apple-dark hover:bg-black text-white text-xs font-semibold py-2 rounded-xl transition-colors">
+                        应用并加载
+                    </button>
+                    <button id="clear-cf-override-btn" type="button" class="bg-white hover:bg-gray-100 text-apple-dark text-xs font-medium px-3 py-2 rounded-xl border border-black/10 transition-colors">
+                        清除
+                    </button>
+                </div>
+            </div>
+        </section>
+
+        <!-- 站内常用子邮箱状态速览 -->
+        <section class="bg-white rounded-2xl p-4 border border-black/[0.06] shadow-sm flex flex-wrap items-center justify-between gap-3">
+            <div class="flex flex-wrap items-center gap-2">
+                <span class="text-xs font-semibold text-apple-gray mr-1">站点公开 / 配置邮箱状态：</span>
+                <div id="preset-chips" class="flex flex-wrap items-center gap-2"></div>
+            </div>
+            <span class="text-[11px] text-apple-muted">点击未配置地址可一键填入左侧创建表单</span>
+        </section>
+
+        <div class="grid grid-cols-1 lg:grid-cols-12 gap-6 items-start">
+            <!-- 左栏：创建规则 + 目标邮箱 + Catch-all -->
+            <div class="lg:col-span-5 space-y-6">
+                <!-- 1. 创建子邮箱转发规则 -->
+                <section class="bg-white rounded-3xl p-6 border border-black/[0.06] shadow-sm space-y-4">
+                    <div>
+                        <span class="text-[11px] font-mono font-bold uppercase tracking-wider text-apple-blue">Create Alias</span>
+                        <h2 class="text-lg font-bold tracking-tight mt-0.5">新增子邮箱转发规则</h2>
+                    </div>
+
+                    <form id="create-rule-form" class="space-y-3.5">
+                        <div>
+                            <label class="block text-[11px] font-semibold text-apple-gray mb-1">子邮箱前缀 *</label>
+                            <div class="flex items-center bg-apple-bg rounded-xl px-3 py-2 border border-transparent focus-within:border-apple-blue focus-within:bg-white">
+                                <input id="new-prefix" type="text" required placeholder="support"
+                                    class="bg-transparent font-mono text-xs font-bold text-apple-blue focus:outline-none w-full">
+                                <span id="domain-suffix" class="font-mono text-[11px] text-apple-muted shrink-0">@vibe-show.com</span>
+                            </div>
+                            <div class="flex flex-wrap gap-1.5 mt-2">
+                                <button type="button" data-quick-prefix="hi" class="quick-prefix text-[11px] font-mono bg-apple-bg hover:bg-gray-200 px-2 py-0.5 rounded-md text-apple-dark">hi</button>
+                                <button type="button" data-quick-prefix="abuse" class="quick-prefix text-[11px] font-mono bg-apple-bg hover:bg-gray-200 px-2 py-0.5 rounded-md text-apple-dark">abuse</button>
+                                <button type="button" data-quick-prefix="mail" class="quick-prefix text-[11px] font-mono bg-apple-bg hover:bg-gray-200 px-2 py-0.5 rounded-md text-apple-dark">mail</button>
+                                <button type="button" data-quick-prefix="support" class="quick-prefix text-[11px] font-mono bg-apple-bg hover:bg-gray-200 px-2 py-0.5 rounded-md text-apple-dark">support</button>
+                                <button type="button" data-quick-prefix="billing" class="quick-prefix text-[11px] font-mono bg-apple-bg hover:bg-gray-200 px-2 py-0.5 rounded-md text-apple-dark">billing</button>
+                                <button type="button" data-quick-prefix="noreply" class="quick-prefix text-[11px] font-mono bg-apple-bg hover:bg-gray-200 px-2 py-0.5 rounded-md text-apple-dark">noreply</button>
+                            </div>
+                        </div>
+
+                        <div>
+                            <label class="block text-[11px] font-semibold text-apple-gray mb-1">处理动作</label>
+                            <select id="new-action" class="w-full bg-apple-bg rounded-xl px-3 py-2 text-xs text-apple-dark focus:outline-none focus:bg-white border border-transparent focus:border-apple-blue">
+                                <option value="forward">转发到目标邮箱 (Forward)</option>
+                                <option value="drop">直接拒收 / 丢弃 (Drop)</option>
+                            </select>
+                        </div>
+
+                        <div id="new-dest-wrap" class="space-y-2">
+                            <label class="block text-[11px] font-semibold text-apple-gray">目标接收邮箱 *</label>
+                            <select id="new-dest-select" class="w-full bg-apple-bg rounded-xl px-3 py-2 font-mono text-xs text-apple-dark focus:outline-none focus:bg-white border border-transparent focus:border-apple-blue">
+                                <option value="__manual__">手动输入已验证的目标邮箱…</option>
+                            </select>
+                            <input id="new-dest-manual" type="email" placeholder="your-personal@gmail.com"
+                                class="w-full bg-apple-bg rounded-xl px-3 py-2 font-mono text-xs text-apple-dark focus:outline-none focus:bg-white border border-transparent focus:border-apple-blue">
+                        </div>
+
+                        <div>
+                            <label class="block text-[11px] font-semibold text-apple-gray mb-1">备注名称（可选）</label>
+                            <input id="new-name" type="text" maxlength="90" placeholder="例如：客服联系邮箱"
+                                class="w-full bg-apple-bg rounded-xl px-3 py-2 text-xs text-apple-dark focus:outline-none focus:bg-white border border-transparent focus:border-apple-blue">
+                        </div>
+
+                        <button id="create-rule-btn" type="submit" class="w-full bg-apple-blue hover:bg-apple-blueHover text-white font-semibold py-2.5 rounded-2xl text-xs shadow-sm transition-colors">
+                            + 创建子邮箱转发规则
+                        </button>
+                    </form>
+                </section>
+
+                <!-- 2. 目标接收邮箱管理 -->
+                <section class="bg-white rounded-3xl p-6 border border-black/[0.06] shadow-sm space-y-4">
+                    <div>
+                        <span class="text-[11px] font-mono font-bold uppercase tracking-wider text-emerald-700">Destinations</span>
+                        <h2 class="text-lg font-bold tracking-tight mt-0.5">目标接收邮箱（收件箱）</h2>
+                        <p class="text-[11px] text-apple-gray mt-0.5">添加后会向该邮箱发验证链接，验证通过后才能用来接收转发。</p>
+                    </div>
+
+                    <form id="add-dest-form" class="flex gap-2">
+                        <input id="add-dest-email" type="email" required placeholder="输入你的个人邮箱"
+                            class="flex-1 bg-apple-bg rounded-xl px-3 py-2 font-mono text-xs text-apple-dark focus:outline-none focus:bg-white border border-transparent focus:border-apple-blue">
+                        <button id="add-dest-btn" type="submit" class="shrink-0 bg-apple-dark hover:bg-black text-white text-xs font-semibold px-3.5 py-2 rounded-xl transition-colors">
+                            添加验证
+                        </button>
+                    </form>
+
+                    <div id="dest-list" class="divide-y divide-black/[0.06]"></div>
+                </section>
+
+                <!-- 3. Catch-all 通配设置 -->
+                <section class="bg-white rounded-3xl p-6 border border-black/[0.06] shadow-sm space-y-4">
+                    <div class="flex items-center justify-between">
+                        <div>
+                            <span class="text-[11px] font-mono font-bold uppercase tracking-wider text-amber-600">Catch-All</span>
+                            <h2 class="text-lg font-bold tracking-tight mt-0.5">兜底通配 (*@vibe-show.com)</h2>
+                        </div>
+                        <label class="inline-flex items-center gap-1.5 text-xs font-semibold cursor-pointer">
+                            <input id="catchall-enabled" type="checkbox" class="rounded text-apple-blue">
+                            <span>启用</span>
+                        </label>
+                    </div>
+
+                    <form id="catchall-form" class="space-y-3">
+                        <select id="catchall-action" class="w-full bg-apple-bg rounded-xl px-3 py-2 text-xs text-apple-dark focus:outline-none focus:bg-white border border-transparent focus:border-apple-blue">
+                            <option value="forward">全部未匹配前缀转发到目标邮箱</option>
+                            <option value="drop">全部未匹配前缀直接丢弃</option>
+                        </select>
+                        <div id="catchall-dest-wrap" class="space-y-2">
+                            <select id="catchall-dest-select" class="w-full bg-apple-bg rounded-xl px-3 py-2 font-mono text-xs text-apple-dark focus:outline-none focus:bg-white border border-transparent focus:border-apple-blue">
+                                <option value="__manual__">手动输入已验证的目标邮箱…</option>
+                            </select>
+                            <input id="catchall-dest-manual" type="email" placeholder="your-personal@gmail.com"
+                                class="w-full bg-apple-bg rounded-xl px-3 py-2 font-mono text-xs text-apple-dark focus:outline-none focus:bg-white border border-transparent focus:border-apple-blue">
+                        </div>
+                        <button id="save-catchall-btn" type="submit" class="w-full bg-apple-bg hover:bg-gray-200 text-apple-dark font-semibold py-2.5 rounded-xl text-xs transition-colors">
+                            保存 Catch-all 设置
+                        </button>
+                    </form>
+                </section>
+            </div>
+
+            <!-- 右栏：子邮箱列表 + 在线发信 -->
+            <div class="lg:col-span-7 space-y-6">
+                <!-- 4. 已配置子邮箱列表 -->
+                <section class="bg-white rounded-3xl p-6 border border-black/[0.06] shadow-sm">
+                    <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 pb-4 mb-4 border-b border-black/[0.06]">
+                        <div>
+                            <span class="text-[11px] font-mono font-bold uppercase tracking-wider text-apple-blue">Routing Rules</span>
+                            <h2 class="text-lg font-bold tracking-tight mt-0.5">已配置子邮箱列表</h2>
+                        </div>
+                        <input id="rules-search" type="search" placeholder="搜索前缀或目标邮箱…"
+                            class="bg-apple-bg rounded-full px-3.5 py-1.5 text-xs text-apple-dark focus:outline-none focus:bg-white border border-black/[0.06] focus:border-apple-blue w-full sm:w-56">
+                    </div>
+
+                    <div id="rules-list" class="divide-y divide-black/[0.06]"></div>
+                </section>
+
+                <!-- 5. 在线发信（Resend） -->
+                <section class="bg-white rounded-3xl p-6 border border-black/[0.06] shadow-sm space-y-4">
+                    <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-2">
+                        <div>
+                            <span class="text-[11px] font-mono font-bold uppercase tracking-wider text-purple-600">Send via Resend</span>
+                            <h2 class="text-lg font-bold tracking-tight mt-0.5">以任意子邮箱身份发信</h2>
+                            <p class="text-[11px] text-apple-gray mt-0.5">已验证根域名的 Resend 可直接使用任何 @vibe-show.com 前缀发信，无需预先建立规则。</p>
+                        </div>
+                    </div>
+
+                    <form id="send-mail-form" class="space-y-3">
+                        <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                            <div>
+                                <label class="block text-[11px] font-semibold text-apple-gray mb-1">发件子邮箱前缀 *</label>
+                                <div class="flex items-center bg-apple-bg rounded-xl px-3 py-2 border border-transparent focus-within:border-apple-blue focus-within:bg-white">
+                                    <input id="send-from-prefix" type="text" required value="hi" placeholder="hi"
+                                        class="bg-transparent font-mono text-xs font-bold text-apple-blue focus:outline-none w-full">
+                                    <span id="send-domain-suffix" class="font-mono text-[11px] text-apple-muted shrink-0">@vibe-show.com</span>
+                                </div>
+                            </div>
+                            <div>
+                                <label class="block text-[11px] font-semibold text-apple-gray mb-1">发件人显示名（可选）</label>
+                                <input id="send-from-name" type="text" value="vibe-show" placeholder="vibe-show"
+                                    class="w-full bg-apple-bg rounded-xl px-3 py-2 text-xs text-apple-dark focus:outline-none focus:bg-white border border-transparent focus:border-apple-blue">
+                            </div>
+                        </div>
+
+                        <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                            <div>
+                                <label class="block text-[11px] font-semibold text-apple-gray mb-1">收件人邮箱 *</label>
+                                <input id="send-to" type="email" required placeholder="recipient@example.com"
+                                    class="w-full bg-apple-bg rounded-xl px-3 py-2 font-mono text-xs text-apple-dark focus:outline-none focus:bg-white border border-transparent focus:border-apple-blue">
+                            </div>
+                            <div>
+                                <label class="block text-[11px] font-semibold text-apple-gray mb-1">Reply-To 回复地址（可选）</label>
+                                <input id="send-reply-to" type="email" placeholder="留空则默认回复到发件子邮箱"
+                                    class="w-full bg-apple-bg rounded-xl px-3 py-2 font-mono text-xs text-apple-dark focus:outline-none focus:bg-white border border-transparent focus:border-apple-blue">
+                            </div>
+                        </div>
+
+                        <div>
+                            <label class="block text-[11px] font-semibold text-apple-gray mb-1">邮件主题 *</label>
+                            <input id="send-subject" type="text" required maxlength="200" placeholder="例如：Re: Your inquiry on vibe-show.com"
+                                class="w-full bg-apple-bg rounded-xl px-3 py-2 text-xs text-apple-dark focus:outline-none focus:bg-white border border-transparent focus:border-apple-blue">
+                        </div>
+
+                        <div>
+                            <label class="block text-[11px] font-semibold text-apple-gray mb-1">正文内容 *</label>
+                            <textarea id="send-text" rows="5" required placeholder="输入要发送的正文…"
+                                class="w-full bg-apple-bg rounded-2xl p-3.5 text-xs leading-relaxed text-apple-dark focus:outline-none focus:bg-white border border-transparent focus:border-apple-blue"></textarea>
+                        </div>
+
+                        <button id="send-mail-btn" type="submit" class="w-full bg-apple-dark hover:bg-black text-white font-semibold py-2.5 rounded-2xl text-xs transition-colors">
+                            发送邮件
+                        </button>
+                    </form>
+                </section>
+            </div>
+        </div>
+    </main>
+
+    <script>
+        const $ = sel => document.querySelector(sel);
+        const $$ = sel => Array.from(document.querySelectorAll(sel));
+
+        const state = {
+            domain: 'vibe-show.com',
+            rules: [],
+            destinations: [],
+            catchAll: null,
+            editingRuleId: null,
+            search: ''
+        };
+
+        const tokenInput = $('#admin-token');
+        const savedToken = localStorage.getItem('vibe_admin_token');
+        if (savedToken) tokenInput.value = savedToken;
+        tokenInput.addEventListener('change', () => {
+            localStorage.setItem('vibe_admin_token', tokenInput.value.trim());
+            loadOverview();
+        });
+
+        const cfOverrideTokenInput = $('#cf-override-token');
+        const cfOverrideAccInput = $('#cf-override-account');
+        cfOverrideTokenInput.value = sessionStorage.getItem('vibe_cf_email_token') || '';
+        cfOverrideAccInput.value = sessionStorage.getItem('vibe_cf_account_id') || '';
+
+        function getHeaders() {
+            const h = {
+                'Content-Type': 'application/json',
+                'Authorization': `Bearer ${tokenInput.value.trim()}`
+            };
+            const cfToken = cfOverrideTokenInput.value.trim();
+            const cfAcc = cfOverrideAccInput.value.trim();
+            if (cfToken) h['x-cf-email-token'] = cfToken;
+            if (cfAcc) h['x-cf-account-id'] = cfAcc;
+            return h;
+        }
+
+        function escapeHtml(str) {
+            return String(str || '').replace(/[&<>"']/g, m => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[m]));
+        }
+
+        let toastTimer = null;
+        function showToast(msg, type = 'info') {
+            const bar = $('#toast-bar');
+            bar.classList.remove('hidden', 'bg-emerald-50', 'border-emerald-500/25', 'text-emerald-900', 'bg-rose-50', 'border-rose-500/25', 'text-rose-900', 'bg-blue-50', 'border-blue-500/25', 'text-blue-900');
+            if (type === 'ok') bar.classList.add('bg-emerald-50', 'border-emerald-500/25', 'text-emerald-900');
+            else if (type === 'err') bar.classList.add('bg-rose-50', 'border-rose-500/25', 'text-rose-900');
+            else bar.classList.add('bg-blue-50', 'border-blue-500/25', 'text-blue-900');
+            bar.textContent = msg;
+            if (toastTimer) clearTimeout(toastTimer);
+            toastTimer = setTimeout(() => bar.classList.add('hidden'), 6000);
+        }
+
+        async function apiFetch(url, options = {}) {
+            const res = await fetch(url, {
+                ...options,
+                headers: { ...getHeaders(), ...(options.headers || {}) }
+            });
+            const data = await res.json().catch(() => ({ ok: false, error: `HTTP ${res.status}` }));
+            return { ok: res.ok && data.ok, status: res.status, data };
+        }
+
+        function syncDestinationSelect(selectEl, manualEl, preferredValue) {
+            const verified = state.destinations.filter(d => d.verified);
+            const pending = state.destinations.filter(d => !d.verified);
+            const opts = [];
+            for (const d of verified) {
+                opts.push(`<option value="${escapeHtml(d.email)}">${escapeHtml(d.email)}</option>`);
+            }
+            for (const d of pending) {
+                opts.push(`<option value="${escapeHtml(d.email)}" disabled>${escapeHtml(d.email)} (待邮件验证)</option>`);
+            }
+            opts.push(`<option value="__manual__">手动输入已验证的目标邮箱…</option>`);
+            selectEl.innerHTML = opts.join('');
+
+            if (preferredValue && state.destinations.some(d => d.email === preferredValue && d.verified)) {
+                selectEl.value = preferredValue;
+                manualEl.classList.add('hidden');
+            } else if (preferredValue) {
+                selectEl.value = '__manual__';
+                manualEl.value = preferredValue;
+                manualEl.classList.remove('hidden');
+            } else if (verified.length > 0) {
+                selectEl.value = verified[0].email;
+                manualEl.classList.add('hidden');
+            } else {
+                selectEl.value = '__manual__';
+                manualEl.classList.remove('hidden');
+            }
+        }
+
+        function bindDestSelectToggle(selectEl, manualEl) {
+            selectEl.addEventListener('change', () => {
+                if (selectEl.value === '__manual__') {
+                    manualEl.classList.remove('hidden');
+                    manualEl.focus();
+                } else {
+                    manualEl.classList.add('hidden');
+                }
+            });
+        }
+
+        function readDestValue(selectEl, manualEl) {
+            return selectEl.value === '__manual__' ? manualEl.value.trim() : selectEl.value;
+        }
+
+        function renderPresets() {
+            const presets = [
+                { prefix: 'hi', note: '官网 & Resend 默认' },
+                { prefix: 'abuse', note: '条款举报' },
+                { prefix: 'mail', note: 'DMARC 报告' },
+                { prefix: 'support', note: '客服' }
+            ];
+            const catchAllForward = Boolean(state.catchAll?.enabled && state.catchAll?.action === 'forward');
+            $('#preset-chips').innerHTML = presets.map(p => {
+                const rule = state.rules.find(r => r.prefix === p.prefix);
+                if (rule && rule.enabled) {
+                    return `<span class="inline-flex items-center gap-1.5 text-xs font-mono bg-emerald-50 text-emerald-800 border border-emerald-500/20 px-2.5 py-1 rounded-full">✓ ${escapeHtml(p.prefix)}@${escapeHtml(state.domain)} <span class="font-sans text-[10px] opacity-75">(${escapeHtml(p.note)})</span></span>`;
+                }
+                if (rule && !rule.enabled) {
+                    return `<span class="inline-flex items-center gap-1.5 text-xs font-mono bg-amber-50 text-amber-800 border border-amber-500/20 px-2.5 py-1 rounded-full">○ ${escapeHtml(p.prefix)}@${escapeHtml(state.domain)} <span class="font-sans text-[10px] opacity-75">已停用</span></span>`;
+                }
+                if (catchAllForward) {
+                    return `<button type="button" data-quick-prefix="${escapeHtml(p.prefix)}" class="quick-prefix inline-flex items-center gap-1.5 text-xs font-mono bg-blue-50 text-blue-800 border border-blue-500/20 px-2.5 py-1 rounded-full hover:bg-blue-100">◐ ${escapeHtml(p.prefix)}@${escapeHtml(state.domain)} <span class="font-sans text-[10px] opacity-75">Catch-all</span></button>`;
+                }
+                return `<button type="button" data-quick-prefix="${escapeHtml(p.prefix)}" class="quick-prefix inline-flex items-center gap-1.5 text-xs font-mono bg-apple-bg text-apple-gray border border-black/10 px-2.5 py-1 rounded-full hover:bg-gray-200 hover:text-apple-dark">+ ${escapeHtml(p.prefix)}@${escapeHtml(state.domain)} <span class="font-sans text-[10px] opacity-75">未配置</span></button>`;
+            }).join('');
+        }
+
+        function renderDestinations() {
+            const box = $('#dest-list');
+            if (!state.destinations.length) {
+                box.innerHTML = `<div class="py-5 text-center text-xs text-apple-gray">暂无目标邮箱（若确认已添加，请检查 Token 是否有 Account → Email Routing Addresses 权限）</div>`;
+                return;
+            }
+            box.innerHTML = state.destinations.map(d => {
+                const statusBadge = d.verified
+                    ? `<span class="text-[10.5px] font-mono font-semibold bg-emerald-500/10 text-emerald-700 px-2 py-0.5 rounded-full">✓ 已验证</span>`
+                    : `<span class="text-[10.5px] font-mono font-semibold bg-amber-500/15 text-amber-700 px-2 py-0.5 rounded-full">⏳ 待点邮件验证</span>`;
+                return `
+                    <div class="py-2.5 flex items-center justify-between gap-2">
+                        <div class="min-w-0 flex items-center gap-2">
+                            <span class="font-mono text-xs text-apple-dark truncate">${escapeHtml(d.email)}</span>
+                            ${statusBadge}
+                        </div>
+                        <button type="button" data-del-dest="${escapeHtml(d.id)}" data-del-email="${escapeHtml(d.email)}" class="text-[11px] font-medium text-rose-600 hover:bg-rose-50 px-2 py-1 rounded-lg transition-colors">
+                            删除
+                        </button>
+                    </div>
+                `;
+            }).join('');
+        }
+
+        function renderRules() {
+            const box = $('#rules-list');
+            const q = state.search.trim().toLowerCase();
+            const list = state.rules.filter(r =>
+                !q || r.address.includes(q) || r.name.toLowerCase().includes(q) || r.destinations.some(d => d.toLowerCase().includes(q))
+            );
+            if (!list.length) {
+                box.innerHTML = `<div class="py-10 text-center text-xs text-apple-gray">${state.rules.length ? '没有匹配的子邮箱规则' : '暂无自定义子邮箱规则，可在左侧新建'}</div>`;
+                return;
+            }
+            const verifiedDests = state.destinations.filter(d => d.verified).map(d => d.email);
+
+            box.innerHTML = list.map(r => {
+                const badge = r.enabled
+                    ? `<span class="text-[10.5px] font-mono font-semibold bg-emerald-500/10 text-emerald-700 px-2 py-0.5 rounded-full">● 启用</span>`
+                    : `<span class="text-[10.5px] font-mono font-semibold bg-gray-200 text-gray-600 px-2 py-0.5 rounded-full">○ 停用</span>`;
+                const targetText = r.action === 'drop'
+                    ? '直接丢弃 (Drop)'
+                    : r.action === 'worker'
+                    ? `Worker: ${r.destinations.join(', ')}`
+                    : `→ ${r.destinations.join(', ') || '未指定'}`;
+
+                const isEditing = state.editingRuleId === r.id;
+                const datalistId = `dl-${escapeHtml(r.id)}`;
+                const editPanel = isEditing ? `
+                    <div class="mt-3 p-3 bg-apple-bg rounded-2xl flex flex-col sm:flex-row gap-2 items-stretch sm:items-center">
+                        <select data-edit-action="${escapeHtml(r.id)}" class="bg-white rounded-xl px-2.5 py-1.5 text-xs border border-black/10">
+                            <option value="forward" ${r.action === 'forward' ? 'selected' : ''}>转发到</option>
+                            <option value="drop" ${r.action === 'drop' ? 'selected' : ''}>直接丢弃</option>
+                        </select>
+                        <input data-edit-dest="${escapeHtml(r.id)}" list="${datalistId}" type="email" value="${escapeHtml(r.destinations[0] || '')}" placeholder="输入或选择已验证目标邮箱"
+                            class="flex-1 bg-white rounded-xl px-2.5 py-1.5 font-mono text-xs border border-black/10 ${r.action === 'drop' ? 'hidden' : ''}">
+                        <datalist id="${datalistId}">
+                            ${verifiedDests.map(e => `<option value="${escapeHtml(e)}"></option>`).join('')}
+                        </datalist>
+                        <div class="flex gap-1.5 shrink-0">
+                            <button type="button" data-save-rule="${escapeHtml(r.id)}" class="bg-apple-blue hover:bg-apple-blueHover text-white text-xs font-semibold px-3 py-1.5 rounded-xl">保存</button>
+                            <button type="button" data-cancel-edit="1" class="bg-white hover:bg-gray-100 text-apple-dark text-xs font-medium px-3 py-1.5 rounded-xl border border-black/10">取消</button>
+                        </div>
+                    </div>
+                ` : '';
+
+                return `
+                    <div class="py-4">
+                        <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+                            <div class="min-w-0 space-y-1">
+                                <div class="flex flex-wrap items-center gap-2">
+                                    <span class="font-mono text-sm font-bold text-apple-blue">${escapeHtml(r.prefix)}<span class="text-apple-dark font-normal">@${escapeHtml(state.domain)}</span></span>
+                                    <button type="button" data-copy-addr="${escapeHtml(r.address)}" class="text-[10.5px] text-apple-gray hover:text-apple-dark bg-apple-bg px-2 py-0.5 rounded-md">复制</button>
+                                    ${badge}
+                                </div>
+                                <div class="text-xs text-apple-dark font-mono truncate">${escapeHtml(targetText)}</div>
+                                <div class="text-[11px] text-apple-muted truncate">${escapeHtml(r.name)}</div>
+                            </div>
+                            <div class="flex flex-wrap items-center gap-1.5 shrink-0">
+                                <button type="button" data-toggle-rule="${escapeHtml(r.id)}" data-next-enabled="${r.enabled ? '0' : '1'}" class="text-xs font-medium bg-apple-bg hover:bg-gray-200 text-apple-dark px-2.5 py-1.5 rounded-lg transition-colors">
+                                    ${r.enabled ? '停用' : '启用'}
+                                </button>
+                                <button type="button" data-edit-rule="${escapeHtml(r.id)}" class="text-xs font-medium bg-apple-bg hover:bg-gray-200 text-apple-dark px-2.5 py-1.5 rounded-lg transition-colors">
+                                    改目标
+                                </button>
+                                <button type="button" data-use-send="${escapeHtml(r.prefix)}" class="text-xs font-medium bg-purple-50 hover:bg-purple-100 text-purple-700 px-2.5 py-1.5 rounded-lg transition-colors">
+                                    用它发信
+                                </button>
+                                <button type="button" data-del-rule="${escapeHtml(r.id)}" data-del-addr="${escapeHtml(r.address)}" class="text-xs font-medium bg-rose-50 hover:bg-rose-100 text-rose-600 px-2.5 py-1.5 rounded-lg transition-colors">
+                                    删除
+                                </button>
+                            </div>
+                        </div>
+                        ${editPanel}
+                    </div>
+                `;
+            }).join('');
+        }
+
+        async function loadOverview() {
+            $('#rules-list').innerHTML = `<div class="py-8 text-center text-xs text-apple-gray">加载中…</div>`;
+            const { ok, status, data } = await apiFetch('/api/admin/email/overview');
+            if (!ok) {
+                const errMsg = data.error || '加载失败，请检查右上角 ADMIN_TOKEN';
+                $('#rules-list').innerHTML = `<div class="py-8 text-center text-xs text-rose-600">${escapeHtml(errMsg)}</div>`;
+                if (status === 401) showToast('管理口令无效，请在右上角输入正确的 ADMIN_TOKEN', 'err');
+                return;
+            }
+
+            state.domain = data.domain || 'vibe-show.com';
+            state.rules = data.rules || [];
+            state.destinations = data.destinations || [];
+            state.catchAll = data.catch_all || null;
+
+            $('#domain-suffix').textContent = `@${state.domain}`;
+            $('#send-domain-suffix').textContent = `@${state.domain}`;
+
+            const routingEnabled = data.routing_status?.enabled;
+            $('#stat-routing').textContent = data.permissions?.routing_status_ok
+                ? (routingEnabled ? '● 已开启' : '○ 未启用')
+                : '未知 (缺权限)';
+            $('#stat-routing').className = `text-lg font-extrabold font-mono mt-1.5 ${routingEnabled ? 'text-emerald-600' : 'text-amber-600'}`;
+
+            $('#stat-rules').textContent = data.permissions?.rules_ok ? `${state.rules.length} / 200` : '-';
+
+            if (state.catchAll) {
+                $('#stat-catchall').textContent = state.catchAll.enabled
+                    ? (state.catchAll.action === 'drop' ? '已启用 (Drop)' : `→ ${state.catchAll.destinations[0] || ''}`)
+                    : '未开启';
+                $('#catchall-enabled').checked = Boolean(state.catchAll.enabled);
+                $('#catchall-action').value = state.catchAll.action === 'drop' ? 'drop' : 'forward';
+                $('#catchall-dest-wrap').classList.toggle('hidden', $('#catchall-action').value === 'drop');
+            } else {
+                $('#stat-catchall').textContent = '-';
+            }
+
+            $('#stat-resend').textContent = data.resend_configured ? '● 已就绪 (API Key 已配)' : '○ 未配置 RESEND_API_KEY';
+            $('#stat-resend').className = `text-sm font-bold font-mono mt-2 ${data.resend_configured ? 'text-emerald-600' : 'text-amber-600'}`;
+
+            const warnings = data.warnings || [];
+            const warnList = $('#warnings-list');
+            if (warnings.length) {
+                warnList.innerHTML = warnings.map(w => `<li>${escapeHtml(w)}</li>`).join('');
+                warnList.classList.remove('hidden');
+                $('#cf-auth-panel').classList.remove('hidden');
+            } else {
+                warnList.classList.add('hidden');
+                if (!cfOverrideTokenInput.value.trim() && !cfOverrideAccInput.value.trim()) {
+                    $('#cf-auth-panel').classList.add('hidden');
+                }
+            }
+
+            syncDestinationSelect($('#new-dest-select'), $('#new-dest-manual'));
+            syncDestinationSelect($('#catchall-dest-select'), $('#catchall-dest-manual'), state.catchAll?.destinations?.[0] || '');
+            renderPresets();
+            renderDestinations();
+            renderRules();
+        }
+
+        // 绑定目标邮箱选择切换
+        bindDestSelectToggle($('#new-dest-select'), $('#new-dest-manual'));
+        bindDestSelectToggle($('#catchall-dest-select'), $('#catchall-dest-manual'));
+
+        $('#new-action').addEventListener('change', () => {
+            $('#new-dest-wrap').classList.toggle('hidden', $('#new-action').value === 'drop');
+        });
+        $('#catchall-action').addEventListener('change', () => {
+            $('#catchall-dest-wrap').classList.toggle('hidden', $('#catchall-action').value === 'drop');
+        });
+
+        // 顶部授权设置折叠 & 临时覆盖
+        $('#toggle-cf-auth-btn').addEventListener('click', () => {
+            $('#cf-auth-panel').classList.toggle('hidden');
+        });
+        $('#save-cf-override-btn').addEventListener('click', () => {
+            sessionStorage.setItem('vibe_cf_email_token', cfOverrideTokenInput.value.trim());
+            sessionStorage.setItem('vibe_cf_account_id', cfOverrideAccInput.value.trim());
+            showToast('已应用当前会话临时凭证，正在刷新…', 'info');
+            loadOverview();
+        });
+        $('#clear-cf-override-btn').addEventListener('click', () => {
+            cfOverrideTokenInput.value = '';
+            cfOverrideAccInput.value = '';
+            sessionStorage.removeItem('vibe_cf_email_token');
+            sessionStorage.removeItem('vibe_cf_account_id');
+            loadOverview();
+        });
+        $('#copy-wrangler-cmd-btn').addEventListener('click', async () => {
+            const cmd = `npx wrangler secret put CF_EMAIL_API_TOKEN\nnpx wrangler secret put CF_ACCOUNT_ID`;
+            await navigator.clipboard.writeText(cmd);
+            showToast('已复制 Wrangler Secret 命令，可在项目目录运行配置', 'ok');
+        });
+
+        // 快捷填入前缀（表单按钮 + 顶部状态条）
+        document.addEventListener('click', e => {
+            const quick = e.target.closest('.quick-prefix');
+            if (quick && quick.dataset.quickPrefix) {
+                $('#new-prefix').value = quick.dataset.quickPrefix;
+                $('#new-prefix').focus();
+                window.scrollTo({ top: 0, behavior: 'smooth' });
+            }
+        });
+
+        // 创建子邮箱规则
+        $('#create-rule-form').addEventListener('submit', async e => {
+            e.preventDefault();
+            const btn = $('#create-rule-btn');
+            btn.disabled = true;
+            btn.textContent = '正在创建…';
+            try {
+                const action = $('#new-action').value;
+                const destination = readDestValue($('#new-dest-select'), $('#new-dest-manual'));
+                const { ok, data } = await apiFetch('/api/admin/email/rules', {
+                    method: 'POST',
+                    body: JSON.stringify({
+                        prefix: $('#new-prefix').value.trim(),
+                        action,
+                        destination,
+                        name: $('#new-name').value.trim() || undefined
+                    })
+                });
+                if (!ok) {
+                    showToast(data.error || '创建失败', 'err');
+                    if (data.needs_permission) $('#cf-auth-panel').classList.remove('hidden');
+                    return;
+                }
+                showToast(`已创建子邮箱 ${data.rule.address}`, 'ok');
+                $('#new-prefix').value = '';
+                $('#new-name').value = '';
+                await loadOverview();
+            } finally {
+                btn.disabled = false;
+                btn.textContent = '+ 创建子邮箱转发规则';
+            }
+        });
+
+        // 添加目标接收邮箱
+        $('#add-dest-form').addEventListener('submit', async e => {
+            e.preventDefault();
+            const btn = $('#add-dest-btn');
+            btn.disabled = true;
+            try {
+                const email = $('#add-dest-email').value.trim();
+                const { ok, data } = await apiFetch('/api/admin/email/destinations', {
+                    method: 'POST',
+                    body: JSON.stringify({ email })
+                });
+                if (!ok) {
+                    showToast(data.error || '添加目标邮箱失败', 'err');
+                    if (data.needs_permission) $('#cf-auth-panel').classList.remove('hidden');
+                    return;
+                }
+                showToast(data.message || '已发送验证邮件，请去收件箱确认', 'ok');
+                $('#add-dest-email').value = '';
+                await loadOverview();
+            } finally {
+                btn.disabled = false;
+            }
+        });
+
+        // 删除目标邮箱
+        $('#dest-list').addEventListener('click', async e => {
+            const btn = e.target.closest('[data-del-dest]');
+            if (!btn) return;
+            const id = btn.dataset.delDest;
+            const email = btn.dataset.delEmail;
+            if (!confirm(`确定删除目标接收邮箱 ${email} 吗？使用该地址的转发规则将失效。`)) return;
+            const { ok, data } = await apiFetch(`/api/admin/email/destinations/${encodeURIComponent(id)}`, { method: 'DELETE' });
+            if (!ok) {
+                showToast(data.error || '删除失败', 'err');
+                return;
+            }
+            showToast(`已删除目标邮箱 ${email}`, 'ok');
+            await loadOverview();
+        });
+
+        // 更新 Catch-all
+        $('#catchall-form').addEventListener('submit', async e => {
+            e.preventDefault();
+            const btn = $('#save-catchall-btn');
+            btn.disabled = true;
+            try {
+                const enabled = $('#catchall-enabled').checked;
+                const action = $('#catchall-action').value;
+                const destination = readDestValue($('#catchall-dest-select'), $('#catchall-dest-manual'));
+                const { ok, data } = await apiFetch('/api/admin/email/catch-all', {
+                    method: 'PUT',
+                    body: JSON.stringify({ enabled, action, destination })
+                });
+                if (!ok) {
+                    showToast(data.error || '更新 Catch-all 失败', 'err');
+                    return;
+                }
+                showToast('Catch-all 规则已更新', 'ok');
+                await loadOverview();
+            } finally {
+                btn.disabled = false;
+            }
+        });
+
+        // 规则列表搜索与操作
+        $('#rules-search').addEventListener('input', e => {
+            state.search = e.target.value;
+            renderRules();
+        });
+
+        $('#rules-list').addEventListener('change', e => {
+            const sel = e.target.closest('[data-edit-action]');
+            if (!sel) return;
+            const id = sel.dataset.editAction;
+            const input = document.querySelector(`[data-edit-dest="${CSS.escape(id)}"]`);
+            if (input) input.classList.toggle('hidden', sel.value === 'drop');
+        });
+
+        $('#rules-list').addEventListener('click', async e => {
+            const copyBtn = e.target.closest('[data-copy-addr]');
+            if (copyBtn) {
+                await navigator.clipboard.writeText(copyBtn.dataset.copyAddr);
+                showToast(`已复制 ${copyBtn.dataset.copyAddr}`, 'ok');
+                return;
+            }
+
+            const useSendBtn = e.target.closest('[data-use-send]');
+            if (useSendBtn) {
+                $('#send-from-prefix').value = useSendBtn.dataset.useSend;
+                $('#send-to').focus();
+                $('#send-mail-form').scrollIntoView({ behavior: 'smooth', block: 'center' });
+                return;
+            }
+
+            const toggleBtn = e.target.closest('[data-toggle-rule]');
+            if (toggleBtn) {
+                const id = toggleBtn.dataset.toggleRule;
+                const nextEnabled = toggleBtn.dataset.nextEnabled === '1';
+                const { ok, data } = await apiFetch(`/api/admin/email/rules/${encodeURIComponent(id)}`, {
+                    method: 'PUT',
+                    body: JSON.stringify({ enabled: nextEnabled })
+                });
+                if (!ok) {
+                    showToast(data.error || '切换失败', 'err');
+                    return;
+                }
+                showToast(`${data.rule.address} 已${nextEnabled ? '启用' : '停用'}`, 'ok');
+                await loadOverview();
+                return;
+            }
+
+            const editBtn = e.target.closest('[data-edit-rule]');
+            if (editBtn) {
+                state.editingRuleId = state.editingRuleId === editBtn.dataset.editRule ? null : editBtn.dataset.editRule;
+                renderRules();
+                return;
+            }
+
+            if (e.target.closest('[data-cancel-edit]')) {
+                state.editingRuleId = null;
+                renderRules();
+                return;
+            }
+
+            const saveBtn = e.target.closest('[data-save-rule]');
+            if (saveBtn) {
+                const id = saveBtn.dataset.saveRule;
+                const action = document.querySelector(`[data-edit-action="${CSS.escape(id)}"]`)?.value || 'forward';
+                const destination = document.querySelector(`[data-edit-dest="${CSS.escape(id)}"]`)?.value.trim() || '';
+                const { ok, data } = await apiFetch(`/api/admin/email/rules/${encodeURIComponent(id)}`, {
+                    method: 'PUT',
+                    body: JSON.stringify({ action, destination })
+                });
+                if (!ok) {
+                    showToast(data.error || '修改失败', 'err');
+                    return;
+                }
+                state.editingRuleId = null;
+                showToast(`已更新 ${data.rule.address}`, 'ok');
+                await loadOverview();
+                return;
+            }
+
+            const delBtn = e.target.closest('[data-del-rule]');
+            if (delBtn) {
+                const id = delBtn.dataset.delRule;
+                const addr = delBtn.dataset.delAddr;
+                if (!confirm(`确定删除子邮箱规则 ${addr} 吗？删除后若未开启 Catch-all 将不再接收该地址邮件。`)) return;
+                const { ok, data } = await apiFetch(`/api/admin/email/rules/${encodeURIComponent(id)}`, { method: 'DELETE' });
+                if (!ok) {
+                    showToast(data.error || '删除失败', 'err');
+                    return;
+                }
+                showToast(`已删除 ${addr}`, 'ok');
+                await loadOverview();
+            }
+        });
+
+        // 在线发信 (Resend)
+        $('#send-mail-form').addEventListener('submit', async e => {
+            e.preventDefault();
+            const btn = $('#send-mail-btn');
+            btn.disabled = true;
+            btn.textContent = '发送中…';
+            try {
+                const { ok, data } = await apiFetch('/api/admin/email/send', {
+                    method: 'POST',
+                    body: JSON.stringify({
+                        from_prefix: $('#send-from-prefix').value.trim(),
+                        from_name: $('#send-from-name').value.trim(),
+                        to: $('#send-to').value.trim(),
+                        reply_to: $('#send-reply-to').value.trim() || undefined,
+                        subject: $('#send-subject').value.trim(),
+                        text: $('#send-text').value.trim()
+                    })
+                });
+                if (!ok) {
+                    showToast(data.error || '发信失败', 'err');
+                    return;
+                }
+                showToast(`邮件已发送！发件人：${data.from}${data.id ? ` (Resend ID: ${data.id})` : ''}`, 'ok');
+                $('#send-subject').value = '';
+                $('#send-text').value = '';
+            } finally {
+                btn.disabled = false;
+                btn.textContent = '发送邮件';
+            }
+        });
+
+        $('#refresh-btn').addEventListener('click', loadOverview);
+        loadOverview();
+    </script>
+</body>
+</html>

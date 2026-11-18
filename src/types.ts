@@ -6,7 +6,9 @@ export interface Env {
   // 环境变量与 Secrets
   DOMAIN?: string;
   CF_ZONE_ID?: string;
+  CF_ACCOUNT_ID?: string;
   CF_API_TOKEN?: string;
+  CF_EMAIL_API_TOKEN?: string;
   ADMIN_TOKEN?: string;
   RESEND_API_KEY?: string;
   MAIL_FROM?: string;
